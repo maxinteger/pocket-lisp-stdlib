@@ -10,8 +10,9 @@ import { plFractionNumber, reciprocal, str2plFractionNumber } from './data/PLFra
 import { plString } from './data/PLString'
 import { unboxing } from './fn/common'
 
-export { PLNumber, plNumber } from './data/PLNumber'
+export * from './types'
 export { PLBool, plBool } from './data/PLBool'
+export { PLNumber, plNumber } from './data/PLNumber'
 export { PLFractionNumber, plFractionNumber } from './data/PLFractionNumber'
 export { PLString, plString } from './data/PLString'
 export { PLVector, plVector } from './data/PLVector'
