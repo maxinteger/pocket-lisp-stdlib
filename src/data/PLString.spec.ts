@@ -1,12 +1,13 @@
 import { expect } from 'chai'
-import { concat, of, toJS } from '../types'
 import { PLString, plString } from './PLString'
+import { add } from '../typeClasses/ops-types'
+import { toJS, toString } from '../typeClasses/base-types'
 
-describe('stdlib/core/PLString', () => {
+describe('stdlib/data/PLString', () => {
   describe('creation', () => {
     describe('with of', () => {
       it('should have same result as the factory function', () => {
-        expect(PLString[of]('hello world')).deep.equals(plString('hello world'))
+        expect(new PLString('hello world')).deep.equals(plString('hello world'))
       })
     })
   })
@@ -24,16 +25,14 @@ describe('stdlib/core/PLString', () => {
 
   describe('concat', () => {
     it('should concatenate 2 strings', () => {
-      const actual = plString('hello')
-        [concat](plString(' '))
-        [concat](plString('world'))
+      const actual = plString('hello')[add](plString(' '))[add](plString('world'))
       expect(actual.value).equal('hello world')
     })
   })
 
   it('should have proper toString', () => {
-    expect(plString().toString()).equal('')
-    expect(plString('hello world').toString()).equal('hello world')
+    expect(plString()[toString]()).equal('""')
+    expect(plString('hello world')[toString]()).equal('"hello world"')
   })
 
   describe('toJS', () => {

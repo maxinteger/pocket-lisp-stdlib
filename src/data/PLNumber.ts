@@ -1,69 +1,98 @@
+import { RuntimeError } from 'pocket-lisp'
+import { PLBase } from './PLBase'
+import { plBool } from './PLBool'
+import { plString, PLString } from './PLString'
+import { copy, Copy, fromJS, fromStr, toJS, toString } from '../typeClasses/base-types'
+import { equals, Ordering, partialCmp, PartialEq, PartialOrd } from '../typeClasses/cmp-types'
 import {
   add,
-  BaseNumberOp,
+  Add,
   divide,
-  equals,
+  Divide,
   multiple,
+  Multiple,
+  Negate,
   negate,
-  of,
-  SerializeToJS,
-  Setoid,
   subtract,
-  toJS
-} from '../types'
-import { RuntimeError } from 'pocket-lisp'
-import { plBool } from './PLBool'
+  Subtract
+} from '../typeClasses/ops-types'
 
-export class PLNumber implements SerializeToJS<number>, Setoid<PLNumber>, BaseNumberOp<PLNumber> {
-  public static [of](value: number) {
-    return plNumber(value)
+export class PLNumber extends PLBase
+  implements
+    PartialEq<PLNumber>,
+    Add<PLNumber>,
+    Subtract<PLNumber>,
+    Multiple<PLNumber>,
+    Divide<PLNumber>,
+    Negate<PLNumber>,
+    PartialOrd<PLNumber>,
+    Copy<PLNumber> {
+  public static [fromJS](value: number) {
+    return new PLNumber(value)
   }
 
-  public constructor(private _value: number) {}
+  public static [fromStr](source: PLString) {
+    const val = parseFloat(source.value)
+    if (isNaN(val)) {
+      throw new RuntimeError(`Invalid number: "${source.value}".`)
+    }
+    return new PLNumber(val)
+  }
+
+  public constructor(private _value: number) {
+    super()
+  }
 
   public get value() {
     return this._value
   }
 
-  public [equals](a: PLNumber) {
-    return plBool(this._value === a.value)
+  public [equals](other: PLNumber) {
+    return plBool(this._value === other.value)
   }
 
   public [negate]() {
     return new PLNumber(-this._value)
   }
 
-  public [add](a: PLNumber) {
-    return new PLNumber(this._value + a.value)
+  public [add](other: PLNumber) {
+    return new PLNumber(this._value + other.value)
   }
 
-  public [subtract](a: PLNumber) {
-    return new PLNumber(this._value - a.value)
+  public [subtract](other: PLNumber) {
+    return new PLNumber(this._value - other.value)
   }
 
-  public [multiple](a: PLNumber) {
-    return new PLNumber(this._value * a.value)
+  public [multiple](other: PLNumber) {
+    return new PLNumber(this._value * other.value)
   }
 
-  public [divide](a: PLNumber) {
-    return new PLNumber(this._value / a.value)
+  public [divide](other: PLNumber) {
+    return new PLNumber(this._value / other.value)
+  }
+
+  public [copy]() {
+    return new PLNumber(this._value)
+  }
+  public [partialCmp](other: PLNumber): Ordering {
+    if (this.value < other.value) {
+      return Ordering.Less
+    } else if (this.value > other.value) {
+      return Ordering.Greater
+    } else {
+      return Ordering.Equal
+    }
   }
 
   public [toJS]() {
     return this._value
   }
 
-  public toString() {
+  public [toString]() {
     return this._value.toString()
   }
 }
 
 export const plNumber = (value: number) => new PLNumber(value)
 
-export const str2PLNumber = (str: string) => {
-  const val = parseFloat(str)
-  if (isNaN(val)) {
-    throw new RuntimeError(`Invalid number: ${str}.`)
-  }
-  return new PLNumber(val)
-}
+export const parseNumber = (value: string) => PLNumber[fromStr](plString(value))

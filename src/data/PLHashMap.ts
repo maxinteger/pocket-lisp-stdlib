@@ -1,15 +1,13 @@
-import { of, SerializeToJS, toJS } from '../types'
+import { PLBase } from './PLBase'
+import { toJS, toString } from '../typeClasses/base-types'
 
 type Entries = [any, any][]
 
-export class PLHashMap implements SerializeToJS<Map<any, any>> {
+export class PLHashMap extends PLBase{
   private readonly _value: Map<any, any>
 
-  public static [of](value: Entries): PLHashMap {
-    return new PLHashMap(value)
-  }
-
   public constructor(entries?: Entries) {
+    super()
     this._value = new Map(entries)
   }
 
@@ -17,11 +15,11 @@ export class PLHashMap implements SerializeToJS<Map<any, any>> {
     return this._value
   }
 
-  public toString() {
+  public [toString]() {
     return `{${Array.from(this._value.entries())
       .map(([k, v]) => `${k}: ${v}`)
       .join(', ')}}`
   }
 }
 
-export const plHashMap = (entries?: Entries) => PLHashMap[of](entries || [])
+export const plHashMap = (entries?: Entries) => new PLHashMap(entries || [])

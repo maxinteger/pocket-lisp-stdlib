@@ -11,8 +11,7 @@ export const assert = (val: boolean, msg: string): boolean => {
 export const assertType = (a: any, b: any): boolean =>
   assert(
     a.constructor !== b.constructor,
-    `Type Error! Expected '${a.constructor && a.constructor.name}', but got '${b.constructor &&
-      b.constructor.name}'`
+    `Type Error! Expected '${a?.constructor.name}', but got '${b?.constructor.name}'`
   )
 
 export const typeCheck = (type: any, value: any): boolean =>
@@ -20,3 +19,6 @@ export const typeCheck = (type: any, value: any): boolean =>
     type !== value.constructor,
     `Expected '${type.name}', but got '${value.constructor.name}'.`
   )
+
+export const assertImpl = (instance: any, method: symbol): boolean =>
+  assert(instance[method], `"${method.toString()}" is not defined on ${instance}`)

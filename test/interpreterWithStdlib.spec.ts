@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { Interpreter, Parser, Scanner } from 'pocket-lisp'
 import { plNumber } from '../src/data/PLNumber'
-import { runtime, literals } from '../src'
+import { literals, runtime } from '../src'
 
 describe('stdlib', () => {
   it('should be compatible with the interpreter', () => {

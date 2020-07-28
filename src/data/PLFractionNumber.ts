@@ -1,43 +1,42 @@
+import { RuntimeError } from 'pocket-lisp'
 import { gcd } from '../utils/math'
+import { plBool } from './PLBool'
+import { PLBase } from './PLBase'
+import { typeCheck } from '../utils/assert'
+import { equals, Ordering, partialCmp, PartialEq, PartialOrd } from '../typeClasses/cmp-types'
 import {
   add,
-  BaseNumberOp,
+  Add,
   divide,
-  equals,
+  Divide,
   multiple,
+  Multiple,
   negate,
-  of,
-  SerializeToJS,
-  Setoid,
+  Negate,
   subtract,
-  toJS
-} from '../types'
-import { RuntimeError } from 'pocket-lisp'
-import { plBool } from './PLBool'
-import { typeCheck } from '../utils/assert'
-
-interface JSFractionNumber {
-  numerator: number
-  denominator: number
-}
+  Subtract
+} from '../typeClasses/ops-types'
+import { copy, Copy, toJS, toString } from '../typeClasses/base-types'
 
 ///
 
-export class PLFractionNumber
+export class PLFractionNumber extends PLBase
   implements
-    SerializeToJS<JSFractionNumber>,
-    Setoid<PLFractionNumber>,
-    BaseNumberOp<PLFractionNumber> {
+    PartialEq<PLFractionNumber>,
+    Add<PLFractionNumber>,
+    Subtract<PLFractionNumber>,
+    Multiple<PLFractionNumber>,
+    Divide<PLFractionNumber>,
+    Negate<PLFractionNumber>,
+    PartialOrd<PLFractionNumber>,
+    Copy<PLFractionNumber> {
   private readonly _n: number
   private readonly _d: number
 
-  public static [of](value: JSFractionNumber) {
-    return plFractionNumber(value.numerator, value.denominator)
-  }
-
   public constructor(numerator: number, denominator: number) {
+    super()
     if (!isValid(numerator, denominator)) {
-      throw new Error('Invalid fraction number parameters!')
+      throw new RuntimeError('Invalid fraction number parameters!')
     }
 
     if (denominator < 0) {
@@ -90,6 +89,16 @@ export class PLFractionNumber
     return new PLFractionNumber(numerator, denominator)
   }
 
+  public [partialCmp](other: PLFractionNumber): Ordering {
+    const lcm = (this._d * other._d) / gcd(this._d, other._d)
+    const a = (this._n * lcm) / this._d
+    const b = (other._n * lcm) / other._d
+
+    if (a < b) return Ordering.Less
+    if (a > b) return Ordering.Greater
+    return Ordering.Equal
+  }
+
   public [toJS]() {
     return {
       numerator: this._n,
@@ -97,8 +106,12 @@ export class PLFractionNumber
     }
   }
 
-  public toString() {
+  public [toString]() {
     return `${this._n}/${this._d}`
+  }
+
+  public [copy]() {
+    return new PLFractionNumber(this._n, this._d)
   }
 }
 

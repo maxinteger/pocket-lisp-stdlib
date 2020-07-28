@@ -6,9 +6,11 @@ import {
   str2plFractionNumber
 } from './PLFractionNumber'
 import { plBool } from './PLBool'
-import { add, divide, equals, multiple, negate, of, subtract, toJS } from '../types'
+import { copy, toJS, toString } from '../typeClasses/base-types'
+import { equals, Ordering, partialCmp } from '../typeClasses/cmp-types'
+import { add, divide, multiple, negate, subtract } from '../typeClasses/ops-types'
 
-describe('stdlib/core/PLFractionNumber', () => {
+describe('stdlib/data/PLFractionNumber', () => {
   describe('creation', () => {
     it('should throw error if the parameters are invalid', () => {
       const tests = [
@@ -25,14 +27,17 @@ describe('stdlib/core/PLFractionNumber', () => {
     })
 
     it('should accept valid inputs', () => {
-      const tests = [{ n: 1, d: 1, res: '1/1' }, { n: 1, d: 2, res: '1/2' }] as {
+      const tests = [
+        { n: 1, d: 1, res: '1/1' },
+        { n: 1, d: 2, res: '1/2' }
+      ] as {
         n: any
         d: any
         res: string
       }[]
 
       tests.map(({ n, d, res }) => {
-        expect(plFractionNumber(n, d).toString()).eq(res)
+        expect(plFractionNumber(n, d)[toString]()).eq(res)
       })
     })
 
@@ -46,15 +51,13 @@ describe('stdlib/core/PLFractionNumber', () => {
       ] as { n: any; d: any; res: string }[]
 
       tests.map(({ n, d, res }) => {
-        expect(plFractionNumber(n, d).toString()).eq(res)
+        expect(plFractionNumber(n, d)[toString]()).eq(res)
       })
     })
 
-    describe('with of', () => {
+    describe('with new', () => {
       it('should have same result as the factory function', () => {
-        expect(PLFractionNumber[of]({ numerator: 1, denominator: 2 })).deep.equals(
-          plFractionNumber(1, 2)
-        )
+        expect(new PLFractionNumber(1, 2)).deep.equals(plFractionNumber(1, 2))
       })
     })
   })
@@ -77,7 +80,7 @@ describe('stdlib/core/PLFractionNumber', () => {
     it('should throw error if the input is invalid', () => {
       const tests = ['', 'xyz', '1', '1/', '1.1/1', '1/1.1', '1/0']
 
-      tests.map(input => {
+      tests.map((input) => {
         expect(() => str2plFractionNumber(input)).throw(`Invalid fraction number: ${input}.`)
       })
     })
@@ -92,7 +95,7 @@ describe('stdlib/core/PLFractionNumber', () => {
       ]
 
       tests.map(({ input, out }) => {
-        expect(str2plFractionNumber(input).toString()).equal(out)
+        expect(str2plFractionNumber(input)[toString]()).equal(out)
       })
     })
   })
@@ -148,6 +151,24 @@ describe('stdlib/core/PLFractionNumber', () => {
   describe('reciprocal operator', () => {
     it('should reciprocal the number', () => {
       expect(reciprocal(plFractionNumber(1, 2))).deep.equals(plFractionNumber(2, 1))
+    })
+  })
+
+  describe('partialCmp', () => {
+    it('should compare numbers', () => {
+      expect(plFractionNumber(1, 2)[partialCmp](plFractionNumber(1, 2))).equals(Ordering.Equal)
+      expect(plFractionNumber(1, 2)[partialCmp](plFractionNumber(4, 5))).equals(Ordering.Less)
+      expect(plFractionNumber(1, 2)[partialCmp](plFractionNumber(2, 11))).equals(Ordering.Greater)
+    })
+  })
+
+  describe('copy function', () => {
+    it('should copy value', () => {
+      const originalValue = plFractionNumber(1, 2)
+      const copiedValue = originalValue[copy]()
+      expect(originalValue.numerator).equals(copiedValue.numerator)
+      expect(originalValue.denominator).equals(copiedValue.denominator)
+      expect(originalValue).not.equals(copiedValue)
     })
   })
 })

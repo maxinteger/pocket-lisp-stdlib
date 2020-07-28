@@ -1,13 +1,15 @@
 import { expect } from 'chai'
-import { add, divide, equals, multiple, negate, of, subtract, toJS } from '../types'
-import { PLNumber, plNumber, str2PLNumber } from './PLNumber'
+import { parseNumber, PLNumber, plNumber } from './PLNumber'
 import { plBool } from './PLBool'
+import { toJS, toString } from '../typeClasses/base-types'
+import { equals } from '../typeClasses/cmp-types'
+import { add, divide, multiple, negate, subtract } from '../typeClasses/ops-types'
 
-describe('stdlib/core/PLNumber', () => {
+describe('stdlib/data/PLNumber', () => {
   describe('creation', () => {
     describe('with of', () => {
       it('should have same result as the factory function', () => {
-        expect(PLNumber[of](42)).deep.equals(plNumber(42))
+        expect(new PLNumber(42)).deep.equals(plNumber(42))
       })
     })
   })
@@ -29,8 +31,8 @@ describe('stdlib/core/PLNumber', () => {
     it('should throw error if the input is invalid', () => {
       const tests = ['', 'xyz', '_']
 
-      tests.map(input => {
-        expect(() => str2PLNumber(input)).throw(`Invalid number: ${input}.`)
+      tests.map((input) => {
+        expect(() => parseNumber(input)).throw(`Invalid number: "${input}".`)
       })
     })
 
@@ -44,7 +46,7 @@ describe('stdlib/core/PLNumber', () => {
       ]
 
       tests.map(({ input, out }) => {
-        expect(str2PLNumber(input).toString()).equal(out)
+        expect(parseNumber(input)[toString]()).equal(out)
       })
     })
   })

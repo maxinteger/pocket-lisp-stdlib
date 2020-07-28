@@ -1,45 +1,32 @@
-import { BoxedValue, Functor, map, of, SerializeToJS, toJS } from '../types'
+import { toJS, toString } from '../typeClasses/base-types'
+import { PLBase } from './PLBase'
 
-export type Maybe<T extends BoxedValue<any>> = Just<T> | NothingClass
+export type Maybe<T extends PLBase> = Just<T> | typeof Nothing
 
 ///
 
-export class Just<T extends BoxedValue<any>> implements SerializeToJS<any>, Functor<T> {
-  public static [of](value: any) {
-    return maybe(value)
+export class Just<T extends PLBase> extends PLBase {
+  public constructor(private _value: T) {
+    super()
   }
-
-  public constructor(private _value: T) {}
 
   public get value() {
     return this._value
   }
 
-  public [map]<b>(fn: (a: T) => b): Functor<b> {
-    return maybe(fn(this._value)) as any
-  }
-
-  public [toJS]() {
+  public [toJS](): unknown {
     return this._value[toJS] && this._value[toJS]()
   }
 
-  public toString() {
-    return `Just(${this._value.toString()})`
+  public [toString]() {
+    return `Just(${this._value[toString]()})`
   }
 }
 
 ///
 
-class NothingClass implements SerializeToJS<undefined>, Functor<undefined> {
-  public static [of](value: any) {
-    return maybe(value)
-  }
-
+class NothingClass extends PLBase {
   public get value() {
-    return Nothing
-  }
-
-  public [map]<b>(): Functor<b> {
     return Nothing
   }
 
@@ -47,7 +34,7 @@ class NothingClass implements SerializeToJS<undefined>, Functor<undefined> {
     return undefined
   }
 
-  public toString() {
+  public [toString]() {
     return 'Nothing'
   }
 }
@@ -56,8 +43,8 @@ export const Nothing = new NothingClass()
 
 ///
 
-export const maybe: <T extends BoxedValue<any>>(v: any) => Maybe<T> = (value: any) => {
-  if (value === undefined || value === null || value === Nothing) {
+export const maybe: <T extends PLBase>(v: any) => Maybe<T> = (value) => {
+  if (value === undefined || value === null || (value as any) === Nothing) {
     return Nothing
   } else {
     return new Just(value)

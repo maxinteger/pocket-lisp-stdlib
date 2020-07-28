@@ -1,41 +1,29 @@
 import { expect } from 'chai'
 import { Just, maybe, Nothing } from './Maybe'
 import { plNumber } from './PLNumber'
-import { map, of, toJS } from '../types'
+import { toJS, toString } from '../typeClasses/base-types'
+import { plString } from './PLString'
 
-describe('stdlib/core/Maybe', () => {
+describe('stdlib/data/Maybe', () => {
   describe('maybe function', () => {
     it('should return with Nothing instance for invalid values', () => {
+      expect(maybe(Nothing).value).equals(Nothing)
+      expect(maybe(Nothing)).equals(Nothing)
       expect(maybe(undefined)).equals(Nothing)
       expect(maybe(null)).equals(Nothing)
-      expect(maybe(Nothing)).equals(Nothing)
     })
     it('should return with Just instance for all other values', () => {
+      expect(maybe(0).value).deep.equals(0)
       expect(maybe(0)).deep.equals(new Just(0 as any))
       expect(maybe('hello world')).deep.equals(new Just('hello world' as any))
       expect(maybe([1, 2, 3])).deep.equals(new Just([1, 2, 3] as any))
     })
   })
 
-  describe('of static function', () => {
-    it('cshould return with the boxed value', () => {
-      expect(Just[of](undefined)).equals(Nothing)
-      expect(Just[of](1).value).equals(1)
-    })
-  })
-
-  describe('map function', () => {
-    it('should return with the calculated value in a Maybe box', () => {
-      const mapFn = (x: number) => x + 1
-      expect((maybe(1) as any)[map](mapFn)).deep.equals(new Just(2 as any))
-      expect((maybe(undefined) as any)[map](mapFn)).equals(Nothing)
-      expect((maybe(1) as any)[map](() => undefined)).equals(Nothing)
-    })
-  })
-
   it('should have proper toString', () => {
-    expect(maybe(1).toString()).deep.equal('Just(1)')
-    expect(maybe(undefined).toString()).deep.equal('Nothing')
+    expect(maybe(plNumber(1))[toString]()).deep.equal('Just(1)')
+    expect(maybe(plString('1'))[toString]()).deep.equal('Just("1")')
+    expect(maybe(undefined)[toString]()).deep.equal('Nothing')
   })
 
   describe('toJS', () => {

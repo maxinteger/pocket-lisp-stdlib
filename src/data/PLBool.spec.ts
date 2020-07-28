@@ -1,15 +1,11 @@
 import { expect } from 'chai'
-import { equals, lte, of, toJS } from '../types'
-import { and, not, or, PLBool, plBool, str2plBool } from './PLBool'
+import { plBool, PLBool } from './PLBool'
+import { plString } from './PLString'
+import { copy, fromJS, fromStr, toJS, toString } from '../typeClasses/base-types'
+import { equals, Ordering, partialCmp } from '../typeClasses/cmp-types'
+import { and, not, or } from '../typeClasses/ops-types'
 
-describe('stdlib/core/PLBool', () => {
-  describe('creation with of', () => {
-    it('should have same result as the factory function', () => {
-      expect(PLBool[of](true)).deep.equals(plBool(true))
-      expect(PLBool[of](false)).deep.equals(plBool(false))
-    })
-  })
-
+describe('stdlib/data/PLBool', () => {
   describe('getters', () => {
     it('should work', () => {
       expect(plBool(true).value).equal(true)
@@ -28,17 +24,26 @@ describe('stdlib/core/PLBool', () => {
     it('should throw error if the input is invalid', () => {
       const tests = ['', 'xyz', '_']
 
-      tests.map(input => {
-        expect(() => str2plBool(input)).throw(`Invalid boolean: '${input}'.`)
+      tests.map((input) => {
+        expect(() => PLBool[fromStr](plString(input))).throw(`Invalid boolean: "${input}".`)
       })
     })
 
-    it('should parse proper fraction numbers', () => {
-      const tests = [{ input: 'true', out: 'true' }, { input: 'false', out: 'false' }]
+    it('should parse proper boolean values', () => {
+      const tests = [
+        { input: 'true', out: 'true' },
+        { input: 'false', out: 'false' }
+      ]
 
       tests.map(({ input, out }) => {
-        expect(str2plBool(input).toString()).equal(out)
+        expect(PLBool[fromStr](plString(input))[toString]()).deep.equals(out)
       })
+    })
+  })
+
+  describe('fromJS', () => {
+    it('should convert string to PLBool', () => {
+      expect(PLBool[fromJS](true)).deep.equals(new PLBool(true))
     })
   })
 
@@ -50,34 +55,42 @@ describe('stdlib/core/PLBool', () => {
     })
   })
 
-  describe('lte operator', () => {
+  describe('partial Order', () => {
     it('should lte the bool', () => {
-      expect(plBool(true)[lte](plBool(false))).deep.equals(plBool(false))
-      expect(plBool(false)[lte](plBool(true))).deep.equals(plBool(true))
+      expect(plBool(true)[partialCmp](plBool(false))).deep.equals(Ordering.Greater)
+      expect(plBool(false)[partialCmp](plBool(false))).deep.equals(Ordering.Equal)
+      expect(plBool(true)[partialCmp](plBool(true))).deep.equals(Ordering.Equal)
+      expect(plBool(false)[partialCmp](plBool(true))).deep.equals(Ordering.Less)
     })
   })
 
   describe('not function', () => {
     it('should check and evaluate the argument', () => {
-      expect(() => not('' as any)).throws(`Expected 'PLBool', but got 'String'.`)
-      expect(not(plBool(true))).deep.equal(plBool(false))
-      expect(not(plBool(false))).deep.equal(plBool(true))
+      expect(plBool(true)[not]()).deep.equal(plBool(false))
+      expect(plBool(false)[not]()).deep.equal(plBool(true))
     })
   })
 
   describe('and function', () => {
     it('should check and evaluate the arguments', () => {
-      expect(() => and('' as any, plBool(false))).throws(`Expected 'PLBool', but got 'String'.`)
-      expect(and(plBool(true), plBool(true))).deep.equal(plBool(true))
-      expect(and(plBool(false), plBool(true))).deep.equal(plBool(false))
+      expect(plBool(true)[and](plBool(true))).deep.equal(plBool(true))
+      expect(plBool(false)[and](plBool(true))).deep.equal(plBool(false))
     })
   })
 
   describe('or function', () => {
     it('should check and evaluate the arguments', () => {
-      expect(() => or('' as any, plBool(false))).throws(`Expected 'PLBool', but got 'String'.`)
-      expect(or(plBool(false), plBool(false))).deep.equal(plBool(false))
-      expect(or(plBool(false), plBool(true))).deep.equal(plBool(true))
+      expect(plBool(false)[or](plBool(false))).deep.equal(plBool(false))
+      expect(plBool(false)[or](plBool(true))).deep.equal(plBool(true))
+    })
+  })
+
+  describe('copy function', () => {
+    it('should copy value', () => {
+      const originalValue = new PLBool(true)
+      const copiedValue = originalValue[copy]()
+      expect(originalValue.value).equals(copiedValue.value)
+      expect(originalValue).not.equals(copiedValue)
     })
   })
 })
