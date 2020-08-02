@@ -10,7 +10,7 @@ const rand = Math.random
 export const random = () => plNumber(rand())
 
 /**
- * Return a random integer N such that a <= N <= b.
+ * Return a random integer N such that a <= N < b.
  */
 export const randomInt = (a: PLNumber, b: PLNumber) => {
   const ai = toInt(a.value)
