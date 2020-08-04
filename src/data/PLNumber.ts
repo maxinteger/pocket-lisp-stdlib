@@ -1,6 +1,6 @@
 import { RuntimeError } from 'pocket-lisp'
 import { PLBase } from './PLBase'
-import { plBool } from './PLBool'
+import { PLBool, plBool } from './PLBool'
 import { plString, PLString } from './PLString'
 import { Copy } from '../typeClasses/base'
 import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
@@ -16,11 +16,11 @@ export class PLNumber extends PLBase
     Negate<PLNumber>,
     PartialOrd<PLNumber>,
     Copy<PLNumber> {
-  public static fromJS(value: number) {
+  public static fromJS(value: number): PLNumber {
     return new PLNumber(value)
   }
 
-  public static fromStr(source: PLString) {
+  public static fromStr(source: PLString): PLNumber {
     const val = parseFloat(source.value)
     if (isNaN(val)) {
       throw new RuntimeError(`Invalid number: "${source.value}".`)
@@ -32,35 +32,35 @@ export class PLNumber extends PLBase
     super()
   }
 
-  public get value() {
+  public get value(): number {
     return this._value
   }
 
-  public equals(other: PLNumber) {
+  public equals(other: PLNumber): PLBool {
     return plBool(this._value === other.value)
   }
 
-  public negate() {
+  public negate(): PLNumber {
     return new PLNumber(-this._value)
   }
 
-  public add(other: PLNumber) {
+  public add(other: PLNumber): PLNumber {
     return new PLNumber(this._value + other.value)
   }
 
-  public subtract(other: PLNumber) {
+  public subtract(other: PLNumber): PLNumber {
     return new PLNumber(this._value - other.value)
   }
 
-  public multiple(other: PLNumber) {
+  public multiple(other: PLNumber): PLNumber {
     return new PLNumber(this._value * other.value)
   }
 
-  public divide(other: PLNumber) {
+  public divide(other: PLNumber): PLNumber {
     return new PLNumber(this._value / other.value)
   }
 
-  public copy() {
+  public copy(): PLNumber {
     return new PLNumber(this._value)
   }
 
@@ -74,11 +74,11 @@ export class PLNumber extends PLBase
     }
   }
 
-  public toJS() {
+  public toJS(): number {
     return this._value
   }
 
-  public toString() {
+  public toString(): string {
     return this._value.toString()
   }
 
@@ -87,6 +87,6 @@ export class PLNumber extends PLBase
   }
 }
 
-export const plNumber = (value: number) => new PLNumber(value)
+export const plNumber = (value: number): PLNumber => new PLNumber(value)
 
-export const parseNumber = (value: string) => PLNumber.fromStr(plString(value))
+export const parseNumber = (value: string): PLNumber => PLNumber.fromStr(plString(value))

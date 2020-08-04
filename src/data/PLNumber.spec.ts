@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { parseNumber, PLNumber, plNumber } from './PLNumber'
 import { plBool } from './PLBool'
-import { Ordering, partialCmp } from '../typeClasses/cmp'
+import { Ordering } from '../typeClasses/cmp'
 
 describe('stdlib/data/PLNumber', () => {
   describe('fromJS', () => {

@@ -22,8 +22,7 @@ describe('stdlib', () => {
           ...runtime,
           ...{
             print1: check(plNumber(3)),
-            print2: check(plNumber(7)),
-            print3: check(maybe(plString('b')))
+            print2: check(plNumber(7))
           }
         }
       },
@@ -35,13 +34,11 @@ describe('stdlib', () => {
       
       (def a (+ 5))
       (print2 (a 2))
-      
-      (def a ["a" "b" "c"])
-      (print3 (get a 1))
     `
 
     const parserResult = new Parser(new Scanner(programCode), literals).parse()
-    if (parserResult.errors.length) {
+
+    if (!!parserResult.errors.length) {
       throw parserResult.errors
     }
 

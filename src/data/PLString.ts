@@ -19,7 +19,7 @@ export class PLString extends PLBase
     super()
   }
 
-  public get value() {
+  public get value(): string {
     return this._value
   }
 
@@ -46,15 +46,15 @@ export class PLString extends PLBase
     return Ordering.Greater
   }
 
-  public copy() {
+  public copy(): PLString {
     return new PLString(this._value)
   }
 
-  public toJS() {
+  public toJS(): string {
     return this._value
   }
 
-  public toString() {
+  public toString(): string {
     return `"${this._value}"`
   }
 
@@ -63,4 +63,4 @@ export class PLString extends PLBase
   }
 }
 
-export const plString = (value = '') => new PLString(value)
+export const plString = (value = ''): PLString => new PLString(value)

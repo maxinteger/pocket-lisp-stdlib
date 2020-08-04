@@ -11,6 +11,7 @@ import {
   functions as fractionNumberFn
 } from './data/PLFractionNumber'
 import { plString } from './data/PLString'
+import { maybe } from './data/Maybe'
 import { unboxing } from './fn/common'
 
 import typeClassBaseFn from './typeClasses/base'
@@ -60,7 +61,8 @@ export const runtime = {
   ...fractionNumberFn,
   ...vectorFn,
   ...hashMapFn,
-  ...modules
+  ...modules,
+  maybe
 }
 
 export const utils = {

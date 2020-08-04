@@ -17,11 +17,12 @@ export class PLHashMap<Item extends PLBase> extends PLBase implements Index<PLSt
         'Invalid hash map definition.\nDefinition must contains key value pairs'
       )
     }
-    const entries = chunk(list) as [[any, any]]
-    const isInvalidKeys = entries.some((item) => PLString !== item[0].constructor)
-    if (isInvalidKeys) {
-      throw new RuntimeError('Invalid hash map definition.\n Keys are must be string or keyword')
-    }
+    const entries = chunk(list).map(([key, value]) => {
+      if (PLString !== key.constructor) {
+        throw new RuntimeError('Invalid hash map definition.\n Keys are must be string or keyword')
+      }
+      return [key.value, value]
+    }) as [[any, any]]
     this._value = new Map(entries)
   }
 

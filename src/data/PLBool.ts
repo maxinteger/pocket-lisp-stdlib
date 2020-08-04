@@ -33,27 +33,27 @@ export class PLBool extends PLBase
     super()
   }
 
-  public get value() {
+  public get value(): boolean {
     return this._value
   }
 
-  public not() {
+  public not(): PLBool {
     return new PLBool(!this._value)
   }
 
-  public and(other: PLBool) {
+  public and(other: PLBool): PLBool {
     return new PLBool(this._value && other._value)
   }
 
-  public or(other: PLBool) {
+  public or(other: PLBool): PLBool {
     return new PLBool(this._value || other._value)
   }
 
-  public equals(other: PLBool) {
+  public equals(other: PLBool): PLBool {
     return new PLBool(this._value === other._value)
   }
 
-  public partialCmp(other: PLBool) {
+  public partialCmp(other: PLBool): Ordering {
     if (this.value === other.value) {
       return Ordering.Equal
     } else if (this.value) {
@@ -63,15 +63,15 @@ export class PLBool extends PLBase
     }
   }
 
-  public copy() {
+  public copy(): PLBool {
     return new PLBool(this._value)
   }
 
-  public toString() {
+  public toString(): string {
     return this._value ? 'true' : 'false'
   }
 
-  public toJS() {
+  public toJS(): boolean {
     return this._value
   }
 
@@ -82,6 +82,6 @@ export class PLBool extends PLBase
 
 ///
 
-export const plBool = (value: boolean) => new PLBool(value)
+export const plBool = (value: boolean): PLBool => new PLBool(value)
 
-export const parseBool = (value: string) => PLBool.fromStr(plString(value))
+export const parseBool = (value: string): PLBool => PLBool.fromStr(plString(value))

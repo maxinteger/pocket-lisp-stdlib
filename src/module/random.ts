@@ -7,12 +7,12 @@ const rand = Math.random
 /**
  * Return the next random floating point number in the range [0.0, 1.0).
  */
-export const random = () => plNumber(rand())
+export const random = (): PLNumber => plNumber(rand())
 
 /**
  * Return a random integer N such that a <= N <= b.
  */
-export const randomInt = (a: PLNumber, b: PLNumber) => {
+export const randomInt = (a: PLNumber, b: PLNumber): PLNumber => {
   const ai = toInt(a.value)
   const bi = toInt(b.value)
   return plNumber(toInt(ai + rand() * (bi - ai)))
@@ -21,7 +21,7 @@ export const randomInt = (a: PLNumber, b: PLNumber) => {
 /**
  * Shuffle vector
  */
-export const shuffle = (v: PLVector<any>) => {
+export const shuffle = (v: PLVector<any>): PLVector<any> => {
   const vv = [...v.value]
   // based on: https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
   let j, x, i

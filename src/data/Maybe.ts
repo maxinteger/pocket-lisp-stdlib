@@ -10,7 +10,7 @@ export class Just<T extends PLBase> extends PLBase {
     super()
   }
 
-  public get value() {
+  public get value(): T {
     return this._value
   }
 
@@ -18,11 +18,11 @@ export class Just<T extends PLBase> extends PLBase {
     return this._value.toJS && this._value.toJS()
   }
 
-  public toString() {
+  public toString(): string {
     return `Just(${this._value.toString()})`
   }
 
-  debugTypeOf(): PLString {
+  public debugTypeOf(): PLString {
     return plString(`Just(${this._value.debugTypeOf()})`)
   }
 }

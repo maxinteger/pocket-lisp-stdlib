@@ -1,6 +1,6 @@
 import { RuntimeError } from 'pocket-lisp'
 import { gcd } from '../utils/math'
-import { plBool } from './PLBool'
+import { PLBool, plBool } from './PLBool'
 import { PLBase } from './PLBase'
 import { typeCheck } from '../utils/assert'
 import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
@@ -39,41 +39,41 @@ export class PLFractionNumber extends PLBase
     this._d = denominator / divisor
   }
 
-  public get numerator() {
+  public get numerator(): number {
     return this._n
   }
 
-  public get denominator() {
+  public get denominator(): number {
     return this._d
   }
 
-  public equals(a: PLFractionNumber) {
+  public equals(a: PLFractionNumber): PLBool {
     return plBool(this.numerator === a.numerator && this.denominator === a.denominator)
   }
 
-  public negate() {
+  public negate(): PLFractionNumber {
     return new PLFractionNumber(-this._n, this._d)
   }
 
-  public add(a: PLFractionNumber) {
+  public add(a: PLFractionNumber): PLFractionNumber {
     const numerator = this.numerator * a.denominator + this.denominator * a.numerator
     const denominator = this.denominator * a.denominator
     return new PLFractionNumber(numerator, denominator)
   }
 
-  public subtract(a: PLFractionNumber) {
+  public subtract(a: PLFractionNumber): PLFractionNumber {
     const numerator = this.numerator * a.denominator - this.denominator * a.numerator
     const denominator = this.denominator * a.denominator
     return new PLFractionNumber(numerator, denominator)
   }
 
-  public multiple(a: PLFractionNumber) {
+  public multiple(a: PLFractionNumber): PLFractionNumber {
     const numerator = this.numerator * a.numerator
     const denominator = this.denominator * a.denominator
     return new PLFractionNumber(numerator, denominator)
   }
 
-  public divide(a: PLFractionNumber) {
+  public divide(a: PLFractionNumber): PLFractionNumber {
     const numerator = this.numerator * a.denominator
     const denominator = this.denominator * a.numerator
     return new PLFractionNumber(numerator, denominator)
@@ -89,18 +89,18 @@ export class PLFractionNumber extends PLBase
     return Ordering.Equal
   }
 
-  public toJS() {
+  public toJS(): { numerator: number; denominator: number } {
     return {
       numerator: this._n,
       denominator: this._d
     }
   }
 
-  public toString() {
+  public toString(): string {
     return `${this._n}/${this._d}`
   }
 
-  public copy() {
+  public copy(): PLFractionNumber {
     return new PLFractionNumber(this._n, this._d)
   }
 
@@ -121,7 +121,7 @@ export const plFractionNumber = (n: number, d: number): PLFractionNumber => {
   return new PLFractionNumber(n, d)
 }
 
-export const str2plFractionNumber = (str: string) => {
+export const str2plFractionNumber = (str: string): PLFractionNumber => {
   const [n, d] = str.split('/').map(parseFloat)
   if (isValid(n, d)) {
     return new PLFractionNumber(n, d)

@@ -1,8 +1,8 @@
 import { plString, PLString } from '../index'
 import { assertImpl } from '../utils/assert'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore:
+// eslint-disable-next-line @typescript-eslint/no-empty-interface,@typescript-eslint/ban-ts-comment
+// @ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Box<T> {}
 
