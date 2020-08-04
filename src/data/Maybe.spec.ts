@@ -1,7 +1,6 @@
 import { expect } from 'chai'
 import { Just, maybe, Nothing } from './Maybe'
 import { plNumber } from './PLNumber'
-import { toJS, toString } from '../typeClasses/base-types'
 import { plString } from './PLString'
 
 describe('stdlib/data/Maybe', () => {
@@ -21,16 +20,16 @@ describe('stdlib/data/Maybe', () => {
   })
 
   it('should have proper toString', () => {
-    expect(maybe(plNumber(1))[toString]()).deep.equal('Just(1)')
-    expect(maybe(plString('1'))[toString]()).deep.equal('Just("1")')
-    expect(maybe(undefined)[toString]()).deep.equal('Nothing')
+    expect(maybe(plNumber(1)).toString()).deep.equal('Just(1)')
+    expect(maybe(plString('1')).toString()).deep.equal('Just("1")')
+    expect(maybe(undefined).toString()).deep.equal('Nothing')
   })
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(maybe(plNumber(1))[toJS]()).equals(1)
-      expect(maybe(undefined)[toJS]()).equals(undefined)
-      expect(maybe(Nothing)[toJS]()).equals(undefined)
+      expect(maybe(plNumber(1)).toJS()).equals(1)
+      expect(maybe(undefined).toJS()).equals(undefined)
+      expect(maybe(Nothing).toJS()).equals(undefined)
     })
   })
 })

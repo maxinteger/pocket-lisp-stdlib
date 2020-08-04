@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import { PLHashMap, plHashMap } from './PLHashMap'
-import { toJS, toString } from '../typeClasses/base-types'
 
 describe('stdlib/data/PLHashMap', () => {
   describe('creation with of', () => {
@@ -9,14 +8,14 @@ describe('stdlib/data/PLHashMap', () => {
     })
   })
   it('should create empty plHashMap', () => {
-    expect(plHashMap()[toString]()).deep.equal('{}')
+    expect(plHashMap().toString()).deep.equal('{}')
   })
   it('should have proper toString', () => {
     expect(
       plHashMap([
         ['a', 1],
         ['b', 2]
-      ])[toString]()
+      ]).toString()
     ).deep.equal('{a: 1, b: 2}')
   })
 
@@ -25,7 +24,7 @@ describe('stdlib/data/PLHashMap', () => {
       const js = plHashMap([
         ['a', 1],
         ['b', 2]
-      ])[toJS]()
+      ]).toJS()
       expect(Array.from(js.keys())).deep.equal(['a', 'b'])
       expect(Array.from(js.values())).deep.equal([1, 2])
     })

@@ -20,5 +20,5 @@ export const typeCheck = (type: any, value: any): boolean =>
     `Expected '${type.name}', but got '${value.constructor.name}'.`
   )
 
-export const assertImpl = (instance: any, method: symbol): boolean =>
-  assert(instance[method], `"${method.toString()}" is not defined on ${instance}`)
+export const assertImpl = (instance: any, method: string): boolean =>
+  assert(!instance[method], `"${method.toString()}" is not defined on ${instance}`)

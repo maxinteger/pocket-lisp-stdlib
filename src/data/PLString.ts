@@ -1,18 +1,18 @@
 import { PLBase } from './PLBase'
 import { PLBool } from './PLBool'
 import { PLNumber } from './PLNumber'
-import { copy, Copy, fromJS, fromStr, toJS, toString } from '../typeClasses/base-types'
-import { add, index, Index } from '../typeClasses/ops-types'
-import { equals, Ordering, partialCmp, PartialEq, PartialOrd } from '../typeClasses/cmp-types'
+import { Copy } from '../typeClasses/base'
+import { Index } from '../typeClasses/ops'
+import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
 
 export class PLString extends PLBase
   implements Index<PLNumber, PLString>, PartialEq<PLString>, PartialOrd<PLString>, Copy<PLString> {
-  public static [fromJS](value: string): PLString {
+  public static fromJS(value: string): PLString {
     return new PLString(value)
   }
 
-  public static [fromStr](value: PLString): PLString {
-    return value[copy]()
+  public static fromStr(value: PLString): PLString {
+    return value.copy()
   }
 
   public constructor(private _value: string) {
@@ -23,11 +23,11 @@ export class PLString extends PLBase
     return this._value
   }
 
-  public [add](other: PLString): PLString {
+  public add(other: PLString): PLString {
     return new PLString(this._value + other.value)
   }
 
-  public [index](idx: PLNumber): PLString {
+  public index(idx: PLNumber): PLString {
     if (Number.isInteger(idx.value)) {
       return new PLString(this._value.charAt(idx.value) ?? '')
     } else {
@@ -35,27 +35,31 @@ export class PLString extends PLBase
     }
   }
 
-  public [equals](other: PLString): PLBool {
+  public equals(other: PLString): PLBool {
     return new PLBool(this._value === other.value)
   }
 
-  public [partialCmp](other: PLString): Ordering {
+  public partialCmp(other: PLString): Ordering {
     const ord = this._value.localeCompare(other.value)
     if (ord < 0) return Ordering.Less
     if (ord === 0) return Ordering.Equal
     return Ordering.Greater
   }
 
-  public [copy]() {
+  public copy() {
     return new PLString(this._value)
   }
 
-  public [toJS]() {
+  public toJS() {
     return this._value
   }
 
-  public [toString]() {
+  public toString() {
     return `"${this._value}"`
+  }
+
+  public debugTypeOf(): PLString {
+    return plString('String')
   }
 }
 

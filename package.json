@@ -20,7 +20,7 @@
   "engines": {
     "node": ">= 10.0.0"
   },
-  "peerDependencies": {
+  "dependencies": {
     "pocket-lisp": "latest"
   },
   "devDependencies": {

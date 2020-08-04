@@ -1,7 +1,7 @@
 import { RuntimeError } from 'pocket-lisp'
-import { equals, Ordering, partialCmp, PartialEq, PartialOrd } from '../typeClasses/cmp-types'
-import { and, And, not, Not, or, Or } from '../typeClasses/all-types'
-import { Copy, copy, fromJS, fromStr, toJS, toString } from '../typeClasses/base-types'
+import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
+import { And, Not, Or } from '../typeClasses'
+import { Copy } from '../typeClasses/base'
 import { PLBase } from './PLBase'
 import { plString, PLString } from './PLString'
 
@@ -14,11 +14,11 @@ export class PLBool extends PLBase
     PartialEq<PLBool>,
     PartialOrd<PLBool>,
     Copy<PLBool> {
-  public static [fromJS](value: boolean): PLBool {
+  public static fromJS(value: boolean): PLBool {
     return new PLBool(value)
   }
 
-  public static [fromStr](str: PLString): PLBool {
+  public static fromStr(str: PLString): PLBool {
     switch (str.value) {
       case 'true':
         return plBool(true)
@@ -37,23 +37,23 @@ export class PLBool extends PLBase
     return this._value
   }
 
-  public [not]() {
+  public not() {
     return new PLBool(!this._value)
   }
 
-  public [and](other: PLBool) {
+  public and(other: PLBool) {
     return new PLBool(this._value && other._value)
   }
 
-  public [or](other: PLBool) {
+  public or(other: PLBool) {
     return new PLBool(this._value || other._value)
   }
 
-  public [equals](other: PLBool) {
+  public equals(other: PLBool) {
     return new PLBool(this._value === other._value)
   }
 
-  public [partialCmp](other: PLBool) {
+  public partialCmp(other: PLBool) {
     if (this.value === other.value) {
       return Ordering.Equal
     } else if (this.value) {
@@ -63,16 +63,20 @@ export class PLBool extends PLBase
     }
   }
 
-  public [copy]() {
+  public copy() {
     return new PLBool(this._value)
   }
 
-  public [toString]() {
+  public toString() {
     return this._value ? 'true' : 'false'
   }
 
-  public [toJS]() {
+  public toJS() {
     return this._value
+  }
+
+  public debugTypeOf(): PLString {
+    return plString('Bool')
   }
 }
 
@@ -80,4 +84,4 @@ export class PLBool extends PLBase
 
 export const plBool = (value: boolean) => new PLBool(value)
 
-export const parseBool = (value: string) => PLBool[fromStr](plString(value))
+export const parseBool = (value: string) => PLBool.fromStr(plString(value))

@@ -1,17 +1,22 @@
 import { PLLiterals } from 'pocket-lisp'
 import * as math from './fn/math'
 import * as modules from './module'
-import { plVector } from './data/PLVector'
-import { plHashMap } from './data/PLHashMap'
+import { plVector, functions as vectorFn } from './data/PLVector'
+import { plHashMap, functions as hashMapFn } from './data/PLHashMap'
 import { parseBool, plBool } from './data/PLBool'
-import { plNumber, parseNumber } from './data/PLNumber'
-import { plFractionNumber, reciprocal, str2plFractionNumber } from './data/PLFractionNumber'
+import { parseNumber, plNumber } from './data/PLNumber'
+import {
+  plFractionNumber,
+  str2plFractionNumber,
+  functions as fractionNumberFn
+} from './data/PLFractionNumber'
 import { plString } from './data/PLString'
 import { unboxing } from './fn/common'
-import typeClassBaseFn from './typeClasses/base-fn'
-import typeClassCmpFn from './typeClasses/cmp-fn'
-import typeClassIter from './typeClasses/iter-fn'
-import typeClassOps from './typeClasses/ops-fn'
+
+import typeClassBaseFn from './typeClasses/base'
+import typeClassCmpFn from './typeClasses/cmp'
+import typeClassIter from './typeClasses/iter'
+import typeClassOps from './typeClasses/ops'
 
 export const identity: <T>(x: T) => T = (x: any): any => x
 
@@ -52,7 +57,9 @@ export const runtime = {
   ...typeClassIter,
   ...typeClassOps,
   ...math,
-  reciprocal,
+  ...fractionNumberFn,
+  ...vectorFn,
+  ...hashMapFn,
   ...modules
 }
 
@@ -66,3 +73,4 @@ export { PLFractionNumber, plFractionNumber } from './data/PLFractionNumber'
 export { PLString, plString } from './data/PLString'
 export { PLVector, plVector } from './data/PLVector'
 export { PLHashMap, plHashMap } from './data/PLHashMap'
+export * from './typeClasses'

@@ -1,5 +1,5 @@
-import { toJS, toString } from '../typeClasses/base-types'
 import { PLBase } from './PLBase'
+import { PLString, plString } from './PLString'
 
 export type Maybe<T extends PLBase> = Just<T> | typeof Nothing
 
@@ -14,12 +14,16 @@ export class Just<T extends PLBase> extends PLBase {
     return this._value
   }
 
-  public [toJS](): unknown {
-    return this._value[toJS] && this._value[toJS]()
+  public toJS(): unknown {
+    return this._value.toJS && this._value.toJS()
   }
 
-  public [toString]() {
-    return `Just(${this._value[toString]()})`
+  public toString() {
+    return `Just(${this._value.toString()})`
+  }
+
+  debugTypeOf(): PLString {
+    return plString(`Just(${this._value.debugTypeOf()})`)
   }
 }
 
@@ -30,12 +34,16 @@ class NothingClass extends PLBase {
     return Nothing
   }
 
-  public [toJS]() {
+  public toJS() {
     return undefined
   }
 
-  public [toString]() {
+  public toString() {
     return 'Nothing'
+  }
+
+  debugTypeOf(): PLString {
+    return plString('Nothing')
   }
 }
 

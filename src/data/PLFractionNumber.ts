@@ -3,20 +3,10 @@ import { gcd } from '../utils/math'
 import { plBool } from './PLBool'
 import { PLBase } from './PLBase'
 import { typeCheck } from '../utils/assert'
-import { equals, Ordering, partialCmp, PartialEq, PartialOrd } from '../typeClasses/cmp-types'
-import {
-  add,
-  Add,
-  divide,
-  Divide,
-  multiple,
-  Multiple,
-  negate,
-  Negate,
-  subtract,
-  Subtract
-} from '../typeClasses/ops-types'
-import { copy, Copy, toJS, toString } from '../typeClasses/base-types'
+import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
+import { Add, Divide, Multiple, Negate, Subtract } from '../typeClasses/ops'
+import { Copy } from '../typeClasses/base'
+import { plString, PLString } from './PLString'
 
 ///
 
@@ -57,39 +47,39 @@ export class PLFractionNumber extends PLBase
     return this._d
   }
 
-  public [equals](a: PLFractionNumber) {
+  public equals(a: PLFractionNumber) {
     return plBool(this.numerator === a.numerator && this.denominator === a.denominator)
   }
 
-  public [negate]() {
+  public negate() {
     return new PLFractionNumber(-this._n, this._d)
   }
 
-  public [add](a: PLFractionNumber) {
+  public add(a: PLFractionNumber) {
     const numerator = this.numerator * a.denominator + this.denominator * a.numerator
     const denominator = this.denominator * a.denominator
     return new PLFractionNumber(numerator, denominator)
   }
 
-  public [subtract](a: PLFractionNumber) {
+  public subtract(a: PLFractionNumber) {
     const numerator = this.numerator * a.denominator - this.denominator * a.numerator
     const denominator = this.denominator * a.denominator
     return new PLFractionNumber(numerator, denominator)
   }
 
-  public [multiple](a: PLFractionNumber) {
+  public multiple(a: PLFractionNumber) {
     const numerator = this.numerator * a.numerator
     const denominator = this.denominator * a.denominator
     return new PLFractionNumber(numerator, denominator)
   }
 
-  public [divide](a: PLFractionNumber) {
+  public divide(a: PLFractionNumber) {
     const numerator = this.numerator * a.denominator
     const denominator = this.denominator * a.numerator
     return new PLFractionNumber(numerator, denominator)
   }
 
-  public [partialCmp](other: PLFractionNumber): Ordering {
+  public partialCmp(other: PLFractionNumber): Ordering {
     const lcm = (this._d * other._d) / gcd(this._d, other._d)
     const a = (this._n * lcm) / this._d
     const b = (other._n * lcm) / other._d
@@ -99,19 +89,23 @@ export class PLFractionNumber extends PLBase
     return Ordering.Equal
   }
 
-  public [toJS]() {
+  public toJS() {
     return {
       numerator: this._n,
       denominator: this._d
     }
   }
 
-  public [toString]() {
+  public toString() {
     return `${this._n}/${this._d}`
   }
 
-  public [copy]() {
+  public copy() {
     return new PLFractionNumber(this._n, this._d)
+  }
+
+  public debugTypeOf(): PLString {
+    return plString('FractionNumber')
   }
 }
 
@@ -140,3 +134,5 @@ export const reciprocal = (fn: PLFractionNumber): PLFractionNumber => {
   typeCheck(PLFractionNumber, fn)
   return plFractionNumber(fn.denominator, fn.numerator)
 }
+
+export const functions = { reciprocal }
