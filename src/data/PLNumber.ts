@@ -1,4 +1,4 @@
-import { RuntimeError } from 'pocket-lisp'
+import { StdRuntimeError } from '../utils/StdRuntimeError'
 import { PLBase } from './PLBase'
 import { PLBool, plBool } from './PLBool'
 import { plString, PLString } from './PLString'
@@ -23,7 +23,7 @@ export class PLNumber extends PLBase
   public static fromStr(source: PLString): PLNumber {
     const val = parseFloat(source.value)
     if (isNaN(val)) {
-      throw new RuntimeError(`Invalid number: "${source.value}".`)
+      throw new StdRuntimeError(`Invalid number: "${source.value}".`)
     }
     return new PLNumber(val)
   }

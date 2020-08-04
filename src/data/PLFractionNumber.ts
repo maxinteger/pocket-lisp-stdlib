@@ -1,4 +1,4 @@
-import { RuntimeError } from 'pocket-lisp'
+import { StdRuntimeError } from '../utils/StdRuntimeError'
 import { gcd } from '../utils/math'
 import { PLBool, plBool } from './PLBool'
 import { PLBase } from './PLBase'
@@ -26,7 +26,7 @@ export class PLFractionNumber extends PLBase
   public constructor(numerator: number, denominator: number) {
     super()
     if (!isValid(numerator, denominator)) {
-      throw new RuntimeError('Invalid fraction number parameters!')
+      throw new StdRuntimeError('Invalid fraction number parameters!')
     }
 
     if (denominator < 0) {
@@ -126,7 +126,7 @@ export const str2plFractionNumber = (str: string): PLFractionNumber => {
   if (isValid(n, d)) {
     return new PLFractionNumber(n, d)
   } else {
-    throw new RuntimeError(`Invalid fraction number: ${str}.`)
+    throw new StdRuntimeError(`Invalid fraction number: ${str}.`)
   }
 }
 

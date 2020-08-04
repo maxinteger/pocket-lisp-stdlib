@@ -1,10 +1,10 @@
-import { RuntimeError } from 'pocket-lisp'
+import { StdRuntimeError } from './StdRuntimeError'
 
 ///
 
 export const assert = (val: boolean, msg: string): boolean => {
   // TODO remove lang dependency
-  if (val) throw new RuntimeError(msg)
+  if (val) throw new StdRuntimeError(msg)
   return true
 }
 

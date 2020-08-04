@@ -1,4 +1,4 @@
-import { RuntimeError } from 'pocket-lisp'
+import { StdRuntimeError } from '../utils/StdRuntimeError'
 import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
 import { And, Not, Or } from '../typeClasses'
 import { Copy } from '../typeClasses/base'
@@ -25,7 +25,7 @@ export class PLBool extends PLBase
       case 'false':
         return plBool(false)
       default:
-        throw new RuntimeError(`Invalid boolean: "${str.value}".`)
+        throw new StdRuntimeError(`Invalid boolean: "${str.value}".`)
     }
   }
 

@@ -1,4 +1,4 @@
-import { RuntimeError } from 'pocket-lisp'
+import { StdRuntimeError } from '../utils/StdRuntimeError'
 import { PLBase } from './PLBase'
 import { PLString, plString } from './PLString'
 import { chunk } from '../utils/list'
@@ -13,13 +13,15 @@ export class PLHashMap<Item extends PLBase> extends PLBase implements Index<PLSt
   public constructor(list: unknown[] = []) {
     super()
     if (list.length % 2 !== 0) {
-      throw new RuntimeError(
+      throw new StdRuntimeError(
         'Invalid hash map definition.\nDefinition must contains key value pairs'
       )
     }
     const entries = chunk(list).map(([key, value]) => {
       if (PLString !== key.constructor) {
-        throw new RuntimeError('Invalid hash map definition.\n Keys are must be string or keyword')
+        throw new StdRuntimeError(
+          'Invalid hash map definition.\n Keys are must be string or keyword'
+        )
       }
       return [key.value, value]
     }) as [[any, any]]
