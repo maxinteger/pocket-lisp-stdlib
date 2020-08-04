@@ -1,6 +1,5 @@
 import { PLBool } from '../data/PLBool'
-import { PLNumber } from '../data/PLNumber'
-import { assertType, typeCheck } from '../utils/assert'
+import { assertType } from '../utils/assert'
 import { PLBase } from '../data/PLBase'
 import { Maybe } from '../data/Maybe'
 
@@ -95,7 +94,6 @@ export const get: <Idx, Item extends PLBase>(
   data: Index<Idx, Maybe<Item>>,
   idx: Idx
 ) => Maybe<Item> = (data, idx) => {
-  typeCheck(PLNumber, idx)
   return data.index(idx)
 }
 

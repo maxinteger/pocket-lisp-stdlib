@@ -47,6 +47,7 @@ export class PLHashMap<Item extends PLBase> extends PLBase implements Index<PLSt
   }
 
   public index(idx: PLString): Maybe<any> {
+    typeCheck(PLString, idx)
     return maybe(this._value.get(idx.value))
   }
 }

@@ -49,6 +49,7 @@ export class PLVector<Item extends VectorItem> extends PLBase
   }
 
   public index(idx: PLNumber): Maybe<Item> {
+    typeCheck(PLNumber, idx)
     return maybe(this.value[idx.value])
   }
 
