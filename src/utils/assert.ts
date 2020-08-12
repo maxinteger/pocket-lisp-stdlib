@@ -1,4 +1,5 @@
 import { StdRuntimeError } from './StdRuntimeError'
+import { isNothing } from './convert'
 
 ///
 
@@ -25,3 +26,8 @@ export const typeCheck = (type: any, value: any): boolean =>
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const assertImpl = (instance: any, method: string): boolean =>
   assert(!instance[method], `"${method.toString()}" is not defined on ${instance}`)
+
+export const assetNothing: <T>(value: T, msg: string) => T = (value, msg) => {
+  assert(isNothing(value), msg)
+  return value
+}

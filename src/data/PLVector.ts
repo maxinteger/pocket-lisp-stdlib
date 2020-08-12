@@ -3,10 +3,9 @@ import { copy, Copy } from '../typeClasses/base'
 import { Iterable } from '../typeClasses/iter'
 import { plNumber, PLNumber } from './PLNumber'
 import { PLBool } from './PLBool'
-import { Maybe, maybe } from './Maybe'
 import { add } from '../typeClasses'
 import { PLString, plString } from './PLString'
-import { typeCheck } from '../utils/assert'
+import { assetNothing, typeCheck } from '../utils/assert'
 
 type VectorItem = PLBase
 
@@ -48,9 +47,9 @@ export class PLVector<Item extends VectorItem> extends PLBase
     return `[${this._value.map((i) => i.toString()).join(',')}]`
   }
 
-  public index(idx: PLNumber): Maybe<Item> {
+  public index(idx: PLNumber): Item {
     typeCheck(PLNumber, idx)
-    return maybe(this.value[idx.value])
+    return assetNothing(this.value[idx.value], `Vector index ${idx.toString()} is not defined`)
   }
 
   public copy(): PLVector<Item> {
@@ -79,14 +78,15 @@ export const join: (list: PLVector<PLString>) => PLString = (list) => {
   return list.reduce(plString(''), add)
 }
 
-export const head: <T extends PLBase>(list: PLVector<T>) => Maybe<T> = (list) => {
+export const head: <T extends PLBase>(list: PLVector<T>) => T = (list) => {
   typeCheck(PLVector, list)
-  return maybe(list.value[0])
+  return assetNothing(list.value[0], 'Vector is empty')
 }
 
-export const tail: <T extends PLBase>(list: PLVector<T>) => Maybe<T> = (list) => {
+export const tail: <T extends PLBase>(list: PLVector<T>) => PLVector<T> = (list) => {
   typeCheck(PLVector, list)
-  return maybe(plVector(...list.value.slice(1)))
+  assetNothing(list.value.length, 'Vector is not defined correctly')
+  return plVector(...list.value.slice(1))
 }
 
 export const functions = {

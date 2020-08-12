@@ -3,11 +3,10 @@ import { PLBase } from './PLBase'
 import { PLString, plString } from './PLString'
 import { chunk } from '../utils/list'
 import { Index } from '../typeClasses/ops'
-import { maybe, Maybe } from './Maybe'
 import { plVector, PLVector } from './PLVector'
-import { typeCheck } from '../utils/assert'
+import { assetNothing, typeCheck } from '../utils/assert'
 
-export class PLHashMap<Item extends PLBase> extends PLBase implements Index<PLString, Maybe<Item>> {
+export class PLHashMap<Item extends PLBase> extends PLBase implements Index<PLString, Item> {
   private readonly _value: Map<string, Item>
 
   public constructor(list: unknown[] = []) {
@@ -46,9 +45,12 @@ export class PLHashMap<Item extends PLBase> extends PLBase implements Index<PLSt
     return plString('HashMap')
   }
 
-  public index(idx: PLString): Maybe<any> {
+  public index(idx: PLString): Item {
     typeCheck(PLString, idx)
-    return maybe(this._value.get(idx.value))
+    return assetNothing(
+      this._value.get(idx.value) as Item,
+      `HashMap key ${idx.toString()} not defined`
+    )
   }
 }
 

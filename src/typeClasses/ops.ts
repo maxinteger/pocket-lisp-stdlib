@@ -1,7 +1,6 @@
 import { PLBool } from '../data/PLBool'
 import { assertType } from '../utils/assert'
 import { PLBase } from '../data/PLBase'
-import { Maybe } from '../data/Maybe'
 
 export interface Not {
   not(): PLBool
@@ -90,10 +89,10 @@ export interface Index<Idx, Return> {
   index(idx: Idx): Return
 }
 
-export const get: <Idx, Item extends PLBase>(
-  data: Index<Idx, Maybe<Item>>,
-  idx: Idx
-) => Maybe<Item> = (data, idx) => {
+export const get: <Idx, Item extends PLBase>(data: Index<Idx, Item>, idx: Idx) => Item = (
+  data,
+  idx
+) => {
   return data.index(idx)
 }
 

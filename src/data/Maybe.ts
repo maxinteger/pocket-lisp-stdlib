@@ -1,5 +1,6 @@
 import { PLBase } from './PLBase'
 import { PLString, plString } from './PLString'
+import { isNothing } from '../utils/convert'
 
 export type Maybe<T extends PLBase> = Just<T> | typeof Nothing
 
@@ -52,7 +53,7 @@ export const Nothing = new NothingClass()
 ///
 
 export const maybe: <T extends PLBase>(v: any) => Maybe<T> = (value) => {
-  if (value === undefined || value === null || (value as any) === Nothing) {
+  if (isNothing(value)) {
     return Nothing
   } else {
     return new Just(value)
