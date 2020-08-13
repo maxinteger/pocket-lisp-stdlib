@@ -46,7 +46,7 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "lint": "eslint \"src/**/*.ts\" --fix --max-warnings=0",
+    "lint": "eslint \"src/**/*.ts\" --fix --max-warnings=0 --ignore-pattern \"src/**/*.d.ts\"",
     "test": "nyc mocha",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "build": "rollup -c",
