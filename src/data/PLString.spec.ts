@@ -47,8 +47,8 @@ describe('stdlib/data/PLString', () => {
   })
 
   it('should have proper toString', () => {
-    expect(plString().toString()).equal('""')
-    expect(plString('hello world').toString()).equal('"hello world"')
+    expect(plString().toString()).equal('')
+    expect(plString('hello world').toString()).equal('hello world')
   })
 
   describe('toJS', () => {

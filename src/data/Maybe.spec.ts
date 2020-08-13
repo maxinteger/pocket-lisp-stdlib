@@ -21,7 +21,7 @@ describe('stdlib/data/Maybe', () => {
 
   it('should have proper toString', () => {
     expect(maybe(plNumber(1)).toString()).deep.equal('Just(1)')
-    expect(maybe(plString('1')).toString()).deep.equal('Just("1")')
+    expect(maybe(plString('1')).toString()).deep.equal('Just(1)')
     expect(maybe(undefined).toString()).deep.equal('Nothing')
   })
 
