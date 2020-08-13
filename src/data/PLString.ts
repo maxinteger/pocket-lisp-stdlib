@@ -55,7 +55,7 @@ export class PLString extends PLBase
   }
 
   public toString(): string {
-    return `"${this._value}"`
+    return `${this._value}`
   }
 
   public debugTypeOf(): PLString {
