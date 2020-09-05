@@ -52,3 +52,7 @@ typings/
 
 # next.js build output
 .next
+
+src/*.d.ts
+src/*.js
+src/*.js.map
