@@ -86,9 +86,9 @@ export const sum: (list: PLVector<PLNumber>) => PLNumber = (list) => {
   return list.reduce(plNumber(0), add)
 }
 
-export const intersperse: <T extends PLBase>(list: PLVector<T>, separator: T) => PLVector<T> = (
-  list,
-  separator
+export const intersperse: <T extends PLBase>(separator: T, list: PLVector<T>) => PLVector<T> = (
+  separator,
+  list
 ) => {
   typeCheck(PLVector, list)
   return list.intersperse(separator)
@@ -99,9 +99,9 @@ export const join: (list: PLVector<PLString>) => PLString = (list) => {
   return list.reduce(plString(''), add)
 }
 
-export const joinWith: (list: PLVector<PLString>, separator: PLString) => PLString = (
-  list,
-  separator
+export const joinWith: (separator: PLString, list: PLVector<PLString>) => PLString = (
+  separator,
+  list
 ) => {
   typeCheck(PLVector, list)
   return list.intersperse(separator).reduce(plString(''), add)

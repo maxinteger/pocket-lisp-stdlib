@@ -115,8 +115,8 @@ describe('stdlib/data/PLVector', () => {
 
   describe('intersperse', () => {
     it('should inject separator item between the existing items', () => {
-      expect(intersperse(plVector(), plNumber(0))).deep.equals(plVector())
-      expect(intersperse(plVector(plNumber(1), plNumber(2), plNumber(3)), plNumber(0))).deep.equals(
+      expect(intersperse(plNumber(0), plVector())).deep.equals(plVector())
+      expect(intersperse(plNumber(0), plVector(plNumber(1), plNumber(2), plNumber(3)))).deep.equals(
         plVector(plNumber(1), plNumber(0), plNumber(2), plNumber(0), plNumber(3))
       )
     })
@@ -133,9 +133,9 @@ describe('stdlib/data/PLVector', () => {
 
   describe('join-with', () => {
     it('should join list items with separator', () => {
-      expect(joinWith(plVector(), plString('<|>'))).deep.equals(plString(''))
+      expect(joinWith(plString('<|>'), plVector())).deep.equals(plString(''))
       expect(
-        joinWith(plVector(plString('a'), plString('b'), plString('c')), plString('<|>'))
+        joinWith(plString('<|>'), plVector(plString('a'), plString('b'), plString('c')))
       ).deep.equals(plString('a<|>b<|>c'))
     })
   })
