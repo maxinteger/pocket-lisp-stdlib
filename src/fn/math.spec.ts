@@ -56,6 +56,8 @@ describe('stdlib/fn/math', () => {
         { actual: plMath.deg2rad(plNumber(180)), expected: plMath.PI },
         { actual: plMath.rad2deg(plMath.PI), expected: plNumber(180) },
         { actual: plMath.sin(plNumber(1.5)), expected: plNumber(Math.sin(1.5)) },
+        { actual: plMath.sin(plNumber(0)), expected: plNumber(0) },
+        { actual: plMath.sin(plNumber(Math.PI)), expected: plNumber(0) },
         { actual: plMath.asin(plNumber(1.5)), expected: plNumber(Math.asin(1.5)) },
         { actual: plMath.asinh(plNumber(1.5)), expected: plNumber(Math.asinh(1.5)) },
         { actual: plMath.cos(plNumber(1.5)), expected: plNumber(Math.cos(1.5)) },

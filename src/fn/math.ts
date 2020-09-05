@@ -1,5 +1,6 @@
 import { PLNumber, plNumber } from '../data/PLNumber'
 import { typeCheck } from '../utils/assert'
+import { isBelowEpsilon } from '../utils/math'
 
 const plNumFn1 = (fn: (x: number) => number) => (x: PLNumber) => {
   typeCheck(PLNumber, x)
@@ -55,7 +56,10 @@ const DEG_TO_RAD = Math.PI / 180
 export const deg2rad = plNumFn1((x: number) => x * DEG_TO_RAD)
 export const rad2deg = plNumFn1((x: number) => x / DEG_TO_RAD)
 
-export const sin = plNumFn1(Math.sin)
+export const sin = plNumFn1((val) => {
+  const rem = val % Math.PI
+  return isBelowEpsilon(rem) || isBelowEpsilon(rem - Math.PI) ? 0 : Math.sin(val)
+})
 export const asin = plNumFn1(Math.asin)
 export const asinh = plNumFn1(Math.asinh)
 
