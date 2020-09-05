@@ -35,7 +35,8 @@ export interface Debug {
 }
 
 export const debugTypeOf: (variable: Debug) => PLString = (v) => {
-  return v['debugTypeOf'] ? v.debugTypeOf() : plString('<unknown>')
+  const result: any = v['debugTypeOf'] ? v.debugTypeOf() : plString('<<unknown>>')
+  return result instanceof String ? plString(result as string) : result
 }
 
 //
