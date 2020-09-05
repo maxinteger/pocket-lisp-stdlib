@@ -39,6 +39,19 @@ export class PLVector<Item extends VectorItem> extends PLBase
     return this.value.reduce(fn, init) as Result
   }
 
+  public intersperse(elem: Item): PLVector<Item> {
+    const lastIdx = this.value.length - 1
+    return new PLVector(
+      this.value.reduce((res, item, idx) => {
+        res.push(item)
+        if (idx < lastIdx) {
+          res.push(elem)
+        }
+        return res
+      }, [] as Item[])
+    )
+  }
+
   public toJS(): unknown[] {
     return this._value.map((i) => i.toJS())
   }
@@ -73,9 +86,25 @@ export const sum: (list: PLVector<PLNumber>) => PLNumber = (list) => {
   return list.reduce(plNumber(0), add)
 }
 
+export const intersperse: <T extends PLBase>(list: PLVector<T>, separator: T) => PLVector<T> = (
+  list,
+  separator
+) => {
+  typeCheck(PLVector, list)
+  return list.intersperse(separator)
+}
+
 export const join: (list: PLVector<PLString>) => PLString = (list) => {
   typeCheck(PLVector, list)
   return list.reduce(plString(''), add)
+}
+
+export const joinWith: (list: PLVector<PLString>, separator: PLString) => PLString = (
+  list,
+  separator
+) => {
+  typeCheck(PLVector, list)
+  return list.intersperse(separator).reduce(plString(''), add)
 }
 
 export const head: <T extends PLBase>(list: PLVector<T>) => T = (list) => {
@@ -91,7 +120,9 @@ export const tail: <T extends PLBase>(list: PLVector<T>) => PLVector<T> = (list)
 
 export const functions = {
   sum,
+  intersperse,
   join,
+  'join-with': joinWith,
   head,
   tail
 }

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { PLVector, plVector } from './PLVector'
+import { head, intersperse, join, joinWith, PLVector, plVector, sum, tail } from './PLVector'
 import { PLNumber, plNumber } from './PLNumber'
 import { plString } from './PLString'
 import { plBool } from './PLBool'
@@ -93,6 +93,7 @@ describe('stdlib/data/PLVector', () => {
       expect(originalItem.value).equals(copiedValue.index(plNumber(0)).value)
     })
   })
+
   describe('deepCopy function', () => {
     it('should deep copy value', () => {
       const originalItem = plString('hello')
@@ -102,6 +103,56 @@ describe('stdlib/data/PLVector', () => {
       expect(originalValue.value).not.equals(copiedValue.value)
       expect(originalItem).not.equals(copiedValue.index(plNumber(0)))
       expect(originalItem.value).equals(copiedValue.index(plNumber(0)).value)
+    })
+  })
+
+  describe('sum', () => {
+    it('should sum number list', () => {
+      expect(sum(plVector())).deep.equals(plNumber(0))
+      expect(sum(plVector(plNumber(1), plNumber(2), plNumber(3)))).deep.equals(plNumber(6))
+    })
+  })
+
+  describe('intersperse', () => {
+    it('should inject separator item between the existing items', () => {
+      expect(intersperse(plVector(), plNumber(0))).deep.equals(plVector())
+      expect(intersperse(plVector(plNumber(1), plNumber(2), plNumber(3)), plNumber(0))).deep.equals(
+        plVector(plNumber(1), plNumber(0), plNumber(2), plNumber(0), plNumber(3))
+      )
+    })
+  })
+
+  describe('join', () => {
+    it('should join list items into a string', () => {
+      expect(join(plVector())).deep.equals(plString(''))
+      expect(join(plVector(plString('a'), plString('b'), plString('c')))).deep.equals(
+        plString('abc')
+      )
+    })
+  })
+
+  describe('join-with', () => {
+    it('should join list items with separator', () => {
+      expect(joinWith(plVector(), plString('<|>'))).deep.equals(plString(''))
+      expect(
+        joinWith(plVector(plString('a'), plString('b'), plString('c')), plString('<|>'))
+      ).deep.equals(plString('a<|>b<|>c'))
+    })
+  })
+
+  describe('head', () => {
+    it('should return with the first item of the list', () => {
+      expect(() => head(plVector())).throws('Vector is empty')
+      expect(head(plVector(plString('a'), plString('b'), plString('c')))).deep.equals(plString('a'))
+    })
+  })
+
+  describe('tail', () => {
+    it('should return with the first item of the list', () => {
+      expect(tail(plVector())).deep.equals(plVector())
+      expect(tail(plVector(plString('a'), plString('b'), plString('c')))).deep.equals(
+        plVector(plString('b'), plString('c'))
+      )
     })
   })
 })
