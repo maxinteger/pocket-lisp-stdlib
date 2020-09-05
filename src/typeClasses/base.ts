@@ -14,6 +14,8 @@ export interface SerializeToString {
   toString(): string
 }
 
+export const str: (value: SerializeToString) => PLString = (value) => plString(value.toString())
+
 export interface BoxedValue<T> extends SerializeToJS<T> {
   toString: () => string
 }
@@ -60,5 +62,6 @@ export const deepCopy: <T extends Copy<any>>(item: T) => T = (item) => {
 export default {
   typeof: debugTypeOf,
   copy,
-  deepCopy
+  deepCopy,
+  str
 }
