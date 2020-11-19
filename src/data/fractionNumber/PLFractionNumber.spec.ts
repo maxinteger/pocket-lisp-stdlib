@@ -1,12 +1,8 @@
-import { expect } from 'chai'
-import {
-  PLFractionNumber,
-  plFractionNumber,
-  reciprocal,
-  str2plFractionNumber
-} from './PLFractionNumber'
-import { plBool } from './PLBool'
-import { Ordering } from '../typeClasses/cmp'
+import { PLFractionNumber } from './PLFractionNumber'
+import { plBool } from '../bool/boolFn'
+import { plFractionNumber, str2plFractionNumber } from './fractionNumberFn'
+import { Ordering } from '../../typeClasses/cmpType'
+import { plString } from '../string/stringFn'
 
 describe('stdlib/data/PLFractionNumber', () => {
   describe('creation', () => {
@@ -16,18 +12,18 @@ describe('stdlib/data/PLFractionNumber', () => {
         { n: null, d: 1 },
         { n: undefined, d: 1 },
         { n: 1.1, d: 1 },
-        { n: 1, d: 0 }
+        { n: 1, d: 0 },
       ] as { n: any; d: any }[]
 
       tests.map(({ n, d }) => {
-        expect(() => plFractionNumber(n, d)).throw('Invalid fraction number parameters!')
+        expect(() => plFractionNumber(n, d)).toThrow('Invalid fraction number parameters!')
       })
     })
 
     it('should accept valid inputs', () => {
       const tests = [
         { n: 1, d: 1, res: '1/1' },
-        { n: 1, d: 2, res: '1/2' }
+        { n: 1, d: 2, res: '1/2' },
       ] as {
         n: any
         d: any
@@ -35,7 +31,7 @@ describe('stdlib/data/PLFractionNumber', () => {
       }[]
 
       tests.map(({ n, d, res }) => {
-        expect(plFractionNumber(n, d).toString()).eq(res)
+        expect(plFractionNumber(n, d).toString()).toBe(res)
       })
     })
 
@@ -45,17 +41,17 @@ describe('stdlib/data/PLFractionNumber', () => {
         { n: 10, d: 20, res: '1/2' },
         { n: 1, d: -2, res: '-1/2' },
         { n: -1, d: -2, res: '1/2' },
-        { n: -1, d: 2, res: '-1/2' }
+        { n: -1, d: 2, res: '-1/2' },
       ] as { n: any; d: any; res: string }[]
 
       tests.map(({ n, d, res }) => {
-        expect(plFractionNumber(n, d).toString()).eq(res)
+        expect(plFractionNumber(n, d).toString()).toBe(res)
       })
     })
 
     describe('with new', () => {
       it('should have same result as the factory function', () => {
-        expect(new PLFractionNumber(1, 2)).deep.equals(plFractionNumber(1, 2))
+        expect(new PLFractionNumber(1, 2)).toEqual(plFractionNumber(1, 2))
       })
     })
   })
@@ -63,14 +59,20 @@ describe('stdlib/data/PLFractionNumber', () => {
   describe('getters', () => {
     it('should work', () => {
       const actual = plFractionNumber(1, 2)
-      expect(actual.numerator).equal(1)
-      expect(actual.denominator).equal(2)
+      expect(actual.numerator).toBe(1)
+      expect(actual.denominator).toBe(2)
     })
   })
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(plFractionNumber(1, 2).toJS()).deep.equal({ numerator: 1, denominator: 2 })
+      expect(plFractionNumber(1, 2).toJS()).toEqual({ numerator: 1, denominator: 2 })
+    })
+  })
+
+  describe('debugTypeOf', () => {
+    it('should return with debug tag', () => {
+      expect(plFractionNumber(1, 2).debugTypeOf()).toEqual(plString(PLFractionNumber.kind))
     })
   })
 
@@ -79,7 +81,7 @@ describe('stdlib/data/PLFractionNumber', () => {
       const tests = ['', 'xyz', '1', '1/', '1.1/1', '1/1.1', '1/0']
 
       tests.map((input) => {
-        expect(() => str2plFractionNumber(input)).throw(`Invalid fraction number: ${input}.`)
+        expect(() => str2plFractionNumber(input)).toThrow(`Invalid fraction number: ${input}.`)
       })
     })
 
@@ -89,28 +91,28 @@ describe('stdlib/data/PLFractionNumber', () => {
         { input: '10/10', out: '1/1' },
         { input: '1/2', out: '1/2' },
         { input: '1/-1', out: '-1/1' },
-        { input: '-1/-1', out: '1/1' }
+        { input: '-1/-1', out: '1/1' },
       ]
 
       tests.map(({ input, out }) => {
-        expect(str2plFractionNumber(input).toString()).equal(out)
+        expect(str2plFractionNumber(input).toString()).toBe(out)
       })
     })
   })
 
   describe('equal operator', () => {
     it('should compare two number', () => {
-      expect(plFractionNumber(1, 2).equals(plFractionNumber(1, 2))).deep.equals(plBool(true))
-      expect(plFractionNumber(1, 2).equals(plFractionNumber(5, 10))).deep.equals(plBool(true))
-      expect(plFractionNumber(1, 2).equals(plFractionNumber(6, 10))).deep.equals(plBool(false))
-      expect(plFractionNumber(1, 2).equals(plFractionNumber(-1, 2))).deep.equals(plBool(false))
+      expect(plFractionNumber(1, 2).equals(plFractionNumber(1, 2))).toEqual(plBool(true))
+      expect(plFractionNumber(1, 2).equals(plFractionNumber(5, 10))).toEqual(plBool(true))
+      expect(plFractionNumber(1, 2).equals(plFractionNumber(6, 10))).toEqual(plBool(false))
+      expect(plFractionNumber(1, 2).equals(plFractionNumber(-1, 2))).toEqual(plBool(false))
     })
   })
 
   describe('negate operator', () => {
     it('should negate the number', () => {
-      expect(plFractionNumber(1, 2).negate()).deep.equals(plFractionNumber(-1, 2))
-      expect(plFractionNumber(-1, 2).negate()).deep.equals(plFractionNumber(1, 2))
+      expect(plFractionNumber(1, 2).negate()).toEqual(plFractionNumber(-1, 2))
+      expect(plFractionNumber(-1, 2).negate()).toEqual(plFractionNumber(1, 2))
     })
   })
 
@@ -118,7 +120,7 @@ describe('stdlib/data/PLFractionNumber', () => {
     it('should add two fraction number', () => {
       const actual = plFractionNumber(2, 3).add(plFractionNumber(1, 5))
       const expected = plFractionNumber(13, 15)
-      expect(actual).deep.equals(expected)
+      expect(actual).toEqual(expected)
     })
   })
 
@@ -126,7 +128,7 @@ describe('stdlib/data/PLFractionNumber', () => {
     it('should subtract two fraction number', () => {
       const actual = plFractionNumber(1, 2).subtract(plFractionNumber(1, 6))
       const expected = plFractionNumber(2, 6)
-      expect(actual).deep.equals(expected)
+      expect(actual).toEqual(expected)
     })
   })
 
@@ -134,7 +136,7 @@ describe('stdlib/data/PLFractionNumber', () => {
     it('should multiple two fraction number', () => {
       const actual = plFractionNumber(1, 2).multiple(plFractionNumber(2, 5))
       const expected = plFractionNumber(1, 5)
-      expect(actual).deep.equals(expected)
+      expect(actual).toEqual(expected)
     })
   })
 
@@ -142,21 +144,15 @@ describe('stdlib/data/PLFractionNumber', () => {
     it('should divide two fraction number', () => {
       const actual = plFractionNumber(1, 8).divide(plFractionNumber(1, 4))
       const expected = plFractionNumber(1, 2)
-      expect(actual).deep.equals(expected)
-    })
-  })
-
-  describe('reciprocal operator', () => {
-    it('should reciprocal the number', () => {
-      expect(reciprocal(plFractionNumber(1, 2))).deep.equals(plFractionNumber(2, 1))
+      expect(actual).toEqual(expected)
     })
   })
 
   describe('partialCmp', () => {
     it('should compare numbers', () => {
-      expect(plFractionNumber(1, 2).partialCmp(plFractionNumber(1, 2))).equals(Ordering.Equal)
-      expect(plFractionNumber(1, 2).partialCmp(plFractionNumber(4, 5))).equals(Ordering.Less)
-      expect(plFractionNumber(1, 2).partialCmp(plFractionNumber(2, 11))).equals(Ordering.Greater)
+      expect(plFractionNumber(1, 2).partialCmp(plFractionNumber(1, 2))).toBe(Ordering.Equal)
+      expect(plFractionNumber(1, 2).partialCmp(plFractionNumber(4, 5))).toBe(Ordering.Less)
+      expect(plFractionNumber(1, 2).partialCmp(plFractionNumber(2, 11))).toBe(Ordering.Greater)
     })
   })
 
@@ -164,9 +160,9 @@ describe('stdlib/data/PLFractionNumber', () => {
     it('should copy value', () => {
       const originalValue = plFractionNumber(1, 2)
       const copiedValue = originalValue.copy()
-      expect(originalValue.numerator).equals(copiedValue.numerator)
-      expect(originalValue.denominator).equals(copiedValue.denominator)
-      expect(originalValue).not.equals(copiedValue)
+      expect(originalValue.numerator).toBe(copiedValue.numerator)
+      expect(originalValue.denominator).toBe(copiedValue.denominator)
+      expect(originalValue).not.toBe(copiedValue)
     })
   })
 })

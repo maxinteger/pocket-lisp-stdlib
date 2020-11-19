@@ -1,17 +1,19 @@
 import { PLLiterals } from 'pocket-lisp'
+import baseFn from './fn/base'
 import * as math from './fn/math'
 import * as modules from './module'
-import { plVector, functions as vectorFn } from './data/PLVector'
-import { plHashMap, functions as hashMapFn } from './data/PLHashMap'
-import { parseBool, plBool } from './data/PLBool'
-import { parseNumber, plNumber } from './data/PLNumber'
+import { parseBool, plBool } from './data/bool/boolFn'
+import { plString } from './data/string/stringFn'
+import { maybe } from './data/maybe/maybeFn'
+import { default as hashMapFn, plHashMap } from './data/hashMap/hashMapFn'
+import { parseNumber, plNumber } from './data/number/numberFn'
+import { default as vectorFn, plVector } from './data/vector/vectorFn'
+import { default as setFn } from './data/set/setFn'
 import {
+  default as fractionNumberFn,
   plFractionNumber,
   str2plFractionNumber,
-  functions as fractionNumberFn
-} from './data/PLFractionNumber'
-import { plString } from './data/PLString'
-import { maybe } from './data/Maybe'
+} from './data/fractionNumber/fractionNumberFn'
 import { unboxing } from './fn/common'
 
 import typeClassBaseFn from './typeClasses/base'
@@ -22,34 +24,34 @@ import typeClassOps from './typeClasses/ops'
 export const identity: <T>(x: T) => T = (x: any): any => x
 
 export const literals: PLLiterals = {
-  bool: {
+  Bool: {
     parser: parseBool,
-    factory: plBool
+    factory: plBool,
   },
-  int: {
+  Int: {
     parser: parseNumber,
-    factory: plNumber
+    factory: plNumber,
   },
-  float: {
+  Float: {
     parser: parseNumber,
-    factory: plNumber
+    factory: plNumber,
   },
-  fractionNumber: {
+  FractionNumber: {
     parser: str2plFractionNumber,
-    factory: plFractionNumber
+    factory: plFractionNumber,
   },
-  string: {
+  String: {
     parser: plString,
-    factory: plString
+    factory: plString,
   },
-  vector: {
+  Vector: {
     parser: identity,
-    factory: plVector
+    factory: plVector,
   },
-  hashMap: {
+  HashMap: {
     parser: identity,
-    factory: plHashMap
-  }
+    factory: plHashMap,
+  },
 }
 
 export const runtime = {
@@ -57,22 +59,30 @@ export const runtime = {
   ...typeClassCmpFn,
   ...typeClassIter,
   ...typeClassOps,
+  ...baseFn,
   ...math,
   ...fractionNumberFn,
   ...vectorFn,
   ...hashMapFn,
+  ...setFn,
   ...modules,
-  maybe
+  maybe,
 }
 
 export const utils = {
-  unboxing
+  unboxing,
 }
 
-export { PLBool, plBool } from './data/PLBool'
-export { PLNumber, plNumber } from './data/PLNumber'
-export { PLFractionNumber, plFractionNumber } from './data/PLFractionNumber'
-export { PLString, plString } from './data/PLString'
-export { PLVector, plVector } from './data/PLVector'
-export { PLHashMap, plHashMap } from './data/PLHashMap'
+export { PLBool } from './data/bool/PLBool'
+export { PLNumber } from './data/number/PLNumber'
+export { PLFractionNumber } from './data/fractionNumber/PLFractionNumber'
+export { PLString } from './data/string/PLString'
+export { PLVector } from './data/vector/PLVector'
+export { PLHashMap } from './data/hashMap/PLHashMap'
 export * from './typeClasses'
+export { plBool } from './data/bool/boolFn'
+export { plString } from './data/string/stringFn'
+export { plFractionNumber } from './data/fractionNumber/fractionNumberFn'
+export { plHashMap } from './data/hashMap/hashMapFn'
+export { plNumber } from './data/number/numberFn'
+export { plVector } from './data/vector/vectorFn'

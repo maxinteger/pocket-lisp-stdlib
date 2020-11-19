@@ -1,13 +1,17 @@
-import { StdRuntimeError } from '../utils/StdRuntimeError'
-import { PLBase } from './PLBase'
-import { PLBool, plBool } from './PLBool'
-import { plString, PLString } from './PLString'
-import { Copy } from '../typeClasses/base'
-import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
-import { Add, Divide, Multiple, Negate, Subtract } from '../typeClasses/ops'
+import { StdRuntimeError } from '../../utils/StdRuntimeError'
+import { PLBase } from '../PLBase'
+import { PLBool } from '../bool/PLBool'
+import { PLString } from '../string/PLString'
+import { plBool } from '../bool/boolFn'
+import { plString } from '../string/stringFn'
+import { Subtract } from '../../typeClasses/ops'
+import { Copy } from '../../typeClasses/baseType'
+import { Ordering, PartialEq, PartialOrd } from '../../typeClasses/cmpType'
+import { Add, Divide, Multiple, Negate } from '../../typeClasses/opsType'
 
-export class PLNumber extends PLBase
+export class PLNumber
   implements
+    PLBase,
     PartialEq<PLNumber>,
     Add<PLNumber>,
     Subtract<PLNumber>,
@@ -16,6 +20,8 @@ export class PLNumber extends PLBase
     Negate<PLNumber>,
     PartialOrd<PLNumber>,
     Copy<PLNumber> {
+  public static kind = 'Number'
+
   public static fromJS(value: number): PLNumber {
     return new PLNumber(value)
   }
@@ -28,9 +34,7 @@ export class PLNumber extends PLBase
     return new PLNumber(val)
   }
 
-  public constructor(private _value: number) {
-    super()
-  }
+  public constructor(private _value: number) {}
 
   public get value(): number {
     return this._value
@@ -83,10 +87,6 @@ export class PLNumber extends PLBase
   }
 
   public debugTypeOf(): PLString {
-    return plString('Number')
+    return plString(PLNumber.kind)
   }
 }
-
-export const plNumber = (value: number): PLNumber => new PLNumber(value)
-
-export const parseNumber = (value: string): PLNumber => PLNumber.fromStr(plString(value))

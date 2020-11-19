@@ -1,6 +1,8 @@
 import { toInt } from '../utils/convert'
-import { plNumber, PLNumber } from '../data/PLNumber'
-import { PLVector, plVector } from '../data/PLVector'
+import { PLNumber } from '../data/number/PLNumber'
+import { PLVector } from '../data/vector/PLVector'
+import { plNumber } from '../data/number/numberFn'
+import { plVector } from '../data/vector/vectorFn'
 
 export const range = (start: PLNumber, len: PLNumber, step: PLNumber): PLVector<PLNumber> => {
   const from = start.value

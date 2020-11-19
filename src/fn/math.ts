@@ -1,6 +1,7 @@
-import { PLNumber, plNumber } from '../data/PLNumber'
+import { PLNumber } from '../data/number/PLNumber'
 import { typeCheck } from '../utils/assert'
 import { isBelowEpsilon } from '../utils/math'
+import { plNumber } from '../data/number/numberFn'
 
 const plNumFn1 = (fn: (x: number) => number) => (x: PLNumber) => {
   typeCheck(PLNumber, x)

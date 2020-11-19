@@ -1,7 +1,6 @@
-import { expect } from 'chai'
 import { Interpreter, Parser, Scanner } from 'pocket-lisp'
-import { plNumber } from '../src/data/PLNumber'
 import { literals, runtime } from '../src'
+import { plNumber } from '../src/data/number/numberFn'
 
 describe('stdlib', () => {
   it('should be compatible with the interpreter', (done) => {
@@ -9,7 +8,7 @@ describe('stdlib', () => {
     const check = (expected: any) => {
       counter++
       return (input: any) => {
-        expect(input).deep.equals(expected)
+        expect(input).toEqual(expected)
         counter--
         if (counter === 0) done()
       }
@@ -44,7 +43,7 @@ describe('stdlib', () => {
     try {
       interpreter.interpret(parserResult.program)
     } catch (error) {
-      expect(error).equals(undefined)
+      expect(error).toBe(undefined)
       done()
     }
   })

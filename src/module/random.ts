@@ -1,6 +1,8 @@
 import { toInt } from '../utils/convert'
-import { plNumber, PLNumber } from '../data/PLNumber'
-import { plVector, PLVector } from '../data/PLVector'
+import { PLNumber } from '../data/number/PLNumber'
+import { PLVector } from '../data/vector/PLVector'
+import { plNumber } from '../data/number/numberFn'
+import { plVector } from '../data/vector/vectorFn'
 
 const rand = Math.random
 

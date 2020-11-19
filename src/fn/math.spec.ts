@@ -1,6 +1,5 @@
-import { expect } from 'chai'
 import * as plMath from './math'
-import { plNumber } from '../data/PLNumber'
+import { plNumber } from '../data/number/numberFn'
 
 describe('stdlib/fn/math', () => {
   describe('constants', () => {
@@ -13,9 +12,9 @@ describe('stdlib/fn/math', () => {
         { actual: plMath.LOG10E, expected: plNumber(Math.LOG10E) },
         { actual: plMath.PI, expected: plNumber(Math.PI) },
         { actual: plMath.SQRT1_2, expected: plNumber(Math.SQRT1_2) },
-        { actual: plMath.SQRT2, expected: plNumber(Math.SQRT2) }
+        { actual: plMath.SQRT2, expected: plNumber(Math.SQRT2) },
       ]
-      tests.map(({ actual, expected }) => expect(actual).deep.equal(expected))
+      tests.map(({ actual, expected }) => expect(actual).toEqual(expected))
     })
   })
 
@@ -29,9 +28,9 @@ describe('stdlib/fn/math', () => {
         { actual: plMath.floor(plNumber(1.5)), expected: plNumber(1) },
         { actual: plMath.round(plNumber(1.5)), expected: plNumber(2) },
         { actual: plMath.ceil(plNumber(1.5)), expected: plNumber(2) },
-        { actual: plMath.trunc(plNumber(1.5)), expected: plNumber(1) }
+        { actual: plMath.trunc(plNumber(1.5)), expected: plNumber(1) },
       ]
-      tests.map(({ actual, expected }) => expect(actual).deep.equal(expected))
+      tests.map(({ actual, expected }) => expect(actual).toEqual(expected))
     })
   })
 
@@ -44,9 +43,9 @@ describe('stdlib/fn/math', () => {
         { actual: plMath.pow(plNumber(1.5), plNumber(10)), expected: plNumber(Math.pow(1.5, 10)) },
         { actual: plMath.log(plNumber(1.5)), expected: plNumber(Math.log(1.5)) },
         { actual: plMath.log2(plNumber(1.5)), expected: plNumber(Math.log2(1.5)) },
-        { actual: plMath.log10(plNumber(1.5)), expected: plNumber(Math.log10(1.5)) }
+        { actual: plMath.log10(plNumber(1.5)), expected: plNumber(Math.log10(1.5)) },
       ]
-      tests.map(({ actual, expected }) => expect(actual).deep.equal(expected))
+      tests.map(({ actual, expected }) => expect(actual).toEqual(expected))
     })
   })
 
@@ -67,11 +66,11 @@ describe('stdlib/fn/math', () => {
         { actual: plMath.atan(plNumber(1.5)), expected: plNumber(Math.atan(1.5)) },
         {
           actual: plMath.atan2(plNumber(1.5), plNumber(19)),
-          expected: plNumber(Math.atan2(1.5, 19))
+          expected: plNumber(Math.atan2(1.5, 19)),
         },
-        { actual: plMath.atanh(plNumber(1.5)), expected: plNumber(Math.atanh(1.5)) }
+        { actual: plMath.atanh(plNumber(1.5)), expected: plNumber(Math.atanh(1.5)) },
       ]
-      tests.map(({ actual, expected }) => expect(actual).deep.equal(expected))
+      tests.map(({ actual, expected }) => expect(actual).toEqual(expected))
     })
   })
 })

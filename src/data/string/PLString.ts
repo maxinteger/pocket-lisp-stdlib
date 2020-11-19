@@ -1,12 +1,23 @@
-import { PLBase } from './PLBase'
-import { PLBool } from './PLBool'
-import { PLNumber } from './PLNumber'
-import { Copy } from '../typeClasses/base'
-import { Index } from '../typeClasses/ops'
-import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
+import { PLBase } from '../PLBase'
+import type { PLBool } from '../bool/PLBool'
+import type { PLNumber } from '../number/PLNumber'
+import { plBool } from '../bool/boolFn'
+import { plNumber } from '../number/numberFn'
+import { Copy } from '../../typeClasses/baseType'
+import { Ordering, PartialEq, PartialOrd } from '../../typeClasses/cmpType'
+import { Container } from '../../typeClasses/iterType'
+import { Index } from '../../typeClasses/opsType'
 
-export class PLString extends PLBase
-  implements Index<PLNumber, PLString>, PartialEq<PLString>, PartialOrd<PLString>, Copy<PLString> {
+export class PLString
+  implements
+    PLBase,
+    Index<PLNumber, PLString>,
+    PartialEq<PLString>,
+    PartialOrd<PLString>,
+    Copy<PLString>,
+    Container<PLString> {
+  public static kind = 'String'
+
   public static fromJS(value: string): PLString {
     return new PLString(value)
   }
@@ -15,9 +26,7 @@ export class PLString extends PLBase
     return value.copy()
   }
 
-  public constructor(private _value: string) {
-    super()
-  }
+  public constructor(private _value: string) {}
 
   public get value(): string {
     return this._value
@@ -36,7 +45,7 @@ export class PLString extends PLBase
   }
 
   public equals(other: PLString): PLBool {
-    return new PLBool(this._value === other.value)
+    return plBool(this._value === other.value)
   }
 
   public partialCmp(other: PLString): Ordering {
@@ -59,8 +68,14 @@ export class PLString extends PLBase
   }
 
   public debugTypeOf(): PLString {
-    return plString('String')
+    return new PLString(PLString.kind)
+  }
+
+  public contains(item: PartialEq<PLString>): PLBool {
+    return plBool(this.value.indexOf((item as any).value) > -1)
+  }
+
+  public count(): PLNumber {
+    return plNumber(this.value.length)
   }
 }
-
-export const plString = (value = ''): PLString => new PLString(value)

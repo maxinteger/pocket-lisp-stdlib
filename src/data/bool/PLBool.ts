@@ -1,12 +1,14 @@
-import { StdRuntimeError } from '../utils/StdRuntimeError'
-import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
-import { And, Not, Or } from '../typeClasses'
-import { Copy } from '../typeClasses/base'
-import { PLBase } from './PLBase'
-import { plString, PLString } from './PLString'
+import { StdRuntimeError } from '../../utils/StdRuntimeError'
+import { PLBase } from '../PLBase'
+import { PLString } from '../string/PLString'
+import { plString } from '../string/stringFn'
+import { Copy } from '../../typeClasses/baseType'
+import { Ordering, PartialEq, PartialOrd } from '../../typeClasses/cmpType'
+import { And, Not, Or } from '../../typeClasses/opsType'
 
-export class PLBool extends PLBase
+export class PLBool
   implements
+    PLBase,
     PartialEq<PLBool>,
     Not,
     And<PLBool>,
@@ -14,6 +16,8 @@ export class PLBool extends PLBase
     PartialEq<PLBool>,
     PartialOrd<PLBool>,
     Copy<PLBool> {
+  public static kind = 'Bool'
+
   public static fromJS(value: boolean): PLBool {
     return new PLBool(value)
   }
@@ -21,17 +25,15 @@ export class PLBool extends PLBase
   public static fromStr(str: PLString): PLBool {
     switch (str.value) {
       case 'true':
-        return plBool(true)
+        return new PLBool(true)
       case 'false':
-        return plBool(false)
+        return new PLBool(false)
       default:
         throw new StdRuntimeError(`Invalid boolean: "${str.value}".`)
     }
   }
 
-  public constructor(private _value: boolean) {
-    super()
-  }
+  public constructor(private _value: boolean) {}
 
   public get value(): boolean {
     return this._value
@@ -76,12 +78,8 @@ export class PLBool extends PLBase
   }
 
   public debugTypeOf(): PLString {
-    return plString('Bool')
+    return plString(PLBool.kind)
   }
 }
 
 ///
-
-export const plBool = (value: boolean): PLBool => new PLBool(value)
-
-export const parseBool = (value: string): PLBool => PLBool.fromStr(plString(value))

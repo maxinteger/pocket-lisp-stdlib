@@ -1,17 +1,21 @@
-import { StdRuntimeError } from '../utils/StdRuntimeError'
-import { gcd } from '../utils/math'
-import { PLBool, plBool } from './PLBool'
-import { PLBase } from './PLBase'
-import { typeCheck } from '../utils/assert'
-import { Ordering, PartialEq, PartialOrd } from '../typeClasses/cmp'
-import { Add, Divide, Multiple, Negate, Subtract } from '../typeClasses/ops'
-import { Copy } from '../typeClasses/base'
-import { plString, PLString } from './PLString'
+import { StdRuntimeError } from '../../utils/StdRuntimeError'
+import { gcd } from '../../utils/math'
+import { PLBool } from '../bool/PLBool'
+import { PLBase } from '../PLBase'
+import { PLString } from '../string/PLString'
+import { plBool } from '../bool/boolFn'
+import { plString } from '../string/stringFn'
+import { isValid } from './utils'
+import { Subtract } from '../../typeClasses/ops'
+import { Copy } from '../../typeClasses/baseType'
+import { Ordering, PartialEq, PartialOrd } from '../../typeClasses/cmpType'
+import { Add, Divide, Multiple, Negate } from '../../typeClasses/opsType'
 
 ///
 
-export class PLFractionNumber extends PLBase
+export class PLFractionNumber
   implements
+    PLBase,
     PartialEq<PLFractionNumber>,
     Add<PLFractionNumber>,
     Subtract<PLFractionNumber>,
@@ -20,11 +24,12 @@ export class PLFractionNumber extends PLBase
     Negate<PLFractionNumber>,
     PartialOrd<PLFractionNumber>,
     Copy<PLFractionNumber> {
+  public static kind = 'Fraction'
+
   private readonly _n: number
   private readonly _d: number
 
   public constructor(numerator: number, denominator: number) {
-    super()
     if (!isValid(numerator, denominator)) {
       throw new StdRuntimeError('Invalid fraction number parameters!')
     }
@@ -92,7 +97,7 @@ export class PLFractionNumber extends PLBase
   public toJS(): { numerator: number; denominator: number } {
     return {
       numerator: this._n,
-      denominator: this._d
+      denominator: this._d,
     }
   }
 
@@ -105,34 +110,6 @@ export class PLFractionNumber extends PLBase
   }
 
   public debugTypeOf(): PLString {
-    return plString('FractionNumber')
+    return plString(PLFractionNumber.kind)
   }
 }
-
-///
-
-const isValid = (n: number, d: number) => {
-  return Number.isInteger(n) && Number.isInteger(d) && d !== 0
-}
-
-///
-
-export const plFractionNumber = (n: number, d: number): PLFractionNumber => {
-  return new PLFractionNumber(n, d)
-}
-
-export const str2plFractionNumber = (str: string): PLFractionNumber => {
-  const [n, d] = str.split('/').map(parseFloat)
-  if (isValid(n, d)) {
-    return new PLFractionNumber(n, d)
-  } else {
-    throw new StdRuntimeError(`Invalid fraction number: ${str}.`)
-  }
-}
-
-export const reciprocal = (fn: PLFractionNumber): PLFractionNumber => {
-  typeCheck(PLFractionNumber, fn)
-  return plFractionNumber(fn.denominator, fn.numerator)
-}
-
-export const functions = { reciprocal }

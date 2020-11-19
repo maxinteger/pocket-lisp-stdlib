@@ -1,10 +1,7 @@
-import { PLBool } from '../data/PLBool'
+import { PLBool } from '../data/bool/PLBool'
 import { assertType } from '../utils/assert'
 import { PLBase } from '../data/PLBase'
-
-export interface Not {
-  not(): PLBool
-}
+import { Add, And, Divide, Index, Multiple, Negate, Not, Or } from './opsType'
 
 export const not: (a: Not) => PLBool = (a) => {
   return a.not()
@@ -12,19 +9,11 @@ export const not: (a: Not) => PLBool = (a) => {
 
 //
 
-export interface And<T> {
-  and(a: T): PLBool
-}
-
 export const and: <T>(a: And<T>, b: T) => PLBool = (a, b) => {
   return a.and(b)
 }
 
 //
-
-export interface Or<T> {
-  or(a: T): PLBool
-}
 
 export const or: <T>(a: Or<T>, b: T) => PLBool = (a, b) => {
   return a.or(b)
@@ -32,19 +21,11 @@ export const or: <T>(a: Or<T>, b: T) => PLBool = (a, b) => {
 
 //
 
-export interface Negate<T> {
-  negate(): T
-}
-
 export const negate: (a: Negate<any>) => PLBool = (a) => {
   return a.negate()
 }
 
 //
-
-export interface Add<T> {
-  add(a: T): T
-}
 
 export const add: <T>(a: Add<T>, b: T) => T = (a, b) => {
   assertType(a, b)
@@ -64,10 +45,6 @@ export const subtract: <T>(a: Subtract<T>, b: T) => T = (a, b) => {
 
 //
 
-export interface Multiple<T> {
-  multiple(a: T): T
-}
-
 export const multiple: <T>(a: Multiple<T>, b: T) => T = (a, b) => {
   assertType(a, b)
   return a.multiple(b)
@@ -75,9 +52,6 @@ export const multiple: <T>(a: Multiple<T>, b: T) => T = (a, b) => {
 
 //
 
-export interface Divide<T> {
-  divide(a: T): T
-}
 export const divide: <T>(a: Divide<T>, b: T) => T = (a, b) => {
   assertType(a, b)
   return a.divide(b)
@@ -85,14 +59,7 @@ export const divide: <T>(a: Divide<T>, b: T) => T = (a, b) => {
 
 //
 
-export interface Index<Idx, Return> {
-  index(idx: Idx): Return
-}
-
-export const get: <Idx, Item extends PLBase>(data: Index<Idx, Item>, idx: Idx) => Item = (
-  data,
-  idx
-) => {
+export const get: <Idx, Item extends PLBase>(data: Index<Idx, Item>, idx: Idx) => Item = (data, idx) => {
   return data.index(idx)
 }
 

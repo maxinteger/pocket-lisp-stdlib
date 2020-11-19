@@ -1,18 +1,19 @@
-import { expect } from 'chai'
-import { parseNumber, PLNumber, plNumber } from './PLNumber'
-import { plBool } from './PLBool'
-import { Ordering } from '../typeClasses/cmp'
+import { PLNumber } from './PLNumber'
+import { plBool } from '../bool/boolFn'
+import { parseNumber, plNumber } from './numberFn'
+import { Ordering } from '../../typeClasses/cmpType'
+import { plString } from '../string/stringFn'
 
 describe('stdlib/data/PLNumber', () => {
   describe('fromJS', () => {
     it('should create PLNumber from number', () => {
-      expect(PLNumber.fromJS(42)).deep.equals(plNumber(42))
+      expect(PLNumber.fromJS(42)).toEqual(plNumber(42))
     })
   })
   describe('creation', () => {
     describe('with new', () => {
       it('should have same result as the factory function', () => {
-        expect(new PLNumber(42)).deep.equals(plNumber(42))
+        expect(new PLNumber(42)).toEqual(plNumber(42))
       })
     })
   })
@@ -20,13 +21,19 @@ describe('stdlib/data/PLNumber', () => {
   describe('getters', () => {
     it('should work', () => {
       const actual = plNumber(1)
-      expect(actual.value).equal(1)
+      expect(actual.value).toBe(1)
     })
   })
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(plNumber(42).toJS()).equal(42)
+      expect(plNumber(42).toJS()).toBe(42)
+    })
+  })
+
+  describe('debugTypeOf', () => {
+    it('should return with debug tag', () => {
+      expect(plNumber(1).debugTypeOf()).toEqual(plString(PLNumber.kind))
     })
   })
 
@@ -35,7 +42,7 @@ describe('stdlib/data/PLNumber', () => {
       const tests = ['', 'xyz', '_']
 
       tests.map((input) => {
-        expect(() => parseNumber(input)).throw(`Invalid number: "${input}".`)
+        expect(() => parseNumber(input)).toThrow(`Invalid number: "${input}".`)
       })
     })
 
@@ -45,26 +52,26 @@ describe('stdlib/data/PLNumber', () => {
         { input: '10', out: '10' },
         { input: '1.5', out: '1.5' },
         { input: '-1', out: '-1' },
-        { input: '-1.5', out: '-1.5' }
+        { input: '-1.5', out: '-1.5' },
       ]
 
       tests.map(({ input, out }) => {
-        expect(parseNumber(input).toString()).equal(out)
+        expect(parseNumber(input).toString()).toBe(out)
       })
     })
   })
 
   describe('equals operator', () => {
     it('should compare numbers', () => {
-      expect(plNumber(2).equals(plNumber(2))).deep.equals(plBool(true))
-      expect(plNumber(2).equals(plNumber(1))).deep.equals(plBool(false))
+      expect(plNumber(2).equals(plNumber(2))).toEqual(plBool(true))
+      expect(plNumber(2).equals(plNumber(1))).toEqual(plBool(false))
     })
   })
 
   describe('negate operator', () => {
     it('should negate the number', () => {
-      expect(plNumber(-2).negate()).deep.equals(plNumber(2))
-      expect(plNumber(2).negate()).deep.equals(plNumber(-2))
+      expect(plNumber(-2).negate()).toEqual(plNumber(2))
+      expect(plNumber(2).negate()).toEqual(plNumber(-2))
     })
   })
 
@@ -72,7 +79,7 @@ describe('stdlib/data/PLNumber', () => {
     it('should add two number', () => {
       const actual = plNumber(3).add(plNumber(5))
       const expected = plNumber(8)
-      expect(actual).deep.equals(expected)
+      expect(actual).toEqual(expected)
     })
   })
 
@@ -80,7 +87,7 @@ describe('stdlib/data/PLNumber', () => {
     it('should subtract two number', () => {
       const actual = plNumber(2).subtract(plNumber(6))
       const expected = plNumber(-4)
-      expect(actual).deep.equals(expected)
+      expect(actual).toEqual(expected)
     })
   })
 
@@ -88,7 +95,7 @@ describe('stdlib/data/PLNumber', () => {
     it('should multiple two number', () => {
       const actual = plNumber(2).multiple(plNumber(5))
       const expected = plNumber(10)
-      expect(actual).deep.equals(expected)
+      expect(actual).toEqual(expected)
     })
   })
 
@@ -96,15 +103,15 @@ describe('stdlib/data/PLNumber', () => {
     it('should divide two number', () => {
       const actual = plNumber(8).divide(plNumber(4))
       const expected = plNumber(2)
-      expect(actual).deep.equals(expected)
+      expect(actual).toEqual(expected)
     })
   })
 
   describe('partialCmp', () => {
     it('should compare values', () => {
-      expect(plNumber(1).partialCmp(plNumber(1))).equals(Ordering.Equal)
-      expect(plNumber(1).partialCmp(plNumber(2))).equals(Ordering.Less)
-      expect(plNumber(1).partialCmp(plNumber(0.9))).equals(Ordering.Greater)
+      expect(plNumber(1).partialCmp(plNumber(1))).toBe(Ordering.Equal)
+      expect(plNumber(1).partialCmp(plNumber(2))).toBe(Ordering.Less)
+      expect(plNumber(1).partialCmp(plNumber(0.9))).toBe(Ordering.Greater)
     })
   })
 
@@ -112,8 +119,8 @@ describe('stdlib/data/PLNumber', () => {
     it('should copy value', () => {
       const originalValue = plNumber(42)
       const copiedValue = originalValue.copy()
-      expect(originalValue.value).equals(copiedValue.value)
-      expect(originalValue).not.equals(copiedValue)
+      expect(originalValue.value).toBe(copiedValue.value)
+      expect(originalValue).not.toBe(copiedValue)
     })
   })
 })
