@@ -9,14 +9,14 @@ import { copy } from '../../typeClasses/base'
 import { equals } from '../../typeClasses/cmp'
 import { Copy } from '../../typeClasses/baseType'
 import { PartialEq } from '../../typeClasses/cmpType'
-import { Iterable } from '../../typeClasses/iterType'
+import { Iterable, Slice } from '../../typeClasses/iterType'
 import { Add } from '../../typeClasses/opsType'
 import type { StrictArray } from '../types'
 
 type VectorItem = PLBase
 
 export class PLVector<Item extends VectorItem>
-  implements PLBase, Add<PLVector<Item>>, Iterable<Item>, Copy<PLVector<Item>> {
+  implements PLBase, Add<PLVector<Item>>, Iterable<Item>, Copy<PLVector<Item>>, Slice<PLVector<Item>> {
   public static kind = 'Vector'
 
   private readonly _value: StrictArray<Item>
@@ -78,6 +78,12 @@ export class PLVector<Item extends VectorItem>
   public index(idx: PLNumber): Item {
     typeCheck(PLNumber, idx)
     return assetNothing(this.value[idx.value], `Vector index ${idx.toString()} is not defined`)
+  }
+
+  public slice(start: PLNumber, end: PLNumber): PLVector<Item> {
+    typeCheck(PLNumber, start)
+    typeCheck(PLNumber, end)
+    return new PLVector<Item>(this.value.slice(start.value, end.value))
   }
 
   public copy(): PLVector<Item> {

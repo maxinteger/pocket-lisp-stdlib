@@ -3,7 +3,7 @@ import { plBool } from '../bool/boolFn'
 import { plString } from './stringFn'
 import { plNumber } from '../number/numberFn'
 import { Ordering } from '../../typeClasses/cmpType'
-import { contains } from '../../typeClasses'
+import { contains, slice } from '../../typeClasses'
 
 describe('stdlib/data/PLString', () => {
   describe('creation', () => {
@@ -108,6 +108,15 @@ describe('stdlib/data/PLString', () => {
     it('should returns with true/false when the item contains or not the item', () => {
       expect(contains(plString('h'), plString('hello'))).toEqual(plBool(true))
       expect(contains(plString('a'), plString('hello'))).toEqual(plBool(false))
+    })
+  })
+
+  describe('slice', () => {
+    it('should return with sub string', () => {
+      expect(slice(plNumber(0), plNumber(2), plString('hello!'))).toEqual(plString('he'))
+      expect(slice(plNumber(2), plNumber(2), plString('hello!'))).toEqual(plString(''))
+      expect(slice(plNumber(2), plNumber(4), plString('hello!'))).toEqual(plString('ll'))
+      expect(slice(plNumber(5), plNumber(10), plString('hello!'))).toEqual(plString('!'))
     })
   })
 })

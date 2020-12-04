@@ -3,8 +3,8 @@ import { PLNumber } from '../number/PLNumber'
 import { plBool } from '../bool/boolFn'
 import { plString } from '../string/stringFn'
 import { plNumber } from '../number/numberFn'
-import { head, intersperse, join, joinWith, plVector, sum, tail } from './vectorFn'
-import { contains } from '../../typeClasses'
+import { plVector } from './vectorFn'
+import { contains, slice } from '../../typeClasses'
 
 describe('stdlib/data/PLVector', () => {
   describe('creation', () => {
@@ -108,58 +108,21 @@ describe('stdlib/data/PLVector', () => {
     })
   })
 
-  describe('sum', () => {
-    it('should sum number list', () => {
-      expect(sum(plVector())).toEqual(plNumber(0))
-      expect(sum(plVector(plNumber(1), plNumber(2), plNumber(3)))).toEqual(plNumber(6))
-    })
-  })
-
-  describe('intersperse', () => {
-    it('should inject separator item between the existing items', () => {
-      expect(intersperse(plNumber(0), plVector())).toEqual(plVector())
-      expect(intersperse(plNumber(0), plVector(plNumber(1), plNumber(2), plNumber(3)))).toEqual(
-        plVector(plNumber(1), plNumber(0), plNumber(2), plNumber(0), plNumber(3)),
-      )
-    })
-  })
-
-  describe('join', () => {
-    it('should join list items into a string', () => {
-      expect(join(plVector())).toEqual(plString(''))
-      expect(join(plVector(plString('a'), plString('b'), plString('c')))).toEqual(plString('abc'))
-    })
-  })
-
-  describe('join-with', () => {
-    it('should join list items with separator', () => {
-      expect(joinWith(plString('<|>'), plVector())).toEqual(plString(''))
-      expect(joinWith(plString('<|>'), plVector(plString('a'), plString('b'), plString('c')))).toEqual(
-        plString('a<|>b<|>c'),
-      )
-    })
-  })
-
-  describe('head', () => {
-    it('should return with the first item of the list', () => {
-      expect(() => head(plVector())).toThrow('Vector is empty')
-      expect(head(plVector(plString('a'), plString('b'), plString('c')))).toEqual(plString('a'))
-    })
-  })
-
-  describe('tail', () => {
-    it('should return with the first item of the list', () => {
-      expect(tail(plVector())).toEqual(plVector())
-      expect(tail(plVector(plString('a'), plString('b'), plString('c')))).toEqual(
-        plVector(plString('b'), plString('c')),
-      )
-    })
-  })
-
   describe('contains', () => {
     it('should returns with true/false when the item contains or not the item', () => {
       expect(contains(plNumber(1), plVector(plNumber(1), plNumber(2)))).toEqual(plBool(true))
       expect(contains(plNumber(5), plVector(plNumber(1), plNumber(2)))).toEqual(plBool(false))
+    })
+  })
+
+  describe('slice', () => {
+    it('should return with a sub vector', () => {
+      const v = plVector(plNumber(1), plNumber(2), plNumber(3), plNumber(4), plNumber(5), plNumber(6))
+
+      expect(slice(plNumber(0), plNumber(2), v)).toEqual(plVector(plNumber(1), plNumber(2)))
+      expect(slice(plNumber(2), plNumber(2), v)).toEqual(plVector())
+      expect(slice(plNumber(2), plNumber(4), v)).toEqual(plVector(plNumber(3), plNumber(4)))
+      expect(slice(plNumber(5), plNumber(10), v)).toEqual(plVector(plNumber(6)))
     })
   })
 })

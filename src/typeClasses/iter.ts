@@ -4,7 +4,7 @@ import { PLBase } from '../data/PLBase'
 import { Interpreter, PLCallable } from 'pocket-lisp'
 import { Box } from './baseType'
 import { PartialEq } from './cmpType'
-import { Container, Iterable } from './iterType'
+import { Container, Iterable, Slice } from './iterType'
 
 export const count: (collection: Container<unknown>) => PLNumber = (collection) => {
   return collection.count()
@@ -12,6 +12,10 @@ export const count: (collection: Container<unknown>) => PLNumber = (collection) 
 
 export function contains<T extends PLBase, Item extends PartialEq<T>>(item: Item, collection: Container<T>): PLBool {
   return collection.contains(item)
+}
+
+export function slice<T extends PLBase>(start: PLNumber, end: PLNumber, container: Slice<T>): Slice<T> {
+  return container.slice(start, end)
 }
 
 export function map<T extends PLBase, B extends PLBase>(this: Interpreter, fn: PLCallable, f: Iterable<T>): Box<B> {
@@ -37,4 +41,5 @@ export default {
   map,
   filter,
   reduce,
+  slice,
 }

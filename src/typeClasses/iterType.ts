@@ -10,6 +10,10 @@ export interface Container<Item> {
   contains(item: PartialEq<Item>): PLBool
 }
 
+export interface Slice<Item> {
+  slice(start: PLNumber, end: PLNumber): Slice<Item>
+}
+
 export interface Iterable<Item> extends Container<Item> {
   map<MapItem extends PLBase>(fn: (item: Item) => MapItem): Box<MapItem>
 

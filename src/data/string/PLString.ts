@@ -5,7 +5,7 @@ import { plBool } from '../bool/boolFn'
 import { plNumber } from '../number/numberFn'
 import { Copy } from '../../typeClasses/baseType'
 import { Ordering, PartialEq, PartialOrd } from '../../typeClasses/cmpType'
-import { Container } from '../../typeClasses/iterType'
+import { Container, Slice } from '../../typeClasses/iterType'
 import { Index } from '../../typeClasses/opsType'
 
 export class PLString
@@ -15,7 +15,8 @@ export class PLString
     PartialEq<PLString>,
     PartialOrd<PLString>,
     Copy<PLString>,
-    Container<PLString> {
+    Container<PLString>,
+    Slice<PLString> {
   public static kind = 'String'
 
   public static fromJS(value: string): PLString {
@@ -42,6 +43,10 @@ export class PLString
     } else {
       return new PLString('')
     }
+  }
+
+  public slice(start: PLNumber, end: PLNumber): PLString {
+    return new PLString(this.value.slice(start.value, end.value))
   }
 
   public equals(other: PLString): PLBool {
