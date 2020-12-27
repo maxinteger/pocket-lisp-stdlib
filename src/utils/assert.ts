@@ -21,9 +21,6 @@ export const typeCheck = (type: any, value: any): boolean =>
 export const assertImpl = (instance: any, method: string): boolean =>
   assert(!instance[method], `"${method.toString()}" is not defined on ${instance}`)
 
-export const assertInteger = (val: number): boolean =>
-  assert(!Number.isInteger(val), `Expected integer number', but got '${val}'.`)
-
 export const assetNothing: <T>(value: T, msg: string) => T = (value, msg) => {
   assert(isNothing(value), msg)
   return value
