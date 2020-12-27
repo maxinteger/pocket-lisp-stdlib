@@ -13,6 +13,15 @@ import { Add, Divide, Multiple, Negate } from '../../typeClasses/opsType'
 
 ///
 
+export function createSimplifiedFraction(numerator: number, denominator: number): PLFractionNumber {
+  if (denominator < 0) {
+    numerator *= -1
+    denominator *= -1
+  }
+  const divisor = gcd(Math.abs(numerator), Math.abs(denominator))
+  return new PLFractionNumber(numerator / divisor, denominator / divisor)
+}
+
 export class PLFractionNumber
   implements
     PLBase,
@@ -34,14 +43,8 @@ export class PLFractionNumber
       throw new StdRuntimeError('Invalid fraction number parameters!')
     }
 
-    if (denominator < 0) {
-      numerator *= -1
-      denominator *= -1
-    }
-
-    const divisor = gcd(Math.abs(numerator), Math.abs(denominator))
-    this._n = numerator / divisor
-    this._d = denominator / divisor
+    this._n = numerator
+    this._d = denominator
   }
 
   public get numerator(): number {
@@ -53,7 +56,9 @@ export class PLFractionNumber
   }
 
   public equals(a: PLFractionNumber): PLBool {
-    return plBool(this.numerator === a.numerator && this.denominator === a.denominator)
+    const frac1 = createSimplifiedFraction(a.numerator, a.denominator)
+    const frac2 = createSimplifiedFraction(this.numerator, this.denominator)
+    return plBool(frac1.numerator === frac2.numerator && frac1.denominator === frac2.denominator)
   }
 
   public negate(): PLFractionNumber {
@@ -63,25 +68,25 @@ export class PLFractionNumber
   public add(a: PLFractionNumber): PLFractionNumber {
     const numerator = this.numerator * a.denominator + this.denominator * a.numerator
     const denominator = this.denominator * a.denominator
-    return new PLFractionNumber(numerator, denominator)
+    return createSimplifiedFraction(numerator, denominator)
   }
 
   public subtract(a: PLFractionNumber): PLFractionNumber {
     const numerator = this.numerator * a.denominator - this.denominator * a.numerator
     const denominator = this.denominator * a.denominator
-    return new PLFractionNumber(numerator, denominator)
+    return createSimplifiedFraction(numerator, denominator)
   }
 
   public multiple(a: PLFractionNumber): PLFractionNumber {
     const numerator = this.numerator * a.numerator
     const denominator = this.denominator * a.denominator
-    return new PLFractionNumber(numerator, denominator)
+    return createSimplifiedFraction(numerator, denominator)
   }
 
   public divide(a: PLFractionNumber): PLFractionNumber {
     const numerator = this.numerator * a.denominator
     const denominator = this.denominator * a.numerator
-    return new PLFractionNumber(numerator, denominator)
+    return createSimplifiedFraction(numerator, denominator)
   }
 
   public partialCmp(other: PLFractionNumber): Ordering {

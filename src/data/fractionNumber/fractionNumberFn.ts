@@ -1,6 +1,6 @@
 import { assert, typeCheck } from '../../utils/assert'
 import { StdRuntimeError } from '../../utils/StdRuntimeError'
-import { PLFractionNumber } from './PLFractionNumber'
+import { createSimplifiedFraction, PLFractionNumber } from './PLFractionNumber'
 import { isValid } from './utils'
 import type { PLNumber } from '../number/PLNumber'
 import { plNumber } from '../number/numberFn'
@@ -28,8 +28,8 @@ export const number2fraction = (accuracy: PLNumber, number: PLNumber): PLFractio
   assert(acc < 1 || !Number.isInteger(acc), `Accuracy must be a positive integer number instead of ${acc}`)
   const base = number.value
   const denominator = Math.pow(10, acc)
-
-  return plFractionNumber(Math.round(base * denominator), denominator)
+  const numerator = Math.round(base * denominator)
+  return createSimplifiedFraction(numerator, denominator)
 }
 
 export const fraction2number = (number: PLFractionNumber): PLNumber => {

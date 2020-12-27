@@ -1,10 +1,29 @@
-import { PLFractionNumber } from './PLFractionNumber'
+import { PLFractionNumber, createSimplifiedFraction } from './PLFractionNumber'
 import { plBool } from '../bool/boolFn'
 import { plFractionNumber, str2plFractionNumber } from './fractionNumberFn'
 import { Ordering } from '../../typeClasses/cmpType'
 import { plString } from '../string/stringFn'
 
 describe('stdlib/data/PLFractionNumber', () => {
+  describe('createSimplifiedFraction', () => {
+    const fn = createSimplifiedFraction
+
+    it('should create fractions', () => {
+      expect(fn(1, 2).toString()).toBe('1/2')
+      expect(fn(-1, 3).toString()).toBe('-1/3')
+    })
+
+    it('should handle negative signs', () => {
+      expect(fn(-1, -2).toString()).toBe('1/2')
+      expect(fn(1, -3).toString()).toBe('-1/3')
+    })
+
+    it('should simplify fractions', () => {
+      expect(fn(-2, -4).toString()).toBe('1/2')
+      expect(fn(2, -6).toString()).toBe('-1/3')
+    })
+  })
+
   describe('creation', () => {
     it('should throw error if the parameters are invalid', () => {
       const tests = [
@@ -35,12 +54,12 @@ describe('stdlib/data/PLFractionNumber', () => {
       })
     })
 
-    it('should normalize the numerator and denominator', () => {
+    it('should not simplify the fraction upon construction', () => {
       const tests = [
-        { n: 10, d: 10, res: '1/1' },
-        { n: 10, d: 20, res: '1/2' },
-        { n: 1, d: -2, res: '-1/2' },
-        { n: -1, d: -2, res: '1/2' },
+        { n: 10, d: 10, res: '10/10' },
+        { n: 10, d: 20, res: '10/20' },
+        { n: 1, d: -2, res: '1/-2' },
+        { n: -1, d: -2, res: '-1/-2' },
         { n: -1, d: 2, res: '-1/2' },
       ] as { n: any; d: any; res: string }[]
 
@@ -85,13 +104,13 @@ describe('stdlib/data/PLFractionNumber', () => {
       })
     })
 
-    it('should parse proper fraction numbers', () => {
+    it('should parse proper fraction numbers without simplification', () => {
       const tests = [
         { input: '1/1', out: '1/1' },
-        { input: '10/10', out: '1/1' },
+        { input: '10/10', out: '10/10' },
         { input: '1/2', out: '1/2' },
-        { input: '1/-1', out: '-1/1' },
-        { input: '-1/-1', out: '1/1' },
+        { input: '1/-1', out: '1/-1' },
+        { input: '-1/-1', out: '-1/-1' },
       ]
 
       tests.map(({ input, out }) => {
@@ -127,7 +146,7 @@ describe('stdlib/data/PLFractionNumber', () => {
   describe('subtract operator', () => {
     it('should subtract two fraction number', () => {
       const actual = plFractionNumber(1, 2).subtract(plFractionNumber(1, 6))
-      const expected = plFractionNumber(2, 6)
+      const expected = plFractionNumber(1, 3)
       expect(actual).toEqual(expected)
     })
   })
