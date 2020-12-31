@@ -1,4 +1,4 @@
-import { expandDecimals, getDecimalString, createSimplifiedDecimal, parseNumString } from './decimalFn'
+import { expandDecimals, getDecimalString, simplifyDecimal } from './decimalFn'
 import { PLBool } from '../bool/PLBool'
 import { plBool } from '../bool/boolFn'
 import { PLBase } from '../PLBase'
@@ -25,19 +25,13 @@ export class PLDecimal
     Copy<PLDecimal> {
   public static kind = 'Decimal'
 
-  private readonly _strValue: string
   private readonly _intValue: number
   private readonly _decimals: number
 
-  public constructor(strValue: string) {
-    const decObj = parseNumString(strValue)
-    this._decimals = decObj.decimals
-    this._intValue = decObj.intValue
-    this._strValue = strValue
-  }
-
-  public get strValue(): string {
-    return this._strValue
+  public constructor(intValue: number, decimals: number) {
+    const decimalObj = simplifyDecimal(intValue, decimals)
+    this._decimals = decimalObj.decimals
+    this._intValue = decimalObj.intValue
   }
 
   public get intValue(): number {
@@ -54,24 +48,23 @@ export class PLDecimal
   }
 
   public negate(): PLDecimal {
-    const resultString = getDecimalString(-this.intValue, this.decimals)
-    return new PLDecimal(resultString)
+    return new PLDecimal(-this.intValue, this.decimals)
   }
 
   public add(d: PLDecimal): PLDecimal {
     const decimalObj = expandDecimals(this, d)
     const totalIntValue = decimalObj.intValue1 + decimalObj.intValue2
-    return createSimplifiedDecimal(totalIntValue, decimalObj.maxDecimal)
+    return new PLDecimal(totalIntValue, decimalObj.maxDecimal)
   }
 
   public subtract(d: PLDecimal): PLDecimal {
     const decimalObj = expandDecimals(this, d)
     const totalIntValue = decimalObj.intValue1 - decimalObj.intValue2
-    return createSimplifiedDecimal(totalIntValue, decimalObj.maxDecimal)
+    return new PLDecimal(totalIntValue, decimalObj.maxDecimal)
   }
 
   public multiple(d: PLDecimal): PLDecimal {
-    return createSimplifiedDecimal(this.intValue * d.intValue, this.decimals + d.decimals)
+    return new PLDecimal(this.intValue * d.intValue, this.decimals + d.decimals)
   }
 
   public divide(d: PLDecimal): PLDecimal {
@@ -80,7 +73,7 @@ export class PLDecimal
     }
     const decimalObj = expandDecimals(this, d)
     const divideIntValue = Math.round((decimalObj.intValue1 / decimalObj.intValue2) * Math.pow(10, MAXDECIMALS))
-    return createSimplifiedDecimal(divideIntValue, MAXDECIMALS)
+    return new PLDecimal(divideIntValue, MAXDECIMALS)
   }
 
   public partialCmp(other: PLDecimal): Ordering {
@@ -99,11 +92,11 @@ export class PLDecimal
   }
 
   public toString(): string {
-    return `${this._strValue}`
+    return `${getDecimalString(this.intValue, this.decimals)}`
   }
 
   public copy(): PLDecimal {
-    return new PLDecimal(this._strValue)
+    return new PLDecimal(this.intValue, this.decimals)
   }
 
   public debugTypeOf(): PLString {

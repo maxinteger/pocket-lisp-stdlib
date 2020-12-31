@@ -2,7 +2,7 @@ import {
   assertNumeric,
   isScientific,
   plDecimal,
-  createSimplifiedDecimal,
+  simplifyDecimal,
   parseDecimalString,
   parseScientificString,
   parseNumString,
@@ -16,7 +16,7 @@ const pld = plDecimal
 describe('stdlib/data/decimal/decimalFn', () => {
   describe('plDecimal', () => {
     it('should construct decimal', () => {
-      expect(pld('0')).toEqual(new PLDecimal('0'))
+      expect(pld('0.2')).toEqual(new PLDecimal(2, 1))
     })
   })
 
@@ -100,22 +100,22 @@ describe('stdlib/data/decimal/decimalFn', () => {
   })
 
   describe('createSimplifiedDecimal', () => {
-    const fn = createSimplifiedDecimal
+    const fn = simplifyDecimal
     it('should create simplified decimal', () => {
-      expect(fn(10, 1)).toEqual(pld('1'))
-      expect(fn(-678, 2)).toEqual(pld('-6.78'))
-      expect(fn(-6780, 2)).toEqual(pld('-67.8'))
-      expect(fn(21_000, 4)).toEqual(pld('2.1'))
+      expect(Object.values(fn(10, 1))).toEqual([1, 0])
+      expect(Object.values(fn(-678, 2))).toEqual([-678, 2])
+      expect(Object.values(fn(-6780, 2))).toEqual([-678, 1])
+      expect(Object.values(fn(21_000, 4))).toEqual([21, 1])
     })
   })
 
   describe('expandDecimals', () => {
     const fn = expandDecimals
     it('should expand decimals to same digits', () => {
-      expect(Object.values(fn(pld('1.0'), pld('0')))).toEqual([1, 10, 0])
+      expect(Object.values(fn(pld('1.0'), pld('0')))).toEqual([0, 1, 0])
       expect(Object.values(fn(pld('-6.78'), pld('67.8')))).toEqual([2, -678, 6780])
       expect(Object.values(fn(pld('-67.80'), pld('0.678')))).toEqual([3, -67_800, 678])
-      expect(Object.values(fn(pld('2.1000'), pld('2.1')))).toEqual([4, 21_000, 21_000])
+      expect(Object.values(fn(pld('2.1000'), pld('2.1')))).toEqual([1, 21, 21])
     })
   })
 

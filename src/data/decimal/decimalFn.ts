@@ -2,12 +2,8 @@ import { assert } from '../../utils/assert'
 import { PLDecimal } from './PLDecimal'
 
 export function plDecimal(strValue: string): PLDecimal {
-  return new PLDecimal(strValue)
-}
-
-export const str2plDecimal = (str: string): PLDecimal => {
-  assertNumeric(str)
-  return new PLDecimal(str)
+  const decimalObj = parseNumString(strValue)
+  return new PLDecimal(decimalObj.intValue, decimalObj.decimals)
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -56,12 +52,12 @@ export function parseNumString(strValue: string): any {
   return isScientific(strValue) ? parseScientificString(strValue) : parseDecimalString(strValue)
 }
 
-export function createSimplifiedDecimal(intValue: number, decimals: number): PLDecimal {
-  while (intValue % 10 === 0 && decimals > 0) {
-    intValue /= 10
-    decimals -= 1
+export function simplifyDecimal(intValueOld: number, decimalsOld: number): any {
+  while (intValueOld % 10 === 0 && decimalsOld > 0) {
+    intValueOld /= 10
+    decimalsOld -= 1
   }
-  return new PLDecimal(getDecimalString(intValue, decimals))
+  return { intValue: intValueOld, decimals: decimalsOld }
 }
 
 export function expandDecimals(d1: PLDecimal, d2: PLDecimal): any {

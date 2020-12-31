@@ -1,6 +1,6 @@
 import { plBool } from '../bool/boolFn'
 import { plString } from '../string/stringFn'
-import { plDecimal, str2plDecimal } from './decimalFn'
+import { plDecimal } from './decimalFn'
 import { Ordering } from '../../typeClasses/cmpType'
 import { PLDecimal } from './PLDecimal'
 
@@ -9,83 +9,59 @@ const plb = plBool
 const pls = plString
 
 describe('stdlib/data/PLDecimal', () => {
-  describe('creation', () => {
-    it('should throw error if the parameters are invalid', () => {
-      expect(() => pld('')).toThrow('Invalid decimal number: ""')
-      expect(() => pld('1 234')).toThrow('Invalid decimal number: "1 234"')
-      expect(() => pld('1.2Exp10')).toThrow('Invalid decimal number: "1.2Exp10"')
+  describe('parser', () => {
+    it('should throw error if the input is invalid', () => {
+      const tests = ['', '12,0', '1,2E-2', 'x12.0', '12 0', '1.2Exp10', '0.1.2', '1 234', '1.2Exp10']
+
+      tests.map((input) => {
+        expect(() => pld(input)).toThrow(`Invalid decimal number: "${input}"`)
+      })
     })
 
     it('should accept valid inputs', () => {
       const tests = [
-        { input: '0', result: ['0', 0, 0] },
-        { input: '1', result: ['1', 1, 0] },
-        { input: '1.', result: ['1.', 1, 0] },
-        { input: '-.9', result: ['-.9', -9, 1] },
-        { input: '1.0', result: ['1.0', 10, 1] },
-        { input: '1.2', result: ['1.2', 12, 1] },
-        { input: '0.03', result: ['0.03', 3, 2] },
-        { input: '1.3e5', result: ['1.3e5', 130_000, 0] },
-        { input: '-1.3e-5', result: ['-1.3e-5', -13, 6] },
-        { input: '-0.00013', result: ['-0.00013', -13, 5] },
-        { input: '-10.560000', result: ['-10.560000', -10_560_000, 6] },
-      ] as { input: string; result: Array<string | number> }[]
+        { strValue: '0', intValue: 0, decimals: 0 },
+        { strValue: '1', intValue: 1, decimals: 0 },
+        { strValue: '1.', intValue: 1, decimals: 0 },
+        { strValue: '-.9', intValue: -9, decimals: 1 },
+        { strValue: '1.0', intValue: 10, decimals: 1 },
+        { strValue: '1.2', intValue: 12, decimals: 1 },
+        { strValue: '0.03', intValue: 3, decimals: 2 },
+        { strValue: '1.3e5', intValue: 130_000, decimals: 0 },
+        { strValue: '-1.3e-5', intValue: -13, decimals: 6 },
+        { strValue: '-0.00013', intValue: -13, decimals: 5 },
+        { strValue: '-10.560000', intValue: -10_560_000, decimals: 6 },
+      ]
 
-      tests.map(({ input, result }) => {
-        const d = pld(input)
-        expect([d.strValue, d.intValue, d.decimals]).toStrictEqual(result)
+      tests.map(({ strValue, intValue, decimals }) => {
+        expect(pld(strValue)).toStrictEqual(new PLDecimal(intValue, decimals))
       })
     })
   })
 
   describe('with new', () => {
     it('should have same result as the factory function', () => {
-      expect(new PLDecimal('1.0')).toEqual(pld('1.0'))
+      expect(new PLDecimal(1, 2)).toEqual(pld('0.01'))
     })
   })
 
   describe('getters', () => {
     it('should work', () => {
-      const actual = pld('1.0')
-      expect(actual.strValue).toBe('1.0')
-      expect(actual.intValue).toBe(10)
+      const actual = pld('1.2')
+      expect(actual.intValue).toBe(12)
       expect(actual.decimals).toBe(1)
     })
   })
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(pld('-1.20').toJS()).toEqual({ intValue: -120, decimals: 2 })
+      expect(pld('-1.20').toJS()).toEqual({ intValue: -12, decimals: 1 })
     })
   })
 
   describe('debugTypeOf', () => {
     it('should return with debug tag', () => {
       expect(pld('-1.20').debugTypeOf()).toEqual(pls(PLDecimal.kind))
-    })
-  })
-
-  describe('parser', () => {
-    it('should throw error if the input is invalid', () => {
-      const tests = ['', '12,0', '1,2E-2', 'x12.0', '12 0', '1.2Exp10', '0.1.2']
-
-      tests.map((input) => {
-        expect(() => str2plDecimal(input)).toThrow(`Invalid decimal number: "${input}"`)
-      })
-    })
-
-    it('should parse proper fraction numbers', () => {
-      const tests = [
-        { input: '1.10', out: '1.10' },
-        { input: '-.0', out: '-.0' },
-        { input: '12E-23', out: '12E-23' },
-        { input: '12.0e2', out: '12.0e2' },
-        { input: '12.E+23', out: '12.E+23' },
-      ]
-
-      tests.map(({ input, out }) => {
-        expect(str2plDecimal(input).toString()).toBe(out)
-      })
     })
   })
 
@@ -154,7 +130,6 @@ describe('stdlib/data/PLDecimal', () => {
     it('should copy value', () => {
       const originalValue = plDecimal('-1.20')
       const copiedValue = originalValue.copy()
-      expect(originalValue.strValue).toBe(copiedValue.strValue)
       expect(originalValue.intValue).toBe(copiedValue.intValue)
       expect(originalValue.decimals).toBe(copiedValue.decimals)
       expect(originalValue).not.toBe(copiedValue)
