@@ -1,18 +1,20 @@
-import * as plMath from './math'
+import * as plm from './math'
 import { plNumber } from '../data/number/numberFn'
+
+const pln = plNumber
 
 describe('stdlib/fn/math', () => {
   describe('constants', () => {
     it('should be OK', () => {
       const tests = [
-        { actual: plMath.E, expected: plNumber(Math.E) },
-        { actual: plMath.LN2, expected: plNumber(Math.LN2) },
-        { actual: plMath.LN10, expected: plNumber(Math.LN10) },
-        { actual: plMath.LOG2E, expected: plNumber(Math.LOG2E) },
-        { actual: plMath.LOG10E, expected: plNumber(Math.LOG10E) },
-        { actual: plMath.PI, expected: plNumber(Math.PI) },
-        { actual: plMath.SQRT1_2, expected: plNumber(Math.SQRT1_2) },
-        { actual: plMath.SQRT2, expected: plNumber(Math.SQRT2) },
+        { actual: plm.E, expected: pln(Math.E) },
+        { actual: plm.LN2, expected: pln(Math.LN2) },
+        { actual: plm.LN10, expected: pln(Math.LN10) },
+        { actual: plm.LOG2E, expected: pln(Math.LOG2E) },
+        { actual: plm.LOG10E, expected: pln(Math.LOG10E) },
+        { actual: plm.PI, expected: pln(Math.PI) },
+        { actual: plm.SQRT1_2, expected: pln(Math.SQRT1_2) },
+        { actual: plm.SQRT2, expected: pln(Math.SQRT2) },
       ]
       tests.map(({ actual, expected }) => expect(actual).toEqual(expected))
     })
@@ -21,14 +23,14 @@ describe('stdlib/fn/math', () => {
   describe('base functions', () => {
     it('should be OK', () => {
       const tests = [
-        { actual: plMath.abs(plNumber(-1.5)), expected: plNumber(1.5) },
-        { actual: plMath.sign(plNumber(1.5)), expected: plNumber(1) },
-        { actual: plMath.min(plNumber(1.5), plNumber(0)), expected: plNumber(0) },
-        { actual: plMath.max(plNumber(1.5), plNumber(1)), expected: plNumber(1.5) },
-        { actual: plMath.floor(plNumber(1.5)), expected: plNumber(1) },
-        { actual: plMath.round(plNumber(1.5)), expected: plNumber(2) },
-        { actual: plMath.ceil(plNumber(1.5)), expected: plNumber(2) },
-        { actual: plMath.trunc(plNumber(1.5)), expected: plNumber(1) },
+        { actual: plm.abs(pln(-1.5)), expected: pln(1.5) },
+        { actual: plm.sign(pln(1.5)), expected: pln(1) },
+        { actual: plm.min(pln(1.5), pln(0)), expected: pln(0) },
+        { actual: plm.max(pln(1.5), pln(1)), expected: pln(1.5) },
+        { actual: plm.floor(pln(1.5)), expected: pln(1) },
+        { actual: plm.round(pln(1.5)), expected: pln(2) },
+        { actual: plm.ceil(pln(1.5)), expected: pln(2) },
+        { actual: plm.trunc(pln(1.5)), expected: pln(1) },
       ]
       tests.map(({ actual, expected }) => expect(actual).toEqual(expected))
     })
@@ -37,38 +39,47 @@ describe('stdlib/fn/math', () => {
   describe('arithmetic functions', () => {
     it('should be OK', () => {
       const tests = [
-        { actual: plMath.cbrt(plNumber(1.5)), expected: plNumber(Math.cbrt(1.5)) },
-        { actual: plMath.sqrt(plNumber(1.5)), expected: plNumber(Math.sqrt(1.5)) },
-        { actual: plMath.exp(plNumber(1.5)), expected: plNumber(Math.exp(1.5)) },
-        { actual: plMath.pow(plNumber(1.5), plNumber(10)), expected: plNumber(Math.pow(1.5, 10)) },
-        { actual: plMath.log(plNumber(1.5)), expected: plNumber(Math.log(1.5)) },
-        { actual: plMath.log2(plNumber(1.5)), expected: plNumber(Math.log2(1.5)) },
-        { actual: plMath.log10(plNumber(1.5)), expected: plNumber(Math.log10(1.5)) },
+        { actual: plm.cbrt(pln(1.5)), expected: pln(Math.cbrt(1.5)) },
+        { actual: plm.sqrt(pln(1.5)), expected: pln(Math.sqrt(1.5)) },
+        { actual: plm.exp(pln(1.5)), expected: pln(Math.exp(1.5)) },
+        { actual: plm.pow(pln(1.5), pln(10)), expected: pln(Math.pow(1.5, 10)) },
+        { actual: plm.log(pln(1.5)), expected: pln(Math.log(1.5)) },
+        { actual: plm.log2(pln(1.5)), expected: pln(Math.log2(1.5)) },
+        { actual: plm.log10(pln(1.5)), expected: pln(Math.log10(1.5)) },
       ]
       tests.map(({ actual, expected }) => expect(actual).toEqual(expected))
     })
   })
 
   describe('trigonometry functions', () => {
+    it('should throw error if argument is out of range', () => {
+      expect(() => plm.asin(pln(1.5))).toThrow('Invalid argument for asin: 1.5')
+      expect(() => plm.acos(pln(1.5))).toThrow('Invalid argument for acos: 1.5')
+      expect(() => plm.atanh(pln(1.5))).toThrow('Invalid argument for atanh: 1.5')
+    })
+
+    it('should convert DEG to RAD', () => {
+      expect(Math.abs(plm.rad2deg(plm.PI).value - pln(180).value) < 1e-12).toBe(true)
+      expect(Math.abs(plm.deg2rad(pln(180)).value - plm.PI.value) < 1e-12).toBe(true)
+    })
+
     it('should be OK', () => {
       const tests = [
-        { actual: plMath.deg2rad(plNumber(180)), expected: plMath.PI },
-        { actual: plMath.rad2deg(plMath.PI), expected: plNumber(180) },
-        { actual: plMath.sin(plNumber(1.5)), expected: plNumber(Math.sin(1.5)) },
-        { actual: plMath.sin(plNumber(0)), expected: plNumber(0) },
-        { actual: plMath.sin(plNumber(Math.PI)), expected: plNumber(0) },
-        { actual: plMath.asin(plNumber(1.5)), expected: plNumber(Math.asin(1.5)) },
-        { actual: plMath.asinh(plNumber(1.5)), expected: plNumber(Math.asinh(1.5)) },
-        { actual: plMath.cos(plNumber(1.5)), expected: plNumber(Math.cos(1.5)) },
-        { actual: plMath.acos(plNumber(1.5)), expected: plNumber(Math.acos(1.5)) },
-        { actual: plMath.acosh(plNumber(1.5)), expected: plNumber(Math.acosh(1.5)) },
-        { actual: plMath.tan(plNumber(1.5)), expected: plNumber(Math.tan(1.5)) },
-        { actual: plMath.atan(plNumber(1.5)), expected: plNumber(Math.atan(1.5)) },
+        { actual: plm.sin(pln(1.5)), expected: pln(Math.sin(1.5)) },
+        { actual: plm.sin(pln(0)), expected: pln(0) },
+        { actual: plm.sin(pln(Math.PI)), expected: pln(0) },
+        { actual: plm.asin(pln(0.5)), expected: pln(Math.asin(0.5)) },
+        { actual: plm.asinh(pln(1.5)), expected: pln(Math.asinh(1.5)) },
+        { actual: plm.cos(pln(1.5)), expected: pln(Math.cos(1.5)) },
+        { actual: plm.acos(pln(0.5)), expected: pln(Math.acos(0.5)) },
+        { actual: plm.acosh(pln(1.5)), expected: pln(Math.acosh(1.5)) },
+        { actual: plm.tan(pln(1.5)), expected: pln(Math.tan(1.5)) },
+        { actual: plm.atan(pln(1.5)), expected: pln(Math.atan(1.5)) },
         {
-          actual: plMath.atan2(plNumber(1.5), plNumber(19)),
-          expected: plNumber(Math.atan2(1.5, 19)),
+          actual: plm.atan2(pln(1.5), pln(19)),
+          expected: pln(Math.atan2(1.5, 19)),
         },
-        { actual: plMath.atanh(plNumber(1.5)), expected: plNumber(Math.atanh(1.5)) },
+        { actual: plm.atanh(pln(0.5)), expected: pln(Math.atanh(0.5)) },
       ]
       tests.map(({ actual, expected }) => expect(actual).toEqual(expected))
     })
