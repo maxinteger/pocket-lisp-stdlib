@@ -13,8 +13,6 @@ import {
 } from './numberFn'
 import { PLNumber } from './PLNumber'
 
-const pln = parseNumber
-
 describe('stdlib/data/decimal/decimalFn', () => {
   describe('plFloat', () => {
     const fn = plFloat
@@ -148,6 +146,7 @@ describe('stdlib/data/decimal/decimalFn', () => {
 
   describe('expandDecimals', () => {
     const fn = expandDecimals
+    const pln = parseNumber
     it('should expand decimals to same digits', () => {
       expect(fn(pln('1.0'), pln('0'))).toStrictEqual({ maxDecimal: 0, intValue1: 1, intValue2: 0 })
       expect(fn(pln('-6.78'), pln('67.8'))).toStrictEqual({ maxDecimal: 2, intValue1: -678, intValue2: 6780 })
