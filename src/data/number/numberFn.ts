@@ -35,14 +35,7 @@ export const isRational = (x: number): boolean => {
 }
 
 export function isScientific(strValue: string): boolean {
-  const parts = strValue.split(/[eE]/)
-  if (parts.length === 2 && assertNumeric(parts[0]) && assertNumeric(parts[1])) {
-    const intValueRounded = Math.abs(parseInt(parts[0]))
-    const exponential = parseFloat(parts[1])
-    return intValueRounded >= 1 && intValueRounded <= 9 && exponential === parseInt(parts[1])
-  } else {
-    return false
-  }
+  return /^[-+]?[1-9](\.\d+)?[eE][-+]?\d+$/.test(strValue)
 }
 
 export function parseScientificString(strValue: string): DecimalResult {

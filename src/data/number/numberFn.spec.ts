@@ -88,8 +88,8 @@ describe('stdlib/data/decimal/decimalFn', () => {
       expect(fn('1.2E+23')).toBe(true)
       // unsupported formats
       expect(fn('-1.2x10^12')).toBe(false)
-      expect(() => fn('1,2E-2')).toThrow('Invalid number: "1,2"')
-      expect(() => fn('1.2Exp10')).toThrow('Invalid number: "xp10"')
+      expect(fn('1,2E-2')).toBe(false)
+      expect(fn('1.2Exp10')).toBe(false)
     })
   })
 
