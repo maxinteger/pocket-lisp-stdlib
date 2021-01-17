@@ -24,7 +24,7 @@ export class PLNumber
     Negate<PLNumber>,
     PartialOrd<PLNumber>,
     Copy<PLNumber> {
-  public static kind = 'Decimal'
+  public static kind = 'Number'
 
   private readonly _intValue: number
   private readonly _decimals: number

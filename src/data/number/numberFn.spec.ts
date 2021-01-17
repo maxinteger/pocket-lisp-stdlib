@@ -17,17 +17,17 @@ const pln = parseNumber
 describe('stdlib/data/decimal/decimalFn', () => {
   describe('plNumber', () => {
     it('should construct decimal', () => {
-      expect(plNumber(0.2)).toEqual(new PLNumber(2, 1))
+      expect(plNumber(2, 1)).toEqual(new PLNumber(2, 1))
     })
   })
 
   describe('assertNumeric', () => {
     const fn = assertNumeric
     it('should assert if string is numeric', () => {
-      expect(() => fn('')).toThrow('Invalid decimal number: ""')
-      expect(() => fn('12,0')).toThrow('Invalid decimal number: "12,0"')
-      expect(() => fn('x12.0')).toThrow('Invalid decimal number: "x12.0"')
-      expect(() => fn('12 0')).toThrow('Invalid decimal number: "12 0"')
+      expect(() => fn('')).toThrow('Invalid number: ""')
+      expect(() => fn('12,0')).toThrow('Invalid number: "12,0"')
+      expect(() => fn('x12.0')).toThrow('Invalid number: "x12.0"')
+      expect(() => fn('12 0')).toThrow('Invalid number: "12 0"')
       expect(fn('0')).toBe(true)
       expect(fn('.12')).toBe(true)
       expect(fn('1.2')).toBe(true)
@@ -65,68 +65,69 @@ describe('stdlib/data/decimal/decimalFn', () => {
       expect(fn('1.2E+23')).toBe(true)
       // unsupported formats
       expect(fn('-1.2x10^12')).toBe(false)
-      expect(() => fn('1,2E-2')).toThrow('Invalid decimal number: "1,2"')
-      expect(() => fn('1.2Exp10')).toThrow('Invalid decimal number: "xp10"')
+      expect(() => fn('1,2E-2')).toThrow('Invalid number: "1,2"')
+      expect(() => fn('1.2Exp10')).toThrow('Invalid number: "xp10"')
     })
   })
 
   describe('parseScientificString', () => {
     const fn = parseScientificString
     it('should extract integer value and decimals from string', () => {
-      expect(() => fn('')).toThrow('Invalid decimal number: ""')
-      expect(Object.values(fn('1e5'))).toStrictEqual([100_000, 0])
-      expect(Object.values(fn('2e-3'))).toStrictEqual([2, 3])
-      expect(Object.values(fn('1.2234E-2'))).toStrictEqual([12_234, 6])
-      expect(Object.values(fn('2.56E+3'))).toStrictEqual([2560, 0])
-      expect(Object.values(fn('-1.3e-5'))).toStrictEqual([-13, 6])
+      expect(() => fn('')).toThrow('Invalid number: ""')
+      expect(fn('1e5')).toStrictEqual({ intValue: 100_000, decimals: 0 })
+      expect(fn('2e-3')).toStrictEqual({ intValue: 2, decimals: 3 })
+      expect(fn('1.2234E-2')).toStrictEqual({ intValue: 12_234, decimals: 6 })
+      expect(fn('2.56E+3')).toStrictEqual({ intValue: 2560, decimals: 0 })
+      expect(fn('-1.3e-5')).toStrictEqual({ intValue: -13, decimals: 6 })
     })
   })
 
   describe('parseDecimalString', () => {
     const fn = parseDecimalString
     it('should extract integer value and decimals from string', () => {
-      expect(() => fn('')).toThrow('Invalid decimal number: ""')
-      expect(Object.values(fn('.230'))).toStrictEqual([230, 3])
-      expect(Object.values(fn('-0.3100'))).toStrictEqual([-3100, 4])
-      expect(Object.values(fn('320.0'))).toStrictEqual([3200, 1])
-      expect(Object.values(fn('-20'))).toStrictEqual([-20, 0])
+      expect(() => fn('')).toThrow('Invalid number: ""')
+      expect(fn('.230')).toStrictEqual({ intValue: 230, decimals: 3 })
+      expect(fn('-0.3100')).toStrictEqual({ intValue: -3100, decimals: 4 })
+      expect(fn('320.0')).toStrictEqual({ intValue: 3200, decimals: 1 })
+      expect(fn('-20')).toStrictEqual({ intValue: -20, decimals: 0 })
     })
   })
 
   describe('parseNumString', () => {
     const fn = parseNumber
     it('should extract integer value and decimals from string', () => {
-      expect(() => fn('')).toThrow('Invalid decimal number: ""')
-      expect(() => fn('0.1.2')).toThrow('Invalid decimal number: "0.1.2"')
-      expect(() => fn('1 234')).toThrow('Invalid decimal number: "1 234')
-      expect(Object.values(fn('1e5'))).toStrictEqual([0, 100_000])
-      expect(Object.values(fn('2e-3'))).toStrictEqual([2, 3])
-      expect(Object.values(fn('1.2234E-2'))).toStrictEqual([12_234, 6])
-      expect(Object.values(fn('2.56E+3'))).toStrictEqual([2560, 0])
-      expect(Object.values(fn('.230'))).toStrictEqual([230, 3])
-      expect(Object.values(fn('-0.3100'))).toStrictEqual([-3100, 4])
-      expect(Object.values(fn('320.0'))).toStrictEqual([3200, 1])
-      expect(Object.values(fn('-20'))).toStrictEqual([-20, 0])
+      expect(() => fn('')).toThrow('Invalid number: ""')
+      expect(() => fn('0.1.2')).toThrow('Invalid number: "0.1.2"')
+      expect(() => fn('1 234')).toThrow('Invalid number: "1 234')
+      expect(fn('1e5').toJS()).toStrictEqual({ intValue: 100_000, decimals: 0 })
+      expect(fn('2e-3').toJS()).toStrictEqual({ intValue: 2, decimals: 3 })
+      expect(fn('1.2234E-2').toJS()).toStrictEqual({ intValue: 12_234, decimals: 6 })
+      expect(fn('2.56E+3').toJS()).toStrictEqual({ intValue: 2560, decimals: 0 })
+      expect(fn('.230').toJS()).toStrictEqual({ intValue: 23, decimals: 2 })
+      expect(fn('-0.3100').toJS()).toStrictEqual({ intValue: -31, decimals: 2 })
+      expect(fn('320.0').toJS()).toStrictEqual({ intValue: 320, decimals: 0 })
+      expect(fn('-20').toJS()).toStrictEqual({ intValue: -20, decimals: 0 })
     })
   })
 
   describe('createSimplifiedDecimal', () => {
     const fn = simplifyDecimal
     it('should create simplified decimal', () => {
-      expect(Object.values(fn(10, 1))).toEqual([1, 0])
-      expect(Object.values(fn(-678, 2))).toEqual([-678, 2])
-      expect(Object.values(fn(-6780, 2))).toEqual([-678, 1])
-      expect(Object.values(fn(21_000, 4))).toEqual([21, 1])
+      expect(fn(0, 10)).toEqual({ intValue: 0, decimals: 0 })
+      expect(fn(10, 1)).toEqual({ intValue: 1, decimals: 0 })
+      expect(fn(-678, 2)).toEqual({ intValue: -678, decimals: 2 })
+      expect(fn(-6780, 2)).toEqual({ intValue: -678, decimals: 1 })
+      expect(fn(21_000, 4)).toEqual({ intValue: 21, decimals: 1 })
     })
   })
 
   describe('expandDecimals', () => {
     const fn = expandDecimals
     it('should expand decimals to same digits', () => {
-      expect(Object.values(fn(pln('1.0'), pln('0')))).toEqual([0, 1, 0])
-      expect(Object.values(fn(pln('-6.78'), pln('67.8')))).toEqual([2, -678, 6780])
-      expect(Object.values(fn(pln('-67.80'), pln('0.678')))).toEqual([3, -67_800, 678])
-      expect(Object.values(fn(pln('2.1000'), pln('2.1')))).toEqual([1, 21, 21])
+      expect(fn(pln('1.0'), pln('0'))).toStrictEqual({ maxDecimal: 0, intValue1: 1, intValue2: 0 })
+      expect(fn(pln('-6.78'), pln('67.8'))).toStrictEqual({ maxDecimal: 2, intValue1: -678, intValue2: 6780 })
+      expect(fn(pln('-67.80'), pln('0.678'))).toStrictEqual({ maxDecimal: 3, intValue1: -67_800, intValue2: 678 })
+      expect(fn(pln('2.1000'), pln('2.1'))).toStrictEqual({ maxDecimal: 1, intValue1: 21, intValue2: 21 })
     })
   })
 

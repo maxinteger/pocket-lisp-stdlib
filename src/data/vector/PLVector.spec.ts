@@ -76,7 +76,11 @@ describe('stdlib/data/PLVector', () => {
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(plVector(...[pln(1), pln(2), pln(3)]).toJS()).toEqual([pln(1), pln(2), pln(3)])
+      expect(plVector(...[pln(1), pln(2), pln(3)]).toJS()).toEqual([
+        { decimals: 0, intValue: 1 },
+        { decimals: 0, intValue: 2 },
+        { decimals: 0, intValue: 3 },
+      ])
     })
   })
 

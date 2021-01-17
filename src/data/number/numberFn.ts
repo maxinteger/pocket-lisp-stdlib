@@ -1,15 +1,18 @@
 import { assert, assertInteger } from '../../utils/assert'
 import { PLNumber } from './PLNumber'
 
-export function plNumber(value: number): PLNumber {
-  const isInteger = value === parseInt(value.toString(), 10)
-  return parseNumber(isInteger || ~isRational(value) ? value.toString() : value.toFixed(12))
+export function plFloat(x: number): PLNumber {
+  return parseNumber(x.toString())
+}
+
+export function plNumber(intValue: number, decimals = 0): PLNumber {
+  return new PLNumber(intValue, decimals)
 }
 
 export function parseNumber(strValue: string): any {
   assertNumeric(strValue)
   const decimalObj = isScientific(strValue) ? parseScientificString(strValue) : parseDecimalString(strValue)
-  return new PLNumber(decimalObj.intValue, decimalObj.decimals)
+  return plNumber(decimalObj.intValue, decimalObj.decimals)
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -61,6 +64,9 @@ export function parseDecimalString(strValue: string): any {
 }
 
 export function simplifyDecimal(intValueOld: number, decimalsOld: number): any {
+  if (intValueOld === 0) {
+    return { intValue: 0, decimals: 0 }
+  }
   while (intValueOld > Number.MAX_SAFE_INTEGER || (intValueOld % 10 === 0 && decimalsOld > 0)) {
     const str = intValueOld.toString()
     intValueOld = parseInt(str.substring(0, str.length - 1))

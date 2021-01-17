@@ -16,7 +16,7 @@ describe('stdlib/data/PLNumber', () => {
       const tests = ['', '12,0', '1,2E-2', 'x12.0', '12 0', '1.2Exp10', '0.1.2', '1 234', '1.2Exp10']
 
       tests.map((input) => {
-        expect(() => parseNumber(input)).toThrow(`Invalid decimal number: "${input}"`)
+        expect(() => parseNumber(input)).toThrow(`Invalid number: "${input}"`)
       })
     })
 
@@ -43,7 +43,7 @@ describe('stdlib/data/PLNumber', () => {
 
   describe('with new', () => {
     it('should have same result as the factory function', () => {
-      expect(new PLNumber(1, 2)).toEqual(plNumber(0.01))
+      expect(new PLNumber(1, 2)).toEqual(plNumber(1, 2))
     })
   })
 
