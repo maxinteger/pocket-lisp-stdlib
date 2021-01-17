@@ -1,5 +1,5 @@
 import { range, range0 } from '../module/vector'
-import { plNumber } from '../data/number/numberFn'
+import { plFloat, plNumber } from '../data/number/numberFn'
 
 describe('stdlib/module/vector', () => {
   describe('range0', () => {
@@ -14,7 +14,7 @@ describe('stdlib/module/vector', () => {
     })
 
     it('should trim the parameter to integer', () => {
-      const res = range0(plNumber(3.5))
+      const res = range0(plFloat(3.5))
       expect(res.value).toEqual([plNumber(0), plNumber(1), plNumber(2)])
     })
   })
@@ -36,7 +36,7 @@ describe('stdlib/module/vector', () => {
     })
 
     it('should work with float parameters', () => {
-      const res = range(plNumber(0), plNumber(0.9), plNumber(0.1))
+      const res = range(plFloat(0), plFloat(0.9), plFloat(0.1))
       const exp = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
       for (const i in res.value) {
         expect(res.value[i].value < exp[i] + Number.EPSILON).toBe(true)

@@ -1,7 +1,7 @@
 import { PLString } from './PLString'
 import { plBool } from '../bool/boolFn'
 import { plString } from './stringFn'
-import { plNumber } from '../number/numberFn'
+import { plFloat, plNumber } from '../number/numberFn'
 import { Ordering } from '../../typeClasses/cmpType'
 import { contains, slice } from '../../typeClasses'
 
@@ -68,7 +68,7 @@ describe('stdlib/data/PLString', () => {
     it('should return with the selected character or empty string', () => {
       expect(plString('abc').index(plNumber(1))).toEqual(plString('b'))
       expect(plString('abc').index(plNumber(10))).toEqual(plString(''))
-      expect(plString('abc').index(plNumber(1.1))).toEqual(plString(''))
+      expect(plString('abc').index(plFloat(1.1))).toEqual(plString(''))
     })
   })
 

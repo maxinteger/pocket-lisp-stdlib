@@ -3,6 +3,7 @@ import {
   isRational,
   isScientific,
   plNumber,
+  plFloat,
   simplifyDecimal,
   parseDecimalString,
   parseScientificString,
@@ -15,9 +16,31 @@ import { PLNumber } from './PLNumber'
 const pln = parseNumber
 
 describe('stdlib/data/decimal/decimalFn', () => {
-  describe('plNumber', () => {
+  describe('plFloat', () => {
+    const fn = plFloat
     it('should construct decimal', () => {
-      expect(plNumber(2, 1)).toEqual(new PLNumber(2, 1))
+      expect(fn(2.1)).toEqual(new PLNumber(21, 1))
+      expect(fn(13.42)).toEqual(new PLNumber(1342, 2))
+    })
+    it('should handle integers', () => {
+      expect(fn(2)).toEqual(new PLNumber(2, 0))
+      expect(fn(23)).toEqual(new PLNumber(23, 0))
+    })
+  })
+
+  describe('plNumber', () => {
+    const fn = plNumber
+    it('should construct decimal', () => {
+      expect(fn(2, 1)).toEqual(new PLNumber(2, 1))
+      expect(fn(13, 4)).toEqual(new PLNumber(13, 4))
+    })
+    it('should handle integers', () => {
+      expect(fn(2)).toEqual(new PLNumber(2, 0))
+      expect(fn(23)).toEqual(new PLNumber(23, 0))
+    })
+    it('should throw error if inputs are not correct', () => {
+      expect(() => fn(0.2)).toThrow("Expected integer number', but got '0.2'.")
+      expect(() => fn(2, 0.3)).toThrow("Expected integer number', but got '0.3'.")
     })
   })
 
@@ -73,7 +96,7 @@ describe('stdlib/data/decimal/decimalFn', () => {
   describe('parseScientificString', () => {
     const fn = parseScientificString
     it('should extract integer value and decimals from string', () => {
-      expect(() => fn('')).toThrow('Invalid number: ""')
+      expect(() => fn('1x10^3')).toThrow('Input is not in scientific form: "1x10^3"')
       expect(fn('1e5')).toStrictEqual({ intValue: 100_000, decimals: 0 })
       expect(fn('2e-3')).toStrictEqual({ intValue: 2, decimals: 3 })
       expect(fn('1.2234E-2')).toStrictEqual({ intValue: 12_234, decimals: 6 })
@@ -93,10 +116,12 @@ describe('stdlib/data/decimal/decimalFn', () => {
     })
   })
 
-  describe('parseNumString', () => {
+  describe('parseNumber', () => {
     const fn = parseNumber
     it('should extract integer value and decimals from string', () => {
       expect(() => fn('')).toThrow('Invalid number: ""')
+      expect(() => fn('hello world')).toThrow('Invalid number: "hello world"')
+      expect(() => fn('0.2hello')).toThrow('Invalid number: "0.2hello"')
       expect(() => fn('0.1.2')).toThrow('Invalid number: "0.1.2"')
       expect(() => fn('1 234')).toThrow('Invalid number: "1 234')
       expect(fn('1e5').toJS()).toStrictEqual({ intValue: 100_000, decimals: 0 })

@@ -1,4 +1,4 @@
-import { expandDecimals, getDecimalString, simplifyDecimal } from './numberFn'
+import { expandDecimals, getDecimalString, simplifyDecimal, DecimalResult } from './numberFn'
 import { PLBool } from '../bool/PLBool'
 import { plBool } from '../bool/boolFn'
 import { PLBase } from '../PLBase'
@@ -88,7 +88,7 @@ export class PLNumber
     return Ordering.Equal
   }
 
-  public toJS(): { intValue: number; decimals: number } {
+  public toJS(): DecimalResult {
     return {
       intValue: this._intValue,
       decimals: this._decimals,
