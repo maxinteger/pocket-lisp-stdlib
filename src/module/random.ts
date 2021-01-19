@@ -1,7 +1,7 @@
 import { toInt } from '../utils/convert'
 import { PLNumber } from '../data/number/PLNumber'
 import { PLVector } from '../data/vector/PLVector'
-import { plFloat } from '../data/number/numberFn'
+import { plNumber } from '../data/number/numberFn'
 import { plVector } from '../data/vector/vectorFn'
 
 const rand = Math.random
@@ -9,7 +9,7 @@ const rand = Math.random
 /**
  * Return the next random floating point number in the range [0.0, 1.0).
  */
-export const random = (): PLNumber => plFloat(rand())
+export const random = (): PLNumber => plNumber(rand())
 
 /**
  * Return a random integer N such that a <= N <= b.
@@ -17,7 +17,7 @@ export const random = (): PLNumber => plFloat(rand())
 export const randomInt = (a: PLNumber, b: PLNumber): PLNumber => {
   const ai = toInt(a.value)
   const bi = toInt(b.value)
-  return plFloat(toInt(ai + rand() * (bi - ai)))
+  return plNumber(toInt(ai + rand() * (bi - ai)))
 }
 
 /**

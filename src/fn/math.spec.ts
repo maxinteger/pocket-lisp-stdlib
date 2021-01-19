@@ -1,7 +1,7 @@
 import * as plm from './math'
-import { plFloat } from '../data/number/numberFn'
+import { plNumber } from '../data/number/numberFn'
 
-const plf = plFloat
+const plf = plNumber
 
 describe('stdlib/fn/math', () => {
   describe('constants', () => {

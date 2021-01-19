@@ -1,13 +1,13 @@
 import { PLNumber } from '../data/number/PLNumber'
 import { typeCheck } from '../utils/assert'
 import { isBelowEpsilon } from '../utils/math'
-import { plFloat } from '../data/number/numberFn'
+import { plNumber } from '../data/number/numberFn'
 import { RuntimeError } from 'pocket-lisp'
 
 const plNumFn1 = (fn: (x: number) => number) => (x: PLNumber) => {
   typeCheck(PLNumber, x)
   try {
-    return plFloat(fn(x.value))
+    return plNumber(fn(x.value))
   } catch (error) {
     throw new RuntimeError(`Invalid argument for ${fn.name}: ${x.value}`)
   }
@@ -16,19 +16,19 @@ const plNumFn1 = (fn: (x: number) => number) => (x: PLNumber) => {
 const plNumFn2 = (fn: (x: number, y: number) => number) => (x: PLNumber, y: PLNumber) => {
   typeCheck(PLNumber, x)
   typeCheck(PLNumber, y)
-  return plFloat(fn(x.value, y.value))
+  return plNumber(fn(x.value, y.value))
 }
 
 /// constants
 
-export const E = plFloat(Math.E)
-export const LN2 = plFloat(Math.LN2)
-export const LN10 = plFloat(Math.LN10)
-export const LOG2E = plFloat(Math.LOG2E)
-export const LOG10E = plFloat(Math.LOG10E)
-export const PI = plFloat(Math.PI)
-export const SQRT1_2 = plFloat(Math.SQRT1_2)
-export const SQRT2 = plFloat(Math.SQRT2)
+export const E = plNumber(Math.E)
+export const LN2 = plNumber(Math.LN2)
+export const LN10 = plNumber(Math.LN10)
+export const LOG2E = plNumber(Math.LOG2E)
+export const LOG10E = plNumber(Math.LOG10E)
+export const PI = plNumber(Math.PI)
+export const SQRT1_2 = plNumber(Math.SQRT1_2)
+export const SQRT2 = plNumber(Math.SQRT2)
 
 /// base
 
@@ -59,8 +59,8 @@ export const log10 = plNumFn1(Math.log10)
 
 const DEG_TO_RAD = Math.PI / 180
 
-export const deg2rad = (x: PLNumber): PLNumber => x.multiple(plFloat(DEG_TO_RAD))
-export const rad2deg = (x: PLNumber): PLNumber => x.divide(plFloat(DEG_TO_RAD))
+export const deg2rad = (x: PLNumber): PLNumber => x.multiple(plNumber(DEG_TO_RAD))
+export const rad2deg = (x: PLNumber): PLNumber => x.divide(plNumber(DEG_TO_RAD))
 
 export const sin = plNumFn1((val) => {
   const rem = val % Math.PI

@@ -1,12 +1,10 @@
 import { plBool } from '../bool/boolFn'
 import { plString } from '../string/stringFn'
-import { plNumber } from './numberFn'
 import { Ordering } from '../../typeClasses/cmpType'
 import { PLNumber } from './PLNumber'
-import { floatEq } from '../../utils/math'
-import { parseNumber } from '../number/numberFn'
+import { plNumber } from '../number/numberFn'
 
-const pln = parseNumber
+const pln = plNumber
 const plb = plBool
 const pls = plString
 
@@ -16,7 +14,7 @@ describe('stdlib/data/PLNumber', () => {
       const tests = ['', '12,0', '1,2E-2', 'x12.0', '12 0', '1.2Exp10', '0.1.2', '1 234', '1.2Exp10']
 
       tests.map((input) => {
-        expect(() => parseNumber(input)).toThrow(`Invalid number: "${input}"`)
+        expect(() => plNumber(input)).toThrow(`Invalid number: "${input}"`)
       })
     })
 
@@ -36,7 +34,7 @@ describe('stdlib/data/PLNumber', () => {
       ]
 
       tests.map(({ strValue, intValue, decimals }) => {
-        expect(parseNumber(strValue)).toStrictEqual(new PLNumber(intValue, decimals))
+        expect(plNumber(strValue)).toStrictEqual(new PLNumber(intValue, decimals))
       })
     })
   })
@@ -44,27 +42,17 @@ describe('stdlib/data/PLNumber', () => {
   describe('with new', () => {
     it('should have same result as the factory function', () => {
       expect(new PLNumber(1, 2)).toEqual(plNumber(1, 2))
+      expect(new PLNumber(1)).toEqual(plNumber(1, 0))
     })
   })
 
   describe('getters', () => {
     it('should work', () => {
-      const actual = pln('1.2')
-      expect(actual.intValue).toBe(12)
-      expect(actual.decimals).toBe(1)
-      expect(floatEq(actual.value, 1.2)).toBe(true)
-    })
-  })
-
-  describe('toJS', () => {
-    it('should return with the JS representation', () => {
-      expect(pln('-1.20').toJS()).toEqual({ intValue: -12, decimals: 1 })
-    })
-  })
-
-  describe('debugTypeOf', () => {
-    it('should return with debug tag', () => {
-      expect(pln('-1.20').debugTypeOf()).toEqual(pls(PLNumber.kind))
+      const decimal = pln('1.2')
+      expect(decimal.intValue).toBe(12)
+      expect(decimal.decimals).toBe(1)
+      const integer = pln('20')
+      expect(integer.value).toBe(20)
     })
   })
 
@@ -129,13 +117,33 @@ describe('stdlib/data/PLNumber', () => {
     })
   })
 
+  describe('toJS', () => {
+    it('should return with the JS representation', () => {
+      expect(pln('-1.20').toJS()).toEqual({ intValue: -12, decimals: 1 })
+    })
+  })
+
+  describe('toString', () => {
+    it('should create decimal string', () => {
+      expect(pln(0, 0).toString()).toBe('0')
+      expect(pln(100, 0).toString()).toBe('100')
+      expect(pln(100, 1).toString()).toBe('10')
+      expect(pln(-100, 2).toString()).toBe('-1')
+      expect(pln(120, 2).toString()).toBe('1.2')
+      expect(pln(-3400, 5).toString()).toBe('-0.034')
+    })
+  })
+
+  describe('debugTypeOf', () => {
+    it('should return with debug tag', () => {
+      expect(pln('-1.20').debugTypeOf()).toEqual(pls(PLNumber.kind))
+    })
+  })
+
   describe('copy function', () => {
     it('should copy value', () => {
-      const originalValue = pln('-1.20')
-      const copiedValue = originalValue.copy()
-      expect(originalValue.intValue).toBe(copiedValue.intValue)
-      expect(originalValue.decimals).toBe(copiedValue.decimals)
-      expect(originalValue).not.toBe(copiedValue)
+      expect(pln('-1.20').copy()).toStrictEqual(pln('-1.20'))
+      expect(pln('1e5').copy()).toStrictEqual(pln('100000'))
     })
   })
 })

@@ -6,20 +6,20 @@ export interface DecimalResult {
   decimals: number
 }
 
-export function plFloat(x: number): PLNumber {
-  return parseNumber(x.toString())
-}
-
-export function plNumber(intValue: number, decimals = 0): PLNumber {
-  assertInteger(intValue)
-  assertInteger(decimals)
-  return new PLNumber(intValue, decimals)
-}
-
-export function parseNumber(strValue: string): PLNumber {
-  assertNumeric(strValue)
-  const decimalObj = isScientific(strValue) ? parseScientificString(strValue) : parseDecimalString(strValue)
-  return plNumber(decimalObj.intValue, decimalObj.decimals)
+export function plNumber(value: string): PLNumber
+export function plNumber(value: number, decimals?: number): PLNumber
+export function plNumber(value: number | string, decimals = 0): PLNumber {
+  if (typeof value === 'string') {
+    assertNumeric(value)
+    const decimalObj = isScientific(value) ? parseScientificString(value) : parseDecimalString(value)
+    return plNumber(decimalObj.intValue, decimalObj.decimals)
+  } else if (Number.isInteger(value) || decimals !== 0) {
+    assertInteger(value)
+    assertInteger(decimals)
+    return new PLNumber(value, decimals)
+  } else {
+    return plNumber(value.toString())
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -27,15 +27,12 @@ export function assertNumeric(strValue: any): boolean {
   return assert(strValue === '' || isNaN(strValue), `Invalid number: "${strValue}"`)
 }
 
-export const isRational = (x: number): boolean => {
-  const decimalStr = x.toString().split('.').pop()
-  const decimalLen = decimalStr ? decimalStr.length : 0
-  const isFraction = /\..*(\d)\1{12,}\d$/g.test(x.toString())
-  return decimalLen < 12 ? true : isFraction
-}
-
 export function isScientific(strValue: string): boolean {
-  return /^[-+]?[1-9](\.\d+)?[eE][-+]?\d+$/.test(strValue)
+  if (strValue.startsWith('0')) {
+    return /^0[eE]0$/.test(strValue)
+  } else {
+    return /^[-+]?[1-9](\.\d+)?[eE][-+]?\d+$/.test(strValue)
+  }
 }
 
 export function parseScientificString(strValue: string): DecimalResult {
