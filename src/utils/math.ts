@@ -6,5 +6,9 @@ export const gcd = (a: number, b: number): number => {
 }
 
 export const isBelowEpsilon = (x: number): boolean => {
-  return Math.abs(x) < Number.EPSILON
+  return Math.abs(x) <= Number.EPSILON
+}
+
+export const floatEq = (a: number, b: number): boolean => {
+  return isBelowEpsilon(a - b)
 }

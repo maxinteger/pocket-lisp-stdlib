@@ -33,7 +33,7 @@ export const number2fraction = (accuracy: PLNumber, number: PLNumber): PLFractio
 }
 
 export const fraction2number = (number: PLFractionNumber): PLNumber => {
-  return plNumber(number.numerator / number.denominator)
+  return plNumber(number.numerator).divide(plNumber(number.denominator))
 }
 
 export default {

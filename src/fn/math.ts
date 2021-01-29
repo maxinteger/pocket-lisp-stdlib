@@ -2,10 +2,15 @@ import { PLNumber } from '../data/number/PLNumber'
 import { typeCheck } from '../utils/assert'
 import { isBelowEpsilon } from '../utils/math'
 import { plNumber } from '../data/number/numberFn'
+import { RuntimeError } from 'pocket-lisp'
 
 const plNumFn1 = (fn: (x: number) => number) => (x: PLNumber) => {
   typeCheck(PLNumber, x)
-  return plNumber(fn(x.value))
+  try {
+    return plNumber(fn(x.value))
+  } catch (error) {
+    throw new RuntimeError(`Invalid argument for ${fn.name}: ${x.value}`)
+  }
 }
 
 const plNumFn2 = (fn: (x: number, y: number) => number) => (x: PLNumber, y: PLNumber) => {
@@ -54,8 +59,8 @@ export const log10 = plNumFn1(Math.log10)
 
 const DEG_TO_RAD = Math.PI / 180
 
-export const deg2rad = plNumFn1((x: number) => x * DEG_TO_RAD)
-export const rad2deg = plNumFn1((x: number) => x / DEG_TO_RAD)
+export const deg2rad = (x: PLNumber): PLNumber => x.multiple(plNumber(DEG_TO_RAD))
+export const rad2deg = (x: PLNumber): PLNumber => x.divide(plNumber(DEG_TO_RAD))
 
 export const sin = plNumFn1((val) => {
   const rem = val % Math.PI
