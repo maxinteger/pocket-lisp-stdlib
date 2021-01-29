@@ -22,9 +22,8 @@ export function plNumber(value: number | string, decimals = 0): PLNumber {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function assertNumeric(strValue: any): boolean {
-  return assert(strValue === '' || isNaN(strValue), `Invalid number: "${strValue}"`)
+export function assertNumeric(strValue: string): boolean {
+  return assert(strValue === '' || isNaN(Number(strValue)), `Invalid number: "${strValue}"`)
 }
 
 export function isScientific(strValue: string): boolean {
