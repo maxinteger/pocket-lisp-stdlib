@@ -107,11 +107,11 @@ export class PLNumber
     return plString(PLNumber.kind)
   }
 
-  public isInteger(): boolean {
-    return this.decimals === 0
+  public isInteger(): PLBool {
+    return plBool(this.decimals === 0)
   }
 
   public toJSNumber(): number {
-    return this.intValue / this.decimals ** 10
+    return this.intValue / 10 ** this.decimals
   }
 }

@@ -146,4 +146,18 @@ describe('stdlib/data/PLNumber', () => {
       expect(pln('1e5').copy()).toStrictEqual(pln('100000'))
     })
   })
+
+  describe('isInteger', () => {
+    it('should check the number is integer or not', () => {
+      expect(pln('-1.20').isInteger()).toStrictEqual(plb(false))
+      expect(pln('1e5').isInteger()).toStrictEqual(plb(true))
+    })
+  })
+
+  describe('toJSNumber', () => {
+    it('should convert PLNumber to JSNumber', () => {
+      expect(pln('-1.20').toJSNumber()).toStrictEqual(-1.2)
+      expect(pln('1e5').toJSNumber()).toStrictEqual(100_000)
+    })
+  })
 })
