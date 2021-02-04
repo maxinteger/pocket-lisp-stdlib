@@ -11,7 +11,7 @@ import { Add, Divide, Multiple, Negate } from '../../typeClasses/opsType'
 import { floatEq } from '../../utils/math'
 import { StdRuntimeError } from '../../utils/StdRuntimeError'
 
-const MAXDECIMALS = 12
+const MAX_DECIMALS = 12
 
 export class PLNumber
   implements
@@ -76,8 +76,8 @@ export class PLNumber
       throw new StdRuntimeError('Cannot divide by zero!')
     }
     const decimalObj = expandDecimals(this, d)
-    const divideIntValue = Math.round((decimalObj.intValue1 / decimalObj.intValue2) * Math.pow(10, MAXDECIMALS))
-    return new PLNumber(divideIntValue, MAXDECIMALS)
+    const divideIntValue = Math.round((decimalObj.intValue1 / decimalObj.intValue2) * Math.pow(10, MAX_DECIMALS))
+    return new PLNumber(divideIntValue, MAX_DECIMALS)
   }
 
   public partialCmp(other: PLNumber): Ordering {
@@ -105,5 +105,13 @@ export class PLNumber
 
   public debugTypeOf(): PLString {
     return plString(PLNumber.kind)
+  }
+
+  public isInteger(): boolean {
+    return this.decimals === 0
+  }
+
+  public toJSNumber(): number {
+    return this.intValue / this.decimals ** 10
   }
 }
