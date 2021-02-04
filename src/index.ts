@@ -1,4 +1,4 @@
-import { PLLiterals } from 'pocket-lisp'
+import type { PLLiterals } from 'pocket-lisp'
 import baseFn from './fn/base'
 import * as math from './fn/math'
 import * as modules from './module'

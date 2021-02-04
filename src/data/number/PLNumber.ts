@@ -4,12 +4,12 @@ import { plBool } from '../bool/boolFn'
 import { PLBase } from '../PLBase'
 import { PLString } from '../string/PLString'
 import { plString } from '../string/stringFn'
-import { RuntimeError } from 'pocket-lisp'
 import { Subtract } from '../../typeClasses/ops'
 import { Copy } from '../../typeClasses/baseType'
 import { Ordering, PartialEq, PartialOrd } from '../../typeClasses/cmpType'
 import { Add, Divide, Multiple, Negate } from '../../typeClasses/opsType'
 import { floatEq } from '../../utils/math'
+import { StdRuntimeError } from '../../utils/StdRuntimeError'
 
 const MAXDECIMALS = 12
 
@@ -73,7 +73,7 @@ export class PLNumber
 
   public divide(d: PLNumber): PLNumber {
     if (d.intValue === 0) {
-      throw new RuntimeError('Cannot divide by zero!')
+      throw new StdRuntimeError('Cannot divide by zero!')
     }
     const decimalObj = expandDecimals(this, d)
     const divideIntValue = Math.round((decimalObj.intValue1 / decimalObj.intValue2) * Math.pow(10, MAXDECIMALS))

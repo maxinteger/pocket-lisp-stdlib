@@ -1,7 +1,7 @@
+import type { Interpreter, PLCallable } from 'pocket-lisp'
 import { PLNumber } from '../data/number/PLNumber'
 import { PLBool } from '../data/bool/PLBool'
 import { PLBase } from '../data/PLBase'
-import { Interpreter, PLCallable } from 'pocket-lisp'
 import { Box } from './baseType'
 import { PartialEq } from './cmpType'
 import { Container, Iterable, Slice } from './iterType'

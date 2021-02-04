@@ -2,14 +2,14 @@ import { PLNumber } from '../data/number/PLNumber'
 import { typeCheck } from '../utils/assert'
 import { isBelowEpsilon } from '../utils/math'
 import { plNumber } from '../data/number/numberFn'
-import { RuntimeError } from 'pocket-lisp'
+import { StdRuntimeError } from '../utils/StdRuntimeError'
 
 const plNumFn1 = (fn: (x: number) => number) => (x: PLNumber) => {
   typeCheck(PLNumber, x)
   try {
     return plNumber(fn(x.value))
   } catch (error) {
-    throw new RuntimeError(`Invalid argument for ${fn.name}: ${x.value}`)
+    throw new StdRuntimeError(`Invalid argument for ${fn.name}: ${x.value}`)
   }
 }
 
