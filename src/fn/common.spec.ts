@@ -9,10 +9,10 @@ describe('stdlib/fn/common', () => {
   describe('unboxing', () => {
     it('should unbox any stdlib value', () => {
       expect(unboxing(plBool(true))).toBe(true)
-      expect(unboxing(plNumber(42))).toStrictEqual({ decimals: 0, intValue: 42 })
+      expect(unboxing(plNumber(42))).toStrictEqual(42)
       expect(unboxing(plFractionNumber(1, 2))).toEqual({ numerator: 1, denominator: 2 })
       expect(unboxing(plString('hello world'))).toBe('hello world')
-      expect(unboxing(plVector(plNumber(1)))).toEqual([{ decimals: 0, intValue: 1 }])
+      expect(unboxing(plVector(plNumber(1)))).toEqual([1])
     })
   })
 })

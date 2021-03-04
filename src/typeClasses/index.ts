@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export * from './base'
 export * from './cmp'
 export * from './iter'

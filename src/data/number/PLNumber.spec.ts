@@ -117,9 +117,9 @@ describe('stdlib/data/PLNumber', () => {
     })
   })
 
-  describe('toJS', () => {
+  describe('toJSON', () => {
     it('should return with the JS representation', () => {
-      expect(pln('-1.20').toJS()).toEqual({ intValue: -12, decimals: 1 })
+      expect(pln('-1.20').toJSON()).toEqual({ intValue: -12, decimals: 1 })
     })
   })
 
@@ -154,10 +154,10 @@ describe('stdlib/data/PLNumber', () => {
     })
   })
 
-  describe('toJSNumber', () => {
-    it('should convert PLNumber to JSNumber', () => {
-      expect(pln('-1.20').toJSNumber()).toStrictEqual(-1.2)
-      expect(pln('1e5').toJSNumber()).toStrictEqual(100_000)
+  describe('toJS', () => {
+    it('should convert PLNumber to JS number', () => {
+      expect(pln('-1.20').toJS()).toStrictEqual(-1.2)
+      expect(pln('1e5').toJS()).toStrictEqual(100_000)
     })
   })
 })

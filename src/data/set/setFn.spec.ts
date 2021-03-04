@@ -106,11 +106,7 @@ describe('stdlib/data/PLSet', () => {
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(createSet([1, 2, 3]).toJS()).toEqual([
-        { decimals: 0, intValue: 1 },
-        { decimals: 0, intValue: 2 },
-        { decimals: 0, intValue: 3 },
-      ])
+      expect(createSet([1, 2, 3]).toJS()).toEqual([1, 2, 3])
     })
   })
 })
