@@ -29,7 +29,7 @@ export class PLHashMap<Item extends PLBase> implements PLBase, Index<PLString, I
   }
 
   public toJS(): Map<string, any> {
-    return this._value
+    return new Map(Array.from(this._value.entries()).map(([k, v]) => [k, v.toJS()]))
   }
 
   public toString(): string {
