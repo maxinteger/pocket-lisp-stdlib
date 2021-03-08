@@ -70,6 +70,12 @@ describe('stdlib/data/PLFractionNumber', () => {
     })
   })
 
+  describe('toJSON', () => {
+    it('should return with the JS representation', () => {
+      expect(plFractionNumber(1, 2).toJSON()).toEqual({ numerator: 1, denominator: 2 })
+    })
+  })
+
   describe('debugTypeOf', () => {
     it('should return with debug tag', () => {
       expect(plFractionNumber(1, 2).debugTypeOf()).toEqual(plString(PLFractionNumber.kind))

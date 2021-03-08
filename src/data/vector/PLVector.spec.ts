@@ -80,6 +80,25 @@ describe('stdlib/data/PLVector', () => {
     })
   })
 
+  describe('toJSON', () => {
+    it('should return with the JS representation', () => {
+      expect(plVector(...[pln(1), pln(2), pln(3)]).toJSON()).toEqual([
+        {
+          decimals: 0,
+          intValue: 1,
+        },
+        {
+          decimals: 0,
+          intValue: 2,
+        },
+        {
+          decimals: 0,
+          intValue: 3,
+        },
+      ])
+    })
+  })
+
   describe('debugTypeOf', () => {
     it('should return with debug tag', () => {
       expect(plVector().debugTypeOf()).toEqual(plString(PLVector.kind))

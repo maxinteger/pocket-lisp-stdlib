@@ -13,6 +13,11 @@ import { Add, Divide, Multiple, Negate } from '../../typeClasses/opsType'
 
 ///
 
+export interface FractionNumberRecord {
+  numerator: number
+  denominator: number
+}
+
 export class PLFractionNumber
   implements
     PLBase,
@@ -94,11 +99,15 @@ export class PLFractionNumber
     return Ordering.Equal
   }
 
-  public toJS(): { numerator: number; denominator: number } {
+  public toJS(): FractionNumberRecord {
     return {
       numerator: this._n,
       denominator: this._d,
     }
+  }
+
+  public toJSON(): FractionNumberRecord {
+    return this.toJS()
   }
 
   public toString(): string {

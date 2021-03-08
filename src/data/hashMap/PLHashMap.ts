@@ -32,6 +32,13 @@ export class PLHashMap<Item extends PLBase> implements PLBase, Index<PLString, I
     return new Map(Array.from(this._value.entries()).map(([k, v]) => [k, v.toJS()]))
   }
 
+  public toJSON<Return = Record<string, unknown>>(): Return {
+    return Array.from(this._value.entries()).reduce((obj, [k, v]) => {
+      obj[k] = v.toJSON()
+      return obj
+    }, {} as any)
+  }
+
   public toString(): string {
     return `{${Array.from(this._value.entries())
       .map(([k, v]) => `${k.toString()} -> ${v.toString()}`)

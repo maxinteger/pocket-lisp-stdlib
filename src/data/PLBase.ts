@@ -6,5 +6,7 @@ export interface PLBase extends SerializeToJS<unknown>, SerializeToString, Debug
 
   toJS(): any
 
+  toJSON(): any
+
   debugTypeOf(): PLString
 }

@@ -68,6 +68,10 @@ export class PLString
     return this._value
   }
 
+  public toJSON(): string {
+    return this.toJS()
+  }
+
   public toString(): string {
     return `${this._value}`
   }

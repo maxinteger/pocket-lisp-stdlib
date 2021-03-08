@@ -67,8 +67,12 @@ export class PLVector<Item extends VectorItem>
     )
   }
 
-  public toJS(): unknown[] {
-    return this._value.map((i) => i.toJS())
+  public toJS<Item = unknown>(): Item[] {
+    return this.value.map((i) => i.toJS())
+  }
+
+  public toJSON<Item = unknown>(): Item[] {
+    return this.value.map((i) => i.toJSON())
   }
 
   public toString(): string {

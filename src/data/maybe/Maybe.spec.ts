@@ -34,6 +34,14 @@ describe('stdlib/data/Maybe', () => {
     })
   })
 
+  describe('toJSON', () => {
+    it('should return with the JSON representation', () => {
+      expect(maybe(plNumber(1)).toJSON()).toStrictEqual(1)
+      expect(maybe(undefined).toJSON()).toBe(undefined)
+      expect(maybe(Nothing).toJSON()).toBe(undefined)
+    })
+  })
+
   describe('debugTypeOf', () => {
     it('should return with debug tag', () => {
       expect(Nothing.debugTypeOf()).toEqual(plString('Nothing'))

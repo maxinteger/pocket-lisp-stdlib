@@ -109,4 +109,23 @@ describe('stdlib/data/PLSet', () => {
       expect(createSet([1, 2, 3]).toJS()).toEqual([1, 2, 3])
     })
   })
+
+  describe('toJSON', () => {
+    it('should return with the JSON representation', () => {
+      expect(createSet([1, 2, 3]).toJSON()).toEqual([
+        {
+          decimals: 0,
+          intValue: 1,
+        },
+        {
+          decimals: 0,
+          intValue: 2,
+        },
+        {
+          decimals: 0,
+          intValue: 3,
+        },
+      ])
+    })
+  })
 })

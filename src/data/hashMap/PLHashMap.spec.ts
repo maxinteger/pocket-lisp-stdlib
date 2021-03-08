@@ -24,6 +24,22 @@ describe('stdlib/data/PLHashMap', () => {
     })
   })
 
+  describe('toJSON', () => {
+    it('should return with the JSON representation', () => {
+      const json = plHashMap(plString('a'), plNumber(1), plString('b'), plNumber(2)).toJSON()
+      expect(json).toEqual({
+        a: {
+          decimals: 0,
+          intValue: 1,
+        },
+        b: {
+          decimals: 0,
+          intValue: 2,
+        },
+      })
+    })
+  })
+
   describe('debugTypeOf', () => {
     it('should return with debug tag', () => {
       expect(plHashMap().debugTypeOf()).toEqual(plString(PLHashMap.kind))

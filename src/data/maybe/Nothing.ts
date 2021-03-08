@@ -13,6 +13,10 @@ class NothingClass implements PLBase {
     return undefined
   }
 
+  public toJSON() {
+    return undefined
+  }
+
   public toString() {
     return 'Nothing'
   }

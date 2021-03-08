@@ -58,6 +58,12 @@ describe('stdlib/data/PLString', () => {
     })
   })
 
+  describe('toJSON', () => {
+    it('should return with the JSON representation', () => {
+      expect(plString('hello world').toJSON()).toBe('hello world')
+    })
+  })
+
   describe('debugTypeOf', () => {
     it('should return with debug tag', () => {
       expect(plString('a').debugTypeOf()).toEqual(plString(PLString.kind))

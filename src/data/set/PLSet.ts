@@ -81,8 +81,12 @@ export class PLSet<Item extends SetItem> implements PLBase, Iterable<Item>, Copy
     return this.value.reduce(fn, init) as Result
   }
 
-  public toJS(): unknown[] {
+  public toJS<Item = unknown>(): Item[] {
     return this.value.map((i) => i.toJS())
+  }
+
+  public toJSON<Item = unknown>(): Item[] {
+    return this.value.map((i) => i.toJSON())
   }
 
   public toString(): string {
