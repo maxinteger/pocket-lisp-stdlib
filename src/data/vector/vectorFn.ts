@@ -43,11 +43,24 @@ export const tail: <T extends PLBase>(list: PLVector<T>) => PLVector<T> = (list)
   return plVector(...(list.value.slice(1) as StrictArray<any>))
 }
 
+export const slice: <T extends PLBase>(list: PLVector<T>, start: PLNumber, end: PLNumber) => PLVector<T> = (
+  list,
+  start,
+  end,
+) => {
+  typeCheck(PLVector, list)
+  typeCheck(PLNumber, end)
+  typeCheck(PLNumber, start)
+  assetNothing(list.value.length, 'Vector is not defined correctly')
+  return plVector(...(list.value.slice(start.value, end.value) as StrictArray<any>))
+}
+
 export default {
   sum,
   intersperse,
   join,
   'join-with': joinWith,
   head,
+  slice,
   tail,
 }
