@@ -1,4 +1,4 @@
-import { PLLiterals } from 'pocket-lisp'
+import type { PLLiterals } from 'pocket-lisp'
 import baseFn from './fn/base'
 import * as math from './fn/math'
 import * as modules from './module'
@@ -6,7 +6,7 @@ import { parseBool, plBool } from './data/bool/boolFn'
 import { plString } from './data/string/stringFn'
 import { maybe } from './data/maybe/maybeFn'
 import { default as hashMapFn, plHashMap } from './data/hashMap/hashMapFn'
-import { parseNumber, plNumber } from './data/number/numberFn'
+import { default as numFn, plNumber } from './data/number/numberFn'
 import { default as vectorFn, plVector } from './data/vector/vectorFn'
 import { default as setFn } from './data/set/setFn'
 import {
@@ -29,11 +29,11 @@ export const literals: PLLiterals = {
     factory: plBool,
   },
   Int: {
-    parser: parseNumber,
+    parser: plNumber,
     factory: plNumber,
   },
   Float: {
-    parser: parseNumber,
+    parser: plNumber,
     factory: plNumber,
   },
   FractionNumber: {
@@ -61,6 +61,7 @@ export const runtime = {
   ...typeClassOps,
   ...baseFn,
   ...math,
+  ...numFn,
   ...fractionNumberFn,
   ...vectorFn,
   ...hashMapFn,
