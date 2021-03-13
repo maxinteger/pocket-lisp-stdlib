@@ -20,7 +20,7 @@ describe('stdlib/data/PLHashMap', () => {
     it('should return with the JS representation', () => {
       const js = plHashMap(plString('a'), plNumber(1), plString('b'), plNumber(2)).toJS()
       expect(Array.from(js.keys())).toEqual(['a', 'b'])
-      expect(Array.from(js.values())).toEqual([1, 2])
+      expect(Array.from(js.values())).toEqual([plNumber(1), plNumber(2)])
     })
   })
 
