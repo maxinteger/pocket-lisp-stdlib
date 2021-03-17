@@ -112,6 +112,6 @@ export class PLNumber
   }
 
   public toJSNumber(): number {
-    return this.intValue / this.decimals ** 10
+    return this.intValue / 10 ** this.decimals
   }
 }
