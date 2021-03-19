@@ -8,8 +8,10 @@ import {
   expandDecimals,
   getDecimalString,
   modulo,
+  plNumberConstructor,
 } from './numberFn'
 import { PLNumber } from './PLNumber'
+import { plString } from '../string/stringFn'
 
 const pln = plNumber
 
@@ -55,6 +57,13 @@ describe('stdlib/data/number/numberFn', () => {
       expect(() => pln('0.2hello')).toThrow('Invalid number: "0.2hello"')
       expect(() => pln('0.1.2')).toThrow('Invalid number: "0.1.2"')
       expect(() => pln('1 234')).toThrow('Invalid number: "1 234')
+    })
+  })
+
+  describe('plNumberConstructor', () => {
+    it('should return with plBool', () => {
+      expect(plNumberConstructor(pln(1))).toEqual(pln(1))
+      expect(() => plNumberConstructor(plString('1') as any)).toThrowError(`Expected 'Number', but got 'String'.`)
     })
   })
 

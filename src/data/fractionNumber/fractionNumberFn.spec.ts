@@ -1,7 +1,23 @@
-import { fraction2number, number2fraction, plFractionNumber, reciprocal } from './fractionNumberFn'
+import {
+  fraction2number,
+  number2fraction,
+  plFractionNumber,
+  plFractionNumberConstructor,
+  reciprocal,
+} from './fractionNumberFn'
 import { plNumber } from '../number/numberFn'
 
 describe('stdlib/data/PLFractionNumber', () => {
+  describe('plFractionNumberConstructor', () => {
+    it('should fail when the parameters are not integers', () => {
+      expect(() => plFractionNumberConstructor(plNumber(1.5), plNumber(2))).toThrow('Numerator must be integer')
+      expect(() => plFractionNumberConstructor(plNumber(1), plNumber(2.1))).toThrow('Denominator must be integer')
+    })
+
+    it('should create FractionNumber', () => {
+      expect(plFractionNumberConstructor(plNumber(1), plNumber(2))).toEqual(plFractionNumber(1, 2))
+    })
+  })
   describe('reciprocal operator', () => {
     it('should reciprocal the number', () => {
       expect(reciprocal(plFractionNumber(1, 2))).toEqual(plFractionNumber(2, 1))

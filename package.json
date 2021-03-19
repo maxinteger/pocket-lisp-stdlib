@@ -4,6 +4,8 @@
   "author": {
     "name": "Laszlo Vadasz"
   },
+  "homepage": "https://maxinteger.github.io/pocket-lisp-page/",
+  "repository": "https://github.com/maxinteger/pocket-lisp-stdlib",
   "license": "MIT",
   "description": "Standard lib for Pocket Lisp",
   "keywords": [

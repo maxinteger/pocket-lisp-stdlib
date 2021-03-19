@@ -23,7 +23,7 @@ export const toJSON: (value: any) => PLString = (value) => {
 //
 
 export const debugTypeOf: (variable: Debug) => PLString = (v) => {
-  const result: any = v['debugTypeOf'] ? v.debugTypeOf() : plString('<<unknown>>')
+  const result: any = v['debugTypeOf'] ? v.debugTypeOf() : plString('<unknown>')
   return result instanceof String ? plString(result as string) : result
 }
 

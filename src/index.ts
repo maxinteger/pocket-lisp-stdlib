@@ -2,16 +2,17 @@ import type { PLLiterals } from 'pocket-lisp'
 import baseFn from './fn/base'
 import * as math from './fn/math'
 import * as modules from './module'
-import { parseBool, plBool } from './data/bool/boolFn'
-import { plString } from './data/string/stringFn'
+import { parseBool, plBool, plBoolConstructor } from './data/bool/boolFn'
+import { plString, plStringConstructor } from './data/string/stringFn'
 import { maybe } from './data/maybe/maybeFn'
-import { default as hashMapFn, plHashMap } from './data/hashMap/hashMapFn'
-import { default as numFn, plNumber } from './data/number/numberFn'
+import { default as hashMapFn, plHashMap, plHashMapConstructor } from './data/hashMap/hashMapFn'
+import { default as numFn, plNumber, plNumberConstructor } from './data/number/numberFn'
 import { default as vectorFn, plVector } from './data/vector/vectorFn'
 import { default as setFn } from './data/set/setFn'
 import {
   default as fractionNumberFn,
   plFractionNumber,
+  plFractionNumberConstructor,
   str2plFractionNumber,
 } from './data/fractionNumber/fractionNumberFn'
 import { unboxing } from './fn/common'
@@ -26,31 +27,38 @@ export const identity: <T>(x: T) => T = (x: any): any => x
 export const literals: PLLiterals = {
   Bool: {
     parser: parseBool,
-    factory: plBool,
+    nativeConstructor: plBool,
+    langConstructor: plBoolConstructor,
   },
   Int: {
     parser: plNumber,
-    factory: plNumber,
+    nativeConstructor: plNumber,
+    langConstructor: plNumberConstructor,
   },
   Float: {
     parser: plNumber,
-    factory: plNumber,
+    nativeConstructor: plNumber,
+    langConstructor: plNumberConstructor,
   },
   FractionNumber: {
     parser: str2plFractionNumber,
-    factory: plFractionNumber,
+    nativeConstructor: plFractionNumber,
+    langConstructor: plFractionNumberConstructor,
   },
   String: {
     parser: plString,
-    factory: plString,
+    nativeConstructor: plString,
+    langConstructor: plStringConstructor,
   },
   Vector: {
     parser: identity,
-    factory: plVector,
+    nativeConstructor: plVector,
+    langConstructor: plVector,
   },
   HashMap: {
     parser: identity,
-    factory: plHashMap,
+    nativeConstructor: plHashMap,
+    langConstructor: plHashMapConstructor,
   },
 }
 

@@ -9,6 +9,12 @@ export const plFractionNumber = (n: number, d: number): PLFractionNumber => {
   return new PLFractionNumber(n, d)
 }
 
+export const plFractionNumberConstructor = (n: PLNumber, d: PLNumber): PLFractionNumber => {
+  assert(!n.isInteger().value, 'Numerator must be integer')
+  assert(!d.isInteger().value, 'Denominator must be integer')
+  return new PLFractionNumber(n.toJS(), d.toJS())
+}
+
 export const str2plFractionNumber = (str: string): PLFractionNumber => {
   const [n, d] = str.split('/').map(parseFloat)
   if (isValid(n, d)) {

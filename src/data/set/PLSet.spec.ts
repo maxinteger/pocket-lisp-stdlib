@@ -7,7 +7,8 @@ import { plVector } from '../vector/vectorFn'
 import { contains } from '../../typeClasses'
 import { plBool } from '../bool/boolFn'
 
-const createSet = (arr: number[]): PLSet<any> => plSet(plVector(...arr.map((x) => plNumber(x))))
+const createSet = (arr: number[]): PLSet<any> => plSet(plVector(...arr.map((x) => pln(x))))
+const pln = plNumber
 
 describe('stdlib/data/PLSet', () => {
   describe('creation', () => {
@@ -16,33 +17,31 @@ describe('stdlib/data/PLSet', () => {
     })
 
     it('should have same result as the factory function', () => {
-      expect(new PLSet<PLNumber>(plVector(plNumber(1), plNumber(2), plNumber(3)))).toEqual(createSet([1, 2, 3]))
+      expect(new PLSet<PLNumber>(plVector(pln(1), pln(2), pln(3)))).toEqual(createSet([1, 2, 3]))
     })
     it('should not allow different types in it', () => {
       expect(
         // @ts-expect-error: check exception
-        () => new PLSet<PLNumber>(plVector(plNumber(1), plNumber(2), plString('hello world'))),
+        () => new PLSet<PLNumber>(plVector(pln(1), pln(2), plString('hello world'))),
       ).toThrow(`Type Error! Expected 'Number', but got 'String'`)
     })
 
     it('should keep only unique values', () => {
-      expect(new PLSet<PLNumber>(plVector(plNumber(1), plNumber(2), plNumber(1), plNumber(2), plNumber(3)))).toEqual(
-        createSet([1, 2, 3]),
-      )
+      expect(new PLSet<PLNumber>(plVector(pln(1), pln(2), pln(1), pln(2), pln(3)))).toEqual(createSet([1, 2, 3]))
     })
   })
 
   describe('count', () => {
     it('should work', () => {
-      expect(createSet([]).count()).toEqual(plNumber(0))
-      expect(createSet([1, 2, 2, 3]).count()).toEqual(plNumber(3))
+      expect(createSet([]).count()).toEqual(pln(0))
+      expect(createSet([1, 2, 2, 3]).count()).toEqual(pln(3))
     })
   })
 
   describe('contains', () => {
     it('should returns with true/false when the item contains or not the item', () => {
-      expect(contains(plNumber(1), createSet([1, 2, 3]))).toEqual(plBool(true))
-      expect(contains(plNumber(5), createSet([1, 2, 3]))).toEqual(plBool(false))
+      expect(contains(pln(1), createSet([1, 2, 3]))).toEqual(plBool(true))
+      expect(contains(pln(5), createSet([1, 2, 3]))).toEqual(plBool(false))
     })
   })
 
@@ -77,25 +76,31 @@ describe('stdlib/data/PLSet', () => {
 
   describe('map', () => {
     it('should exec a function on all set item', () => {
-      const actual = createSet([1, 2, 3]).map((a) => plNumber(a.value * 10))
+      const actual = createSet([1, 2, 3]).map((a) => pln(a.value * 10))
       expect(actual).toEqual(createSet([10, 20, 30]))
     })
 
     it('should work with empty input', () => {
-      const actual = createSet([]).map(() => plNumber(10))
+      const actual = createSet([]).map(() => pln(10))
       expect(actual).toEqual(createSet([]))
     })
   })
 
   describe('filter', () => {
     it('should should filter out items', () => {
-      const actual = createSet([1, 2, 3]).filter((a) => a.equals(plNumber(2)))
+      const actual = createSet([1, 2, 3]).filter((a) => a.equals(pln(2)))
       expect(actual).toEqual(createSet([2]))
     })
 
     it('should work with empty input', () => {
       const actual = createSet([]).map(() => plBool(true))
       expect(actual).toEqual(createSet([]))
+    })
+  })
+
+  describe('set2list', () => {
+    it('should convert set to vector', () => {
+      expect(createSet([1, 2, 3, 3, 4, 1])).toEqual(plVector(pln(1), pln(2), pln(3), pln(4)))
     })
   })
 
@@ -126,6 +131,31 @@ describe('stdlib/data/PLSet', () => {
           intValue: 3,
         },
       ])
+    })
+  })
+
+  describe('copy function', () => {
+    it('should copy value', () => {
+      const originalItem = plString('hello')
+      const originalValue = plSet(plVector(originalItem))
+      const copiedValue = originalValue.copy()
+      expect(originalValue).not.toBe(copiedValue)
+      expect(originalValue.value).toEqual(copiedValue.value)
+      expect(originalItem).toBe(copiedValue.value[0])
+      expect(originalItem.value).toBe(copiedValue.value[0].value)
+    })
+  })
+
+  describe('deepCopy function', () => {
+    it('should deep copy value', () => {
+      const originalItem = plString('hello')
+      const originalValue = plSet(plVector(originalItem))
+      const copiedValue = originalValue.deepCopy()
+      expect(originalValue).not.toBe(copiedValue)
+      expect(originalValue.value).toEqual(copiedValue.value)
+      expect(originalItem).not.toBe(copiedValue.value[0])
+      expect(originalItem).toEqual(copiedValue.value[0])
+      expect(originalItem.value).toBe(copiedValue.value[0].value)
     })
   })
 })

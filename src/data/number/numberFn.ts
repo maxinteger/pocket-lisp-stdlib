@@ -1,4 +1,4 @@
-import { assert, assertInteger } from '../../utils/assert'
+import { assert, assertInteger, typeCheck } from '../../utils/assert'
 import { PLNumber } from './PLNumber'
 
 export interface DecimalResult {
@@ -22,6 +22,11 @@ export function plNumber(value: number | string, decimals = 0): PLNumber {
   }
 }
 
+export function plNumberConstructor(value: PLNumber): PLNumber {
+  typeCheck(PLNumber, value)
+  return value
+}
+
 export function assertNumeric(strValue: string): boolean {
   return assert(strValue === '' || isNaN(Number(strValue)), `Invalid number: "${strValue}"`)
 }
@@ -37,15 +42,15 @@ export function isScientific(strValue: string): boolean {
 export function parseScientificString(strValue: string): DecimalResult {
   assert(!isScientific(strValue), `Input is not in scientific form: "${strValue}"`)
   const parts = strValue.split(/[eE]/)
-  const decimcalObject = parseDecimalString(parts[0])
+  const decimalObject = parseDecimalString(parts[0])
   const exponential = parseInt(parts[1])
-  if (decimcalObject.decimals > exponential) {
-    decimcalObject.decimals -= exponential
+  if (decimalObject.decimals > exponential) {
+    decimalObject.decimals -= exponential
   } else {
-    decimcalObject.intValue *= Math.pow(10, exponential - decimcalObject.decimals)
-    decimcalObject.decimals = 0
+    decimalObject.intValue *= Math.pow(10, exponential - decimalObject.decimals)
+    decimalObject.decimals = 0
   }
-  return decimcalObject
+  return decimalObject
 }
 
 export function parseDecimalString(strValue: string): DecimalResult {

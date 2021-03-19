@@ -14,7 +14,7 @@ describe('type classes base', () => {
   describe('debugTypeOf', () => {
     it('should call debugTypeOf method', () => {
       expect(debugTypeOf(plNumber(42)).toJS()).toBe('Number')
-      expect(debugTypeOf({} as Debug).toJS()).toBe('<<unknown>>')
+      expect(debugTypeOf({} as Debug).toJS()).toBe('<unknown>')
     })
   })
 
