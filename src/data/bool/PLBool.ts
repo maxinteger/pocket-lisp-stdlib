@@ -77,6 +77,10 @@ export class PLBool
     return this._value
   }
 
+  public toJSON(): boolean {
+    return this.toJS()
+  }
+
   public debugTypeOf(): PLString {
     return plString(PLBool.kind)
   }

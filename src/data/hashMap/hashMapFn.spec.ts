@@ -1,33 +1,31 @@
 import { plNumber } from '../number/numberFn'
-import { plString } from '../string/stringFn'
+import { plHashMap, plHashMapConstructor } from './hashMapFn'
 import { plVector } from '../vector/vectorFn'
-import { keys, values, plHashMap } from './hashMapFn'
-import { PLHashMap } from './PLHashMap'
+import { plString } from '../string/stringFn'
 
-const plh = plHashMap
-const pls = plString
 const pln = plNumber
+const pls = plString
 const plv = plVector
 
-describe('stdlib/data/number/hashMapFn', () => {
-  describe('plHashMap', () => {
-    it('should construct properly', () => {
-      expect(plh(pls('key'), pls('value'))).toEqual(new PLHashMap([pls('key'), pls('value')]))
-      expect(plh(pls('key'), pln(1))).toEqual(new PLHashMap([pls('key'), pln(1)]))
+describe('hashMapFn', () => {
+  describe('plHashMapConstructor', () => {
+    it('should fail if called with wrong parameters', () => {
+      expect(() => plHashMapConstructor(pln(1) as any, plv())).toThrowError(`Expected 'Vector', but got 'Number'.`)
+      expect(() => plHashMapConstructor(plv(), pln(1) as any)).toThrowError(`Expected 'Vector', but got 'Number'.`)
+      expect(() => plHashMapConstructor(plv(pln(1)) as any, plv())).toThrowError(
+        `Number of keys must be equal with the number of values`,
+      )
+      expect(() => plHashMapConstructor(plv(), plv(pln(1)) as any)).toThrowError(
+        `Number of keys must be equal with the number of values`,
+      )
+      expect(() => plHashMapConstructor(plv(pln(1) as any), plv(pln(1)))).toThrowError(
+        `Expected 'String', but got 'Number'.`,
+      )
     })
-  })
 
-  describe('keys', () => {
-    const fn = keys
-    it('should get keys', () => {
-      expect(fn(plh(pls('k1'), pls('v1'), pls('k2'), pls('v2')))).toEqual(plv(pls('k1'), pls('k2')))
-    })
-  })
-
-  describe('values', () => {
-    const fn = values
-    it('should get alues', () => {
-      expect(fn(plh(pls('k1'), pls('v1'), pls('k2'), pls('v2')))).toEqual(plv(pls('v1'), pls('v2')))
+    it('should return with plHashMap', () => {
+      expect(plHashMapConstructor(plv(), plv())).toEqual(plHashMap())
+      expect(plHashMapConstructor(plv(pls('key')), plv(pln(42)))).toEqual(plHashMap(pls('key'), pln(42)))
     })
   })
 })

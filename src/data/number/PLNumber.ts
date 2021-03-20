@@ -88,11 +88,8 @@ export class PLNumber
     return Ordering.Equal
   }
 
-  public toJS(): DecimalResult {
-    return {
-      intValue: this._intValue,
-      decimals: this._decimals,
-    }
+  public toJS(): number {
+    return this.intValue / 10 ** this.decimals
   }
 
   public toString(): string {
@@ -107,11 +104,14 @@ export class PLNumber
     return plString(PLNumber.kind)
   }
 
-  public isInteger(): boolean {
-    return this.decimals === 0
+  public isInteger(): PLBool {
+    return plBool(this.decimals === 0)
   }
 
-  public toJSNumber(): number {
-    return this.intValue / 10 ** this.decimals
+  public toJSON(): DecimalResult {
+    return {
+      intValue: this._intValue,
+      decimals: this._decimals,
+    }
   }
 }

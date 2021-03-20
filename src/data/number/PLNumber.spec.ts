@@ -117,17 +117,17 @@ describe('stdlib/data/PLNumber', () => {
     })
   })
 
-  describe('toJS', () => {
+  describe('toJSON', () => {
     it('should return with the JS representation', () => {
-      expect(pln('-1.20').toJS()).toEqual({ intValue: -12, decimals: 1 })
+      expect(pln('-1.20').toJSON()).toEqual({ intValue: -12, decimals: 1 })
     })
   })
 
-  describe('toJSNumber', () => {
+  describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(pln('0.000').toJSNumber()).toEqual(0)
-      expect(pln('5').toJSNumber()).toEqual(5)
-      expect(pln('-120.0').toJSNumber()).toEqual(-120)
+      expect(pln('0.000').toJS()).toEqual(0)
+      expect(pln('5').toJS()).toEqual(5)
+      expect(pln('-120.0').toJS()).toEqual(-120)
     })
   })
 
@@ -152,6 +152,20 @@ describe('stdlib/data/PLNumber', () => {
     it('should copy value', () => {
       expect(pln('-1.20').copy()).toStrictEqual(pln('-1.20'))
       expect(pln('1e5').copy()).toStrictEqual(pln('100000'))
+    })
+  })
+
+  describe('isInteger', () => {
+    it('should check the number is integer or not', () => {
+      expect(pln('-1.20').isInteger()).toStrictEqual(plb(false))
+      expect(pln('1e5').isInteger()).toStrictEqual(plb(true))
+    })
+  })
+
+  describe('toJS', () => {
+    it('should convert PLNumber to JS number', () => {
+      expect(pln('-1.20').toJS()).toStrictEqual(-1.2)
+      expect(pln('1e5').toJS()).toStrictEqual(100_000)
     })
   })
 })

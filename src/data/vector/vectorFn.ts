@@ -12,6 +12,11 @@ export function plVector<T extends PLBase>(...value: StrictArray<T>): PLVector<T
   return new PLVector<T>(value)
 }
 
+export function plVectorConstructor<T extends PLBase>(value: PLVector<T>): PLVector<T> {
+  typeCheck(PLVector, value)
+  return value
+}
+
 export const sum: (list: PLVector<PLNumber>) => PLNumber = (list) => {
   typeCheck(PLVector, list)
   return list.reduce(plNumber(0), add)

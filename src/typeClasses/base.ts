@@ -9,10 +9,21 @@ export interface BoxedValue<T> extends SerializeToJS<T> {
   toString: () => string
 }
 
+export const toJSON: (value: any) => PLString = (value) => {
+  let js = null
+  if (typeof value.toJSON === 'function') {
+    js = value.toJSON()
+  } else if (typeof value.toJS === 'function') {
+    js = value.toJS()
+  }
+
+  return plString(JSON.stringify(js))
+}
+
 //
 
 export const debugTypeOf: (variable: Debug) => PLString = (v) => {
-  const result: any = v['debugTypeOf'] ? v.debugTypeOf() : plString('<<unknown>>')
+  const result: any = v['debugTypeOf'] ? v.debugTypeOf() : plString('<unknown>')
   return result instanceof String ? plString(result as string) : result
 }
 
@@ -35,6 +46,7 @@ export const deepCopy: <T extends Copy<any>>(item: T) => T = (item) => {
 export default {
   typeof: debugTypeOf,
   copy,
-  deepCopy,
+  'deep-copy': deepCopy,
   str,
+  'to-json': toJSON,
 }

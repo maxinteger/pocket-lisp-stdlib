@@ -28,9 +28,17 @@ describe('stdlib/data/Maybe', () => {
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(maybe(plNumber(1)).toJS()).toStrictEqual({ decimals: 0, intValue: 1 })
+      expect(maybe(plNumber(1)).toJS()).toStrictEqual(1)
       expect(maybe(undefined).toJS()).toBe(undefined)
       expect(maybe(Nothing).toJS()).toBe(undefined)
+    })
+  })
+
+  describe('toJSON', () => {
+    it('should return with the JSON representation', () => {
+      expect(maybe(plNumber(1)).toJSON()).toStrictEqual(1)
+      expect(maybe(undefined).toJSON()).toBe(undefined)
+      expect(maybe(Nothing).toJSON()).toBe(undefined)
     })
   })
 

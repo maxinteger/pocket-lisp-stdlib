@@ -18,6 +18,13 @@ describe('stdlib/data/PLBool', () => {
     })
   })
 
+  describe('toJSON', () => {
+    it('should return with the JSON representation', () => {
+      expect(plBool(true).toJSON()).toBe(true)
+      expect(plBool(false).toJSON()).toBe(false)
+    })
+  })
+
   describe('debugTypeOf', () => {
     it('should return with debug tag', () => {
       expect(plBool(true).debugTypeOf()).toEqual(plString(PLBool.kind))

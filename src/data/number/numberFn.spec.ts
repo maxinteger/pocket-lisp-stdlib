@@ -8,8 +8,10 @@ import {
   expandDecimals,
   getDecimalString,
   modulo,
+  plNumberConstructor,
 } from './numberFn'
 import { PLNumber } from './PLNumber'
+import { plString } from '../string/stringFn'
 
 const pln = plNumber
 
@@ -32,14 +34,22 @@ describe('stdlib/data/number/numberFn', () => {
       expect(() => pln(2, 0.3)).toThrow("Expected integer number', but got '0.3'.")
     })
     it('should extract integer value and decimals from string', () => {
-      expect(pln('1e5').toJS()).toStrictEqual({ intValue: 100_000, decimals: 0 })
-      expect(pln('2e-3').toJS()).toStrictEqual({ intValue: 2, decimals: 3 })
-      expect(pln('1.2234E-2').toJS()).toStrictEqual({ intValue: 12_234, decimals: 6 })
-      expect(pln('2.56E+3').toJS()).toStrictEqual({ intValue: 2560, decimals: 0 })
-      expect(pln('.230').toJS()).toStrictEqual({ intValue: 23, decimals: 2 })
-      expect(pln('-0.3100').toJS()).toStrictEqual({ intValue: -31, decimals: 2 })
-      expect(pln('320.0').toJS()).toStrictEqual({ intValue: 320, decimals: 0 })
-      expect(pln('-20').toJS()).toStrictEqual({ intValue: -20, decimals: 0 })
+      expect(pln('1e5').toJSON()).toStrictEqual({ intValue: 100_000, decimals: 0 })
+      expect(pln('1e5').toJS()).toStrictEqual(100_000)
+      expect(pln('2e-3').toJSON()).toStrictEqual({ intValue: 2, decimals: 3 })
+      expect(pln('2e-3').toJS()).toStrictEqual(0.002)
+      expect(pln('1.2234E-2').toJSON()).toStrictEqual({ intValue: 12_234, decimals: 6 })
+      expect(pln('1.2234E-2').toJS()).toStrictEqual(0.012234)
+      expect(pln('2.56E+3').toJSON()).toStrictEqual({ intValue: 2560, decimals: 0 })
+      expect(pln('2.56E+3').toJS()).toStrictEqual(2560)
+      expect(pln('.230').toJSON()).toStrictEqual({ intValue: 23, decimals: 2 })
+      expect(pln('.230').toJS()).toStrictEqual(0.23)
+      expect(pln('-0.3100').toJSON()).toStrictEqual({ intValue: -31, decimals: 2 })
+      expect(pln('-0.3100').toJS()).toStrictEqual(-0.31)
+      expect(pln('320.0').toJSON()).toStrictEqual({ intValue: 320, decimals: 0 })
+      expect(pln('320.0').toJS()).toStrictEqual(320)
+      expect(pln('-20').toJSON()).toStrictEqual({ intValue: -20, decimals: 0 })
+      expect(pln('-20').toJS()).toStrictEqual(-20)
     })
     it('should throw error if input string is not numeric', () => {
       expect(() => pln('')).toThrow('Invalid number: ""')
@@ -47,6 +57,13 @@ describe('stdlib/data/number/numberFn', () => {
       expect(() => pln('0.2hello')).toThrow('Invalid number: "0.2hello"')
       expect(() => pln('0.1.2')).toThrow('Invalid number: "0.1.2"')
       expect(() => pln('1 234')).toThrow('Invalid number: "1 234')
+    })
+  })
+
+  describe('plNumberConstructor', () => {
+    it('should return with plBool', () => {
+      expect(plNumberConstructor(pln(1))).toEqual(pln(1))
+      expect(() => plNumberConstructor(plString('1') as any)).toThrowError(`Expected 'Number', but got 'String'.`)
     })
   })
 

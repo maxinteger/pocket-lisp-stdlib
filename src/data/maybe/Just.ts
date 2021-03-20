@@ -11,8 +11,12 @@ export class Just<T extends PLBase> implements PLBase {
     return this._value
   }
 
-  public toJS(): unknown {
-    return this._value.toJS && this._value.toJS()
+  public toJS<Return>(): Return {
+    return this._value?.toJS?.()
+  }
+
+  public toJSON<Return>(): Return {
+    return this.toJS()
   }
 
   public toString(): string {
