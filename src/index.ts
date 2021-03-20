@@ -6,7 +6,7 @@ import { parseBool, plBool, plBoolConstructor } from './data/bool/boolFn'
 import { plString, plStringConstructor } from './data/string/stringFn'
 import { maybe } from './data/maybe/maybeFn'
 import { default as hashMapFn, plHashMap, plHashMapConstructor } from './data/hashMap/hashMapFn'
-import { default as numFn, plNumber, plNumberConstructor } from './data/number/numberFn'
+import { default as numFn, plFloatConstructor, plIntegerConstructor, plNumber } from './data/number/numberFn'
 import { default as vectorFn, plVector } from './data/vector/vectorFn'
 import { default as setFn } from './data/set/setFn'
 import {
@@ -33,12 +33,12 @@ export const literals: PLLiterals = {
   Int: {
     parser: plNumber,
     nativeConstructor: plNumber,
-    langConstructor: plNumberConstructor,
+    langConstructor: plIntegerConstructor,
   },
   Float: {
     parser: plNumber,
     nativeConstructor: plNumber,
-    langConstructor: plNumberConstructor,
+    langConstructor: plFloatConstructor,
   },
   FractionNumber: {
     parser: str2plFractionNumber,

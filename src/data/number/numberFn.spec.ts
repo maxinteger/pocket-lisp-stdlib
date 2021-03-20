@@ -8,7 +8,8 @@ import {
   expandDecimals,
   getDecimalString,
   modulo,
-  plNumberConstructor,
+  plIntegerConstructor,
+  plFloatConstructor,
 } from './numberFn'
 import { PLNumber } from './PLNumber'
 import { plString } from '../string/stringFn'
@@ -21,18 +22,22 @@ describe('stdlib/data/number/numberFn', () => {
       expect(pln(2.1)).toEqual(new PLNumber(21, 1))
       expect(pln(13.42)).toEqual(new PLNumber(1342, 2))
     })
+
     it('should work for integers', () => {
       expect(pln(2)).toEqual(new PLNumber(2, 0))
       expect(pln(23)).toEqual(new PLNumber(23, 0))
     })
+
     it('should construct decimal', () => {
       expect(pln(2, 1)).toEqual(new PLNumber(2, 1))
       expect(pln(13, 4)).toEqual(new PLNumber(13, 4))
     })
+
     it('should throw error if inputs are not correct', () => {
       expect(() => pln(0.2, 1)).toThrow("Expected integer number', but got '0.2'.")
       expect(() => pln(2, 0.3)).toThrow("Expected integer number', but got '0.3'.")
     })
+
     it('should extract integer value and decimals from string', () => {
       expect(pln('1e5').toJSON()).toStrictEqual({ intValue: 100_000, decimals: 0 })
       expect(pln('1e5').toJS()).toStrictEqual(100_000)
@@ -51,6 +56,7 @@ describe('stdlib/data/number/numberFn', () => {
       expect(pln('-20').toJSON()).toStrictEqual({ intValue: -20, decimals: 0 })
       expect(pln('-20').toJS()).toStrictEqual(-20)
     })
+
     it('should throw error if input string is not numeric', () => {
       expect(() => pln('')).toThrow('Invalid number: ""')
       expect(() => pln('hello world')).toThrow('Invalid number: "hello world"')
@@ -60,10 +66,19 @@ describe('stdlib/data/number/numberFn', () => {
     })
   })
 
-  describe('plNumberConstructor', () => {
-    it('should return with plBool', () => {
-      expect(plNumberConstructor(pln(1))).toEqual(pln(1))
-      expect(() => plNumberConstructor(plString('1') as any)).toThrowError(`Expected 'Number', but got 'String'.`)
+  describe('plIntegerConstructor', () => {
+    it('should return with plNumber', () => {
+      expect(plIntegerConstructor(pln(1))).toEqual(pln(1))
+      expect(() => plIntegerConstructor(plString('1') as any)).toThrow(`Expected 'Number', but got 'String'.`)
+      expect(() => plIntegerConstructor(pln(1.5))).toThrow(`Expected integer, but got float number.`)
+    })
+  })
+
+  describe('plFloatConstructor', () => {
+    it('should return with plNumber', () => {
+      expect(plFloatConstructor(pln(1))).toEqual(pln(1))
+      expect(plFloatConstructor(pln(1.5))).toEqual(pln(1.5))
+      expect(() => plFloatConstructor(plString('1') as any)).toThrowError(`Expected 'Number', but got 'String'.`)
     })
   })
 

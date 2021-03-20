@@ -4,8 +4,9 @@ import { isNothing } from './convert'
 ///
 
 export const assert = (val: boolean, msg: string): boolean => {
-  // TODO remove lang dependency
-  if (val) throw new StdRuntimeError(msg)
+  if (val) {
+    throw new StdRuntimeError(msg)
+  }
   return true
 }
 
