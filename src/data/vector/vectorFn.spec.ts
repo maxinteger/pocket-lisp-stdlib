@@ -1,16 +1,8 @@
-import { head, intersperse, join, joinWith, plVector, plVectorConstructor, sum, tail } from './vectorFn'
+import { head, intersperse, join, joinWith, plVector, sum, tail } from './vectorFn'
 import { plNumber } from '../number/numberFn'
 import { plString } from '../string/stringFn'
 
 describe('stdlib/data/vectorFn', () => {
-  describe('plVectorConstructor', () => {
-    it('should return with plBool', () => {
-      expect(plVectorConstructor(plVector())).toEqual(plVector())
-      expect(plVectorConstructor(plVector(plNumber(42)))).toEqual(plVector(plNumber(42)))
-      expect(() => plVectorConstructor(plNumber(1) as any)).toThrowError(`Expected 'Vector', but got 'Number'.`)
-    })
-  })
-
   describe('sum', () => {
     it('should sum number list', () => {
       expect(sum(plVector())).toEqual(plNumber(0))
