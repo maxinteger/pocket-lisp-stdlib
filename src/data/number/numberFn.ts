@@ -22,7 +22,13 @@ export function plNumber(value: number | string, decimals = 0): PLNumber {
   }
 }
 
-export function plNumberConstructor(value: PLNumber): PLNumber {
+export function plIntegerConstructor(value: PLNumber): PLNumber {
+  typeCheck(PLNumber, value)
+  assert(!value.isInteger().value, 'Expected integer, but got float number.')
+  return value
+}
+
+export function plFloatConstructor(value: PLNumber): PLNumber {
   typeCheck(PLNumber, value)
   return value
 }
