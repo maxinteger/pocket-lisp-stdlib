@@ -33,6 +33,11 @@ describe('stdlib/data/vectorFn', () => {
         plString('a<|>b<|>c'),
       )
     })
+    it('should work for numbers', () => {
+      expect(joinWith(plString('<|>'), plVector(plNumber(0), plNumber(1), plNumber(2)))).toEqual(
+        plString('0<|>1<|>2'),
+      )
+    })
   })
 
   describe('head', () => {

@@ -27,9 +27,9 @@ export const join: (list: PLVector<PLString>) => PLString = (list) => {
   return list.reduce(plString(''), add)
 }
 
-export const joinWith: (separator: PLString, list: PLVector<PLString>) => PLString = (separator, list) => {
+export const joinWith: (separator: PLString, list: PLVector<PLString|PLNumber>) => PLString = (separator, list) => {
   typeCheck(PLVector, list)
-  return list.intersperse(separator).reduce(plString(''), add)
+  return list.map(x => plString(x.toString())).intersperse(separator).reduce(plString(''), add)
 }
 
 export const head: <T extends PLBase>(list: PLVector<T>) => T = (list) => {
