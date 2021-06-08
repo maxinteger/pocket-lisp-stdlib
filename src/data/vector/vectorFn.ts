@@ -27,7 +27,12 @@ export const join: (list: PLVector<PLString>) => PLString = (list) => {
   return list.reduce(plString(''), add)
 }
 
-export const joinWith: (separator: PLString, list: PLVector<PLString|PLNumber>) => PLString = (separator, list) => {
+export const joinWith: (separator: PLString, list: PLVector<PLString>) => PLString = (separator, list) => {
+  typeCheck(PLVector, list)
+  return list.intersperse(separator).reduce(plString(''), add)
+}
+
+export const numList: (separator: PLString, list: PLVector<PLNumber>) => PLString = (separator, list) => {
   typeCheck(PLVector, list)
   return list.map(x => plString(x.toString())).intersperse(separator).reduce(plString(''), add)
 }
@@ -60,6 +65,7 @@ export default {
   intersperse,
   join,
   'join-with': joinWith,
+  'num-list': numList,
   head,
   slice,
   tail,

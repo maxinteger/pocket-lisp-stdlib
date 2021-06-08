@@ -1,4 +1,4 @@
-import { head, intersperse, join, joinWith, plVector, sum, tail, slice } from './vectorFn'
+import { head, intersperse, join, joinWith, numList, plVector, sum, tail, slice } from './vectorFn'
 import { plNumber } from '../number/numberFn'
 import { plString } from '../string/stringFn'
 
@@ -27,18 +27,22 @@ describe('stdlib/data/vectorFn', () => {
   })
 
   describe('join-with', () => {
-    it('should join list items with separator', () => {
+    it('should join list of strings with separator', () => {
       expect(joinWith(plString('<|>'), plVector())).toEqual(plString(''))
       expect(joinWith(plString('<|>'), plVector(plString('a'), plString('b'), plString('c')))).toEqual(
         plString('a<|>b<|>c'),
       )
     })
-    it('should work for numbers', () => {
-      expect(joinWith(plString('<|>'), plVector(plNumber(0), plNumber(1), plNumber(2)))).toEqual(
+  })
+
+  describe('num-list', () => {
+    it('should join list of numbers with separator', () => {
+      expect(numList(plString('<|>'), plVector())).toEqual(plString(''))
+      expect(numList(plString('<|>'), plVector(plNumber(0), plNumber(1), plNumber(2)))).toEqual(
         plString('0<|>1<|>2'),
       )
     })
-  })
+  })  
 
   describe('head', () => {
     it('should return with the first item of the list', () => {
