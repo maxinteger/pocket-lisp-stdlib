@@ -1,7 +1,7 @@
 import { PLNumber } from '../number/PLNumber'
 import { assetNothing, typeCheck } from '../../utils/assert'
 import { plNumber } from '../number/numberFn'
-import { add } from '../../typeClasses'
+import { add, multiple } from '../../typeClasses'
 import { PLString } from '../string/PLString'
 import { plString } from '../string/stringFn'
 import { PLBase } from '../PLBase'
@@ -15,6 +15,11 @@ export function plVector<T extends PLBase>(...value: StrictArray<T>): PLVector<T
 export const sum: (list: PLVector<PLNumber>) => PLNumber = (list) => {
   typeCheck(PLVector, list)
   return list.reduce(plNumber(0), add)
+}
+
+export const prod: (list: PLVector<PLNumber>) => PLNumber = (list) => {
+  typeCheck(PLVector, list)
+  return list.reduce(plNumber(1), multiple)
 }
 
 export const intersperse: <T extends PLBase>(separator: T, list: PLVector<T>) => PLVector<T> = (separator, list) => {

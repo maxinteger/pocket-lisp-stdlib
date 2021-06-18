@@ -1,4 +1,4 @@
-import { head, intersperse, join, joinWith, numList, plVector, sum, tail, slice } from './vectorFn'
+import { head, intersperse, join, joinWith, numList, plVector, sum, prod, tail, slice } from './vectorFn'
 import { plNumber } from '../number/numberFn'
 import { plString } from '../string/stringFn'
 
@@ -7,6 +7,13 @@ describe('stdlib/data/vectorFn', () => {
     it('should sum number list', () => {
       expect(sum(plVector())).toEqual(plNumber(0))
       expect(sum(plVector(plNumber(1), plNumber(2), plNumber(3)))).toEqual(plNumber(6))
+    })
+  })
+
+  describe('prod', () => {
+    it('should calculate product of number list', () => {
+      expect(prod(plVector())).toEqual(plNumber(1))
+      expect(prod(plVector(plNumber(1), plNumber(2), plNumber(4)))).toEqual(plNumber(8))
     })
   })
 
