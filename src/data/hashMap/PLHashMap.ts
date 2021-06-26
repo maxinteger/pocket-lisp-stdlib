@@ -1,6 +1,7 @@
 import { StdRuntimeError } from '../../utils/StdRuntimeError'
 import { PLBase } from '../PLBase'
 import { PLString } from '../string/PLString'
+import { PLNumber } from '../number/PLNumber'
 import { assetNothing, typeCheck } from '../../utils/assert'
 import { plString } from '../string/stringFn'
 import { chunk } from '../../utils/list'
@@ -28,8 +29,10 @@ export class PLHashMap<Item extends PLBase> implements PLBase, Index<PLString, I
     return this._value
   }
 
-  public toJS(): Map<string, any> {
-    return new Map(Array.from(this._value.entries()).map(([k, v]) => [k, v.toJS()]))
+  public toJS(): Map<string, PLNumber | any> {
+    return new Map(
+      Array.from(this._value.entries()).map(([k, v]) => [k, v instanceof PLNumber ? v.toString() : v.toJS()]),
+    )
   }
 
   public toJSON<Return = Record<string, unknown>>(): Return {

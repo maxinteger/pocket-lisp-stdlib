@@ -123,6 +123,14 @@ describe('stdlib/data/PLNumber', () => {
     })
   })
 
+  describe('toJS', () => {
+    it('should return with the JS representation', () => {
+      expect(pln('0.000').toJS()).toEqual(0)
+      expect(pln('5').toJS()).toEqual(5)
+      expect(pln('-120.0').toJS()).toEqual(-120)
+    })
+  })
+
   describe('toString', () => {
     it('should create decimal string', () => {
       expect(pln(0, 0).toString()).toBe('0')
