@@ -67,6 +67,7 @@ export const slice: <T extends PLBase>(list: PLVector<T>, start: PLNumber, end: 
 
 export default {
   sum,
+  prod,
   intersperse,
   join,
   'join-with': joinWith,
