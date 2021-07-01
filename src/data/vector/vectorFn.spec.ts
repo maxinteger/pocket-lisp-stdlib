@@ -1,4 +1,4 @@
-import { head, intersperse, join, joinWith, numList, plVector, sum, prod, tail, slice } from './vectorFn'
+import { head, intersperse, join, joinWith, numList, plVector, sum, prod, tail, reverse, slice } from './vectorFn'
 import { plNumber } from '../number/numberFn'
 import { plString } from '../string/stringFn'
 
@@ -63,6 +63,14 @@ describe('stdlib/data/vectorFn', () => {
       expect(tail(plVector())).toEqual(plVector())
       expect(tail(plVector(plString('a'), plString('b'), plString('c')))).toEqual(
         plVector(plString('b'), plString('c')),
+      )
+    })
+  })
+
+  describe('reverse', () => {
+    it('should reverse vector correctly', () => {
+      expect(reverse(plVector(plString('a'), plString('b'), plString('c')))).toEqual(
+        plVector(plString('c'), plString('b'), plString('a')),
       )
     })
   })
