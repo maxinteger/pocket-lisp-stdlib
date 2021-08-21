@@ -50,6 +50,10 @@ export class PLVector<Item extends VectorItem>
     return new PLVector<Item>(this.value.filter((item) => fn(item).toJS()))
   }
 
+  public reverse(): PLVector<Item> {
+    return new PLVector<Item>(this.value.reverse())
+  }
+
   public reduce<Result>(init: Result, fn: (acc: Result, item: Item) => Result): Result {
     return this.value.reduce(fn, init) as Result
   }

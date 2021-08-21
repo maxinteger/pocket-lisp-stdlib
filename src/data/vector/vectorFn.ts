@@ -53,6 +53,11 @@ export const tail: <T extends PLBase>(list: PLVector<T>) => PLVector<T> = (list)
   return plVector(...(list.value.slice(1) as StrictArray<any>))
 }
 
+export const reverse: <T extends PLBase>(list: PLVector<T>) => PLVector<T> = (list) => {
+  typeCheck(PLVector, list)
+  return plVector(...(list.value.reverse() as StrictArray<any>))
+}
+
 export const slice: <T extends PLBase>(list: PLVector<T>, start: PLNumber, end: PLNumber) => PLVector<T> = (
   list,
   start,
@@ -67,11 +72,13 @@ export const slice: <T extends PLBase>(list: PLVector<T>, start: PLNumber, end: 
 
 export default {
   sum,
+  prod,
   intersperse,
   join,
   'join-with': joinWith,
   'num-list': numList,
   head,
+  reverse,
   slice,
   tail,
 }
