@@ -16,7 +16,8 @@ export class PLString
     PartialOrd<PLString>,
     Copy<PLString>,
     Container<PLString>,
-    Slice<PLString> {
+    Slice<PLString>,
+    Replace<PLString> {
   public static kind = 'String'
 
   public static fromJS(value: string): PLString {
@@ -86,5 +87,10 @@ export class PLString
 
   public count(): PLNumber {
     return plNumber(this.value.length)
+  }
+
+  public replace(from: PLString, to: PLString): PLString {
+    const regex = new RegExp(from.value)
+    return new PLString(this.value.replace(regex, to.value))
   }
 }

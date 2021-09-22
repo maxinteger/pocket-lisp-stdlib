@@ -4,7 +4,8 @@ import { PLBool } from '../data/bool/PLBool'
 import { PLBase } from '../data/PLBase'
 import { Box } from './baseType'
 import { PartialEq } from './cmpType'
-import { Container, Iterable, Slice } from './iterType'
+import { Container, Iterable, Slice, Replace } from './iterType'
+import { PLString } from '..'
 
 export const count: (collection: Container<unknown>) => PLNumber = (collection) => {
   return collection.count()
@@ -35,6 +36,10 @@ export function reduce<T extends PLBase, Result>(
   return f.reduce(init, (accumulator, item) => this.evalFn(fn, [accumulator, item]) as Result)
 }
 
+export function replace<T extends PLBase>(from: PLString, to: PLString, str: PLString): Replace<T> {
+  return str.replace(from, to)
+}
+
 export default {
   count,
   contains,
@@ -42,4 +47,5 @@ export default {
   filter,
   reduce,
   slice,
+  replace,
 }

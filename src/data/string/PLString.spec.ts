@@ -3,7 +3,7 @@ import { plBool } from '../bool/boolFn'
 import { plString } from './stringFn'
 import { plNumber } from '../number/numberFn'
 import { Ordering } from '../../typeClasses/cmpType'
-import { contains, slice } from '../../typeClasses'
+import { contains, slice, replace } from '../../typeClasses'
 
 describe('stdlib/data/PLString', () => {
   describe('creation', () => {
@@ -123,6 +123,13 @@ describe('stdlib/data/PLString', () => {
       expect(slice(plNumber(2), plNumber(2), plString('hello!'))).toEqual(plString(''))
       expect(slice(plNumber(2), plNumber(4), plString('hello!'))).toEqual(plString('ll'))
       expect(slice(plNumber(5), plNumber(10), plString('hello!'))).toEqual(plString('!'))
+    })
+  })
+
+  describe('replace', () => {
+    it('should replace regex string', () => {
+      expect(replace(plString('ava'), plString('-'), plString('JavaScript'))).toEqual(plString('J-Script'))
+      expect(replace(plString('\\d.*\\d'), plString('-'), plString('Java3foobar4Script'))).toEqual(plString('Java-Script'))
     })
   })
 })

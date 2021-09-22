@@ -3,6 +3,7 @@ import { PartialEq } from './cmpType'
 import { PLBool } from '../data/bool/PLBool'
 import { PLBase } from '../data/PLBase'
 import { Box } from './baseType'
+import { PLString } from '..'
 
 export interface Container<Item> {
   count(): PLNumber
@@ -12,6 +13,10 @@ export interface Container<Item> {
 
 export interface Slice<Item> {
   slice(start: PLNumber, end: PLNumber): Slice<Item>
+}
+
+export interface Replace<Item> {
+  replace(from: PLString, to: PLString): Replace<Item>
 }
 
 export interface Iterable<Item> extends Container<Item> {
