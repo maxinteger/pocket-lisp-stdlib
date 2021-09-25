@@ -1,4 +1,4 @@
-import { plString, plStringConstructor } from './stringFn'
+import { plString, plStringConstructor, replace } from './stringFn'
 import { plNumber } from '../number/numberFn'
 
 describe('stringFn', () => {
@@ -6,6 +6,12 @@ describe('stringFn', () => {
     it('should return with plBool', () => {
       expect(plStringConstructor(plString('Hello'))).toEqual(plString('Hello'))
       expect(() => plStringConstructor(plNumber(1) as any)).toThrowError(`Expected 'String', but got 'Number'.`)
+    })
+  })
+
+  describe('replace', () => {
+    it('should replace string', () => {
+      expect(replace(plString('H'), plString('B'), plString('Hello'))).toEqual(plString('Bello'))
     })
   })
 })

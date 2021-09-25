@@ -7,3 +7,7 @@ export const plStringConstructor = (value: PLString): PLString => {
   typeCheck(PLString, value)
   return value
 }
+
+export const replace = (from: PLString, to: PLString, str: PLString): PLString => {
+  return new PLString(str.value.replace(from.value, to.value))
+}
