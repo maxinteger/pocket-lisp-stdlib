@@ -11,3 +11,7 @@ export const plStringConstructor = (value: PLString): PLString => {
 export const replace = (from: PLString, to: PLString, str: PLString): PLString => {
   return new PLString(str.value.replace(from.value, to.value))
 } 
+
+export default {
+  replace
+}
