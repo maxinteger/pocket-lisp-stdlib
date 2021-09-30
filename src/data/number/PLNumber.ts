@@ -1,4 +1,4 @@
-import { expandDecimals, getDecimalString, simplifyDecimal, DecimalResult } from './numberFn'
+import { expandDecimals, getDecimalString, simplifyDecimal, DecimalResult, isPowerOf10 } from './numberFn'
 import { PLBool } from '../bool/PLBool'
 import { plBool } from '../bool/boolFn'
 import { PLBase } from '../PLBase'
@@ -72,12 +72,16 @@ export class PLNumber
   }
 
   public divide(d: PLNumber): PLNumber {
+    var quotentDecimals = MAX_DECIMALS
     if (d.intValue === 0) {
       throw new StdRuntimeError('Cannot divide by zero!')
+    } else if (isPowerOf10(d.intValue)) {
+      const divisorDecimals = Math.log10(d.intValue)
+      quotentDecimals = MAX_DECIMALS - divisorDecimals
     }
     const decimalObj = expandDecimals(this, d)
-    const divideIntValue = Math.round((decimalObj.intValue1 / decimalObj.intValue2) * Math.pow(10, MAX_DECIMALS))
-    return new PLNumber(divideIntValue, MAX_DECIMALS)
+    const divideIntValue = Math.round((decimalObj.intValue1 / decimalObj.intValue2) * Math.pow(10, quotentDecimals))
+    return new PLNumber(divideIntValue, quotentDecimals)
   }
 
   public partialCmp(other: PLNumber): Ordering {

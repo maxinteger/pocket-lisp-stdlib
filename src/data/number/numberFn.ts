@@ -104,6 +104,13 @@ export function modulo(dividend: PLNumber, divisor: PLNumber): PLNumber {
   return plNumber(remainder)
 }
 
+export function isPowerOf10(n: number): boolean {
+  while(n > 1 && n % 10 == 0){
+      n /= 10;
+  }
+  return n == 1;
+}
+
 export default {
   modulo,
 }
