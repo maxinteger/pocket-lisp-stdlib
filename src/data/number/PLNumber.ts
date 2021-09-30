@@ -72,7 +72,7 @@ export class PLNumber
   }
 
   public divide(d: PLNumber): PLNumber {
-    var quotentDecimals = MAX_DECIMALS
+    let quotentDecimals = MAX_DECIMALS
     if (d.intValue === 0) {
       throw new StdRuntimeError('Cannot divide by zero!')
     } else if (isPowerOf10(d.intValue)) {
