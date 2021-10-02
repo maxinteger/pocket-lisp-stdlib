@@ -31,6 +31,8 @@ describe('stdlib/data/PLNumber', () => {
         { strValue: '-1.3e-5', intValue: -13, decimals: 6 },
         { strValue: '-0.00013', intValue: -13, decimals: 5 },
         { strValue: '-10.560000', intValue: -10_560_000, decimals: 6 },
+        { strValue: '100000', intValue: 100000, decimals: 0 },
+        { strValue: '889892169', intValue: 889892169, decimals: 0 },
       ]
 
       tests.map(({ strValue, intValue, decimals }) => {
@@ -106,6 +108,7 @@ describe('stdlib/data/PLNumber', () => {
       expect(pln('-66.63600').divide(pln('-12.34'))).toStrictEqual(pln('5.4'))
       expect(pln('12.0020').divide(pln('-3.12000'))).toStrictEqual(pln('-3.846794871795'))
       expect(pln('.0020').divide(pln('30000.1'))).toStrictEqual(pln('0.000000066666'))
+      expect(pln('889892169').divide(pln('100000'))).toStrictEqual(pln('8898.92169'))
     })
   })
 

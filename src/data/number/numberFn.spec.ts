@@ -10,6 +10,7 @@ import {
   modulo,
   plIntegerConstructor,
   plFloatConstructor,
+  isPowerOf10
 } from './numberFn'
 import { PLNumber } from './PLNumber'
 import { plString } from '../string/stringFn'
@@ -193,6 +194,20 @@ describe('stdlib/data/number/numberFn', () => {
       ]
       tests.map(({ num, mod, res }) => {
         expect(modulo(pln(num), pln(mod))).toEqual(pln(res))
+      })
+    })
+  })
+
+  describe('isPowerOf10', () => {
+    it('should check if number is power of 10', () => {
+      const tests = [
+        { num: 0, res: false },
+        { num: 1, res: true },
+        { num: 10000, res: true },
+        { num: 10001, res: false }
+      ]
+      tests.map(({ num, res }) => {
+        expect(isPowerOf10(num)).toBe(res)
       })
     })
   })
