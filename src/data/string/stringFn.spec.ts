@@ -1,4 +1,4 @@
-import { plString, plStringConstructor } from './stringFn'
+import { plString, plStringConstructor, replace, replaceRegexp } from './stringFn'
 import { plNumber } from '../number/numberFn'
 
 describe('stringFn', () => {
@@ -6,6 +6,20 @@ describe('stringFn', () => {
     it('should return with plBool', () => {
       expect(plStringConstructor(plString('Hello'))).toEqual(plString('Hello'))
       expect(() => plStringConstructor(plNumber(1) as any)).toThrowError(`Expected 'String', but got 'Number'.`)
+    })
+  })
+
+  describe('replace', () => {
+    it('should replace string', () => {
+      expect(replace(plString('H'), plString('B'), plString('Hello'))).toEqual(plString('Bello'))
+    })
+  })
+
+  describe('replace-regexp', () => {
+    it('should replace regexp string', () => {
+      expect(replaceRegexp(plString('i'), plString('Dog'), plString('monkey'), plString('dog'))).toEqual(plString('monkey'))
+      expect(replaceRegexp(plString('gi'), plString('apples'), plString('oranges'), plString('Apples are round, and apples are juicy.'))).toEqual(plString('oranges are round, and oranges are juicy.'))
+      expect(replaceRegexp(plString(''), plString('(\\w+)\\s(\\w+)'), plString('$2, $1'), plString('John Smith'))).toEqual(plString('Smith, John'))
     })
   })
 })
