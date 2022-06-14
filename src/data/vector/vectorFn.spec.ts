@@ -1,4 +1,4 @@
-import { head, intersperse, join, joinWith, numList, plVector, sum, prod, tail, reverse, slice } from './vectorFn'
+import { head, intersperse, join, joinWith, numList, plVector, sum, prod, tail, reverse, sort, slice } from './vectorFn'
 import { plNumber } from '../number/numberFn'
 import { plString } from '../string/stringFn'
 
@@ -71,6 +71,14 @@ describe('stdlib/data/vectorFn', () => {
     it('should reverse vector correctly', () => {
       expect(reverse(plVector(plString('a'), plString('b'), plString('c')))).toEqual(
         plVector(plString('c'), plString('b'), plString('a')),
+      )
+    })
+  })
+
+  describe('sort', () => {
+    it('should sort vector correctly', () => {
+      expect(sort(plVector(plNumber(3), plNumber(2), plNumber(1)))).toEqual(
+        plVector(plNumber(1), plNumber(2), plNumber(3)),
       )
     })
   })
