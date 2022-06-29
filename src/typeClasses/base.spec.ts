@@ -1,5 +1,5 @@
 import { plNumber } from '../data/number/numberFn'
-import { copy, debugTypeOf, str } from './base'
+import { copy, debugTypeOf, deepCopy, str, toJSON } from './base'
 import { Debug } from './baseType'
 import { plString } from '../data/string/stringFn'
 import { plVector } from '../data/vector/vectorFn'
@@ -18,12 +18,18 @@ describe('type classes base', () => {
     })
   })
 
+  describe('toJSON', () => {
+    it('should convert value to JSON formatted data', () => {
+      expect(toJSON(plNumber(42))).toStrictEqual(plString('{"s":1,"d":[42],"e":1}'))
+    })
+  })
+
   describe('copy', () => {
     it('should call copy method', () => {
       const num = plNumber(42)
       const copyNum = copy(num)
       expect(copyNum).not.toBe(num)
-      expect(copyNum.toJS()).toBe(num.toJS())
+      expect(copyNum.toJS()).toStrictEqual(num.toJS())
     })
   })
 
@@ -31,7 +37,7 @@ describe('type classes base', () => {
     it('should call deepCopy method', () => {
       const originalItem = plString('hello')
       const originalValue = plVector(originalItem)
-      const copiedValue = originalValue.deepCopy()
+      const copiedValue = deepCopy(originalValue)
       expect(originalValue).not.toBe(copiedValue)
       expect(originalValue.value).not.toBe(copiedValue.value)
       expect(originalItem).not.toBe(copiedValue.index(plNumber(0)))

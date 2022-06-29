@@ -29,12 +29,14 @@ describe('stdlib/data/PLHashMap', () => {
       const json = plHashMap(plString('a'), plNumber(1), plString('b'), plNumber(2)).toJSON()
       expect(json).toEqual({
         a: {
-          decimals: 0,
-          intValue: 1,
+          d: [1],
+          e: 0,
+          s: 1,
         },
         b: {
-          decimals: 0,
-          intValue: 2,
+          d: [2],
+          e: 0,
+          s: 1,
         },
       })
     })

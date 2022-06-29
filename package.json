@@ -1,6 +1,6 @@
 {
   "name": "pocket-lisp-stdlib",
-  "version": "0.11.5",
+  "version": "0.12.0",
   "author": {
     "name": "Laszlo Vadasz"
   },
@@ -45,7 +45,8 @@
     "rollup": "^2.52.3",
     "ts-jest": "^26.4.4",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "decimal.js": "^10.4.2"
   },
   "scripts": {
     "lint": "npm run lint:ci -- --fix",

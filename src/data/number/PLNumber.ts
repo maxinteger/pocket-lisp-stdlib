@@ -1,17 +1,18 @@
-import { expandDecimals, getDecimalString, simplifyDecimal, DecimalResult, isPowerOf10 } from './numberFn'
+import { DecimalResult } from './numberFn'
 import { PLBool } from '../bool/PLBool'
 import { plBool } from '../bool/boolFn'
 import { PLBase } from '../PLBase'
 import { PLString } from '../string/PLString'
 import { plString } from '../string/stringFn'
-import { Subtract } from '../../typeClasses/ops'
-import { Copy } from '../../typeClasses/baseType'
-import { Ordering, PartialEq, PartialOrd } from '../../typeClasses/cmpType'
-import { Add, Divide, Multiple, Negate } from '../../typeClasses/opsType'
-import { floatEq } from '../../utils/math'
-import { StdRuntimeError } from '../../utils/StdRuntimeError'
+import { Subtract } from '../../typeClasses'
+import { Copy } from '../../typeClasses'
+import { Ordering, PartialEq, PartialOrd } from '../../typeClasses'
+import { Add, Divide, Multiple, Negate } from '../../typeClasses'
+import Decimal from 'decimal.js'
 
-const MAX_DECIMALS = 12
+export const PL_NUMBER_PRECISION = 16
+
+Decimal.set({ precision: PL_NUMBER_PRECISION })
 
 export class PLNumber
   implements
@@ -23,85 +24,72 @@ export class PLNumber
     Divide<PLNumber>,
     Negate<PLNumber>,
     PartialOrd<PLNumber>,
-    Copy<PLNumber> {
+    Copy<PLNumber>
+{
   public static kind = 'Number'
 
-  private readonly _intValue: number
-  private readonly _decimals: number
+  private readonly decimal: Decimal
 
-  public constructor(intValue: number, decimals = 0) {
-    const decimalObj = simplifyDecimal(intValue, decimals)
-    this._decimals = decimalObj.decimals
-    this._intValue = decimalObj.intValue
+  public constructor(data: string | number | Decimal) {
+    try {
+      this.decimal = new Decimal(data)
+    } catch (e) {
+      throw new Error(`Invalid number: "${data}"`)
+    }
   }
 
-  public get intValue(): number {
-    return this._intValue
-  }
-
-  public get decimals(): number {
-    return this._decimals
+  public get data(): Decimal {
+    return this.decimal
   }
 
   public get value(): number {
-    return this._intValue * Math.pow(10, -this._decimals)
+    return this.decimal.toNumber()
   }
 
   public equals(d: PLNumber): PLBool {
-    return plBool(floatEq(this.value, d.value))
+    return plBool(this.decimal.equals(d.decimal))
   }
 
   public negate(): PLNumber {
-    return new PLNumber(-this.intValue, this.decimals)
+    return new PLNumber(this.decimal.negated())
   }
 
-  public add(d: PLNumber): PLNumber {
-    const decimalObj = expandDecimals(this, d)
-    const totalIntValue = decimalObj.intValue1 + decimalObj.intValue2
-    return new PLNumber(totalIntValue, decimalObj.maxDecimal)
+  public add(num: PLNumber): PLNumber {
+    return new PLNumber(this.decimal.add(num.decimal))
   }
 
-  public subtract(d: PLNumber): PLNumber {
-    const decimalObj = expandDecimals(this, d)
-    const totalIntValue = decimalObj.intValue1 - decimalObj.intValue2
-    return new PLNumber(totalIntValue, decimalObj.maxDecimal)
+  public subtract(num: PLNumber): PLNumber {
+    return new PLNumber(this.decimal.sub(num.decimal))
   }
 
-  public multiple(d: PLNumber): PLNumber {
-    return new PLNumber(this.intValue * d.intValue, this.decimals + d.decimals)
+  public multiple(num: PLNumber): PLNumber {
+    return new PLNumber(this.decimal.mul(num.decimal))
   }
 
-  public divide(d: PLNumber): PLNumber {
-    let quotentDecimals = MAX_DECIMALS
-    if (d.intValue === 0) {
-      throw new StdRuntimeError('Cannot divide by zero!')
-    } else if (isPowerOf10(d.intValue)) {
-      const divisorDecimals = Math.log10(d.intValue)
-      quotentDecimals = MAX_DECIMALS - divisorDecimals
+  public divide(num: PLNumber): PLNumber {
+    if (num.data.isZero()) {
+      throw new Error('Cannot divide by zero!')
     }
-    const decimalObj = expandDecimals(this, d)
-    const divideIntValue = Math.round((decimalObj.intValue1 / decimalObj.intValue2) * Math.pow(10, quotentDecimals))
-    return new PLNumber(divideIntValue, quotentDecimals)
+    return new PLNumber(this.decimal.div(num.decimal))
   }
 
   public partialCmp(other: PLNumber): Ordering {
-    const decimalObj = expandDecimals(this, other)
-
-    if (decimalObj.intValue1 < decimalObj.intValue2) return Ordering.Less
-    if (decimalObj.intValue1 > decimalObj.intValue2) return Ordering.Greater
+    if (this.decimal.lessThan(other.decimal)) return Ordering.Less
+    if (this.decimal.greaterThan(other.decimal)) return Ordering.Greater
     return Ordering.Equal
   }
 
-  public toJS(): number {
-    return this.intValue / 10 ** this.decimals
+  public toJS(): DecimalResult {
+    const { s, d, e } = this.decimal
+    return { s, d, e }
   }
 
   public toString(): string {
-    return `${getDecimalString(this.intValue, this.decimals)}`
+    return this.decimal.toString()
   }
 
   public copy(): PLNumber {
-    return new PLNumber(this.intValue, this.decimals)
+    return new PLNumber(new Decimal(this.decimal))
   }
 
   public debugTypeOf(): PLString {
@@ -109,13 +97,10 @@ export class PLNumber
   }
 
   public isInteger(): PLBool {
-    return plBool(this.decimals === 0)
+    return plBool(this.decimal.isInteger())
   }
 
   public toJSON(): DecimalResult {
-    return {
-      intValue: this._intValue,
-      decimals: this._decimals,
-    }
+    return this.toJS()
   }
 }

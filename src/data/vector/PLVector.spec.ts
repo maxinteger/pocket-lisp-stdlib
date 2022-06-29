@@ -15,9 +15,7 @@ describe('stdlib/data/PLVector', () => {
     })
     describe('with of', () => {
       it('should have same result as the factory function', () => {
-        expect(
-          new PLVector<PLNumber>([pln(1), pln(2), pln(3)]),
-        ).toEqual(plVector(pln(1), pln(2), pln(3)))
+        expect(new PLVector<PLNumber>([pln(1), pln(2), pln(3)])).toEqual(plVector(pln(1), pln(2), pln(3)))
       })
     })
   })
@@ -76,7 +74,23 @@ describe('stdlib/data/PLVector', () => {
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(plVector(...[pln(1), pln(2), pln(3)]).toJS()).toEqual([1, 2, 3])
+      expect(plVector(...[pln(1), pln(2), pln(3)]).toJS()).toEqual([
+        {
+          d: [1],
+          e: 0,
+          s: 1,
+        },
+        {
+          d: [2],
+          e: 0,
+          s: 1,
+        },
+        {
+          d: [3],
+          e: 0,
+          s: 1,
+        },
+      ])
     })
   })
 
@@ -84,16 +98,19 @@ describe('stdlib/data/PLVector', () => {
     it('should return with the JS representation', () => {
       expect(plVector(...[pln(1), pln(2), pln(3)]).toJSON()).toEqual([
         {
-          decimals: 0,
-          intValue: 1,
+          d: [1],
+          e: 0,
+          s: 1,
         },
         {
-          decimals: 0,
-          intValue: 2,
+          d: [2],
+          e: 0,
+          s: 1,
         },
         {
-          decimals: 0,
-          intValue: 3,
+          d: [3],
+          e: 0,
+          s: 1,
         },
       ])
     })

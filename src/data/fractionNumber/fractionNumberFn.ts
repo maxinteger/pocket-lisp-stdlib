@@ -10,9 +10,9 @@ export const plFractionNumber = (n: number, d: number): PLFractionNumber => {
 }
 
 export const plFractionNumberConstructor = (n: PLNumber, d: PLNumber): PLFractionNumber => {
-  assert(!n.isInteger().value, 'Numerator must be integer')
-  assert(!d.isInteger().value, 'Denominator must be integer')
-  return new PLFractionNumber(n.toJS(), d.toJS())
+  assert(!n.data.isInteger(), 'Numerator must be integer')
+  assert(!d.data.isInteger(), 'Denominator must be integer')
+  return new PLFractionNumber(n.data.toNumber(), d.data.toNumber())
 }
 
 export const str2plFractionNumber = (str: string): PLFractionNumber => {

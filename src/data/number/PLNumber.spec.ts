@@ -10,49 +10,45 @@ const pls = plString
 
 describe('stdlib/data/PLNumber', () => {
   describe('parser', () => {
-    it('should throw error if the input is invalid', () => {
-      const tests = ['', '12,0', '1,2E-2', 'x12.0', '12 0', '1.2Exp10', '0.1.2', '1 234', '1.2Exp10']
+    it.each(['', '12,0', '1,2E-2', 'x12.0', '12 0', '1.2Exp10', '0.1.2', '1 234', '1.2Exp10'])(
+      'should throw error if the input is invalid: %s',
+      (value) => {
+        expect(() => plNumber(value)).toThrow(`Invalid number: "${value}"`)
+      },
+    )
 
-      tests.map((input) => {
-        expect(() => plNumber(input)).toThrow(`Invalid number: "${input}"`)
-      })
-    })
-
-    it('should accept valid inputs', () => {
-      const tests = [
-        { strValue: '0', intValue: 0, decimals: 0 },
-        { strValue: '1', intValue: 1, decimals: 0 },
-        { strValue: '1.', intValue: 1, decimals: 0 },
-        { strValue: '-.9', intValue: -9, decimals: 1 },
-        { strValue: '1.0', intValue: 10, decimals: 1 },
-        { strValue: '1.2', intValue: 12, decimals: 1 },
-        { strValue: '0.03', intValue: 3, decimals: 2 },
-        { strValue: '1.3e5', intValue: 130_000, decimals: 0 },
-        { strValue: '-1.3e-5', intValue: -13, decimals: 6 },
-        { strValue: '-0.00013', intValue: -13, decimals: 5 },
-        { strValue: '-10.560000', intValue: -10_560_000, decimals: 6 },
-        { strValue: '100000', intValue: 100000, decimals: 0 },
-        { strValue: '889892169', intValue: 889892169, decimals: 0 },
-      ]
-
-      tests.map(({ strValue, intValue, decimals }) => {
-        expect(plNumber(strValue)).toStrictEqual(new PLNumber(intValue, decimals))
-      })
+    it.each([
+      { strValue: '0', d: [0], e: 0, s: 1 },
+      { strValue: '1', d: [1], e: 0, s: 1 },
+      { strValue: '1.', d: [1], e: 0, s: 1 },
+      { strValue: '-.9', d: [9000000], e: -1, s: -1 },
+      { strValue: '1.0', d: [1], e: 0, s: 1 },
+      { strValue: '1.2', d: [1, 2000000], e: 0, s: 1 },
+      { strValue: '0.03', d: [300000], e: -2, s: 1 },
+      { strValue: '1.3e5', d: [130_000], e: 5, s: 1 },
+      { strValue: '-1.3e-5', d: [130], e: -5, s: -1 },
+      { strValue: '-0.00013', d: [1300], e: -4, s: -1 },
+      { strValue: '-10.560000', d: [10, 5600000], e: 1, s: -1 },
+      { strValue: '100000', d: [100_000], e: 5, s: 1 },
+      { strValue: '889892169', d: [88, 9892169], e: 8, s: 1 },
+    ])('should work with $strValue', ({ strValue, d, e, s }) => {
+      expect(plNumber(strValue).toJSON()).toStrictEqual({ d, e, s })
     })
   })
 
   describe('with new', () => {
     it('should have same result as the factory function', () => {
-      expect(new PLNumber(1, 2)).toEqual(plNumber(1, 2))
-      expect(new PLNumber(1)).toEqual(plNumber(1, 0))
+      expect(new PLNumber(200)).toEqual(plNumber(200))
+      expect(new PLNumber(1)).toEqual(plNumber(1))
     })
   })
 
   describe('getters', () => {
     it('should work', () => {
       const decimal = pln('1.2')
-      expect(decimal.intValue).toBe(12)
-      expect(decimal.decimals).toBe(1)
+      expect(decimal.data.d).toEqual([1, 2000000])
+      expect(decimal.data.e).toBe(0)
+      expect(decimal.data.s).toBe(1)
       const integer = pln('20')
       expect(integer.value).toBe(20)
     })
@@ -106,8 +102,8 @@ describe('stdlib/data/PLNumber', () => {
     it('should divide two decimals', () => {
       expect(() => pln('1').divide(pln('0.0'))).toThrow('Cannot divide by zero!')
       expect(pln('-66.63600').divide(pln('-12.34'))).toStrictEqual(pln('5.4'))
-      expect(pln('12.0020').divide(pln('-3.12000'))).toStrictEqual(pln('-3.846794871795'))
-      expect(pln('.0020').divide(pln('30000.1'))).toStrictEqual(pln('0.000000066666'))
+      expect(pln('12.0020').divide(pln('-3.12000'))).toStrictEqual(pln('-3.846794871794872'))
+      expect(pln('.0020').divide(pln('30000.1'))).toStrictEqual(pln('0.00000006666644444518518'))
       expect(pln('889892169').divide(pln('100000'))).toStrictEqual(pln('8898.92169'))
     })
   })
@@ -122,26 +118,26 @@ describe('stdlib/data/PLNumber', () => {
 
   describe('toJSON', () => {
     it('should return with the JS representation', () => {
-      expect(pln('-1.20').toJSON()).toEqual({ intValue: -12, decimals: 1 })
+      expect(pln('-1.20').toJSON()).toEqual({ d: [1, 2000000], e: 0, s: -1 })
     })
   })
 
   describe('toJS', () => {
     it('should return with the JS representation', () => {
-      expect(pln('0.000').toJS()).toEqual(0)
-      expect(pln('5').toJS()).toEqual(5)
-      expect(pln('-120.0').toJS()).toEqual(-120)
+      expect(pln('0.000').toJS()).toEqual({ d: [0], e: 0, s: 1 })
+      expect(pln('5').toJS()).toEqual({ d: [5], e: 0, s: 1 })
+      expect(pln('-120.0').toJS()).toEqual({ d: [120], e: 2, s: -1 })
     })
   })
 
   describe('toString', () => {
     it('should create decimal string', () => {
-      expect(pln(0, 0).toString()).toBe('0')
-      expect(pln(100, 0).toString()).toBe('100')
-      expect(pln(100, 1).toString()).toBe('10')
-      expect(pln(-100, 2).toString()).toBe('-1')
-      expect(pln(120, 2).toString()).toBe('1.2')
-      expect(pln(-3400, 5).toString()).toBe('-0.034')
+      expect(pln(0).toString()).toBe('0')
+      expect(pln(100).toString()).toBe('100')
+      expect(pln(10).toString()).toBe('10')
+      expect(pln(-1).toString()).toBe('-1')
+      expect(pln(1.2).toString()).toBe('1.2')
+      expect(pln(-0.034).toString()).toBe('-0.034')
     })
   })
 
@@ -167,8 +163,8 @@ describe('stdlib/data/PLNumber', () => {
 
   describe('toJS', () => {
     it('should convert PLNumber to JS number', () => {
-      expect(pln('-1.20').toJS()).toStrictEqual(-1.2)
-      expect(pln('1e5').toJS()).toStrictEqual(100_000)
+      expect(pln('-1.20').toJS()).toStrictEqual({ d: [1, 2000000], e: 0, s: -1 })
+      expect(pln('1e5').toJS()).toStrictEqual({ d: [100_000], e: 5, s: 1 })
     })
   })
 })
