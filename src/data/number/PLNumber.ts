@@ -10,6 +10,8 @@ import { Ordering, PartialEq, PartialOrd } from '../../typeClasses'
 import { Add, Divide, Multiple, Negate } from '../../typeClasses'
 import Decimal from 'decimal.js'
 
+export type PLNumberInput = `${number}` | number | Decimal
+
 export const PL_NUMBER_PRECISION = 16
 
 Decimal.set({ precision: PL_NUMBER_PRECISION })
@@ -30,7 +32,7 @@ export class PLNumber
 
   private readonly decimal: Decimal
 
-  public constructor(data: string | number | Decimal) {
+  public constructor(data: PLNumberInput) {
     try {
       this.decimal = new Decimal(data)
     } catch (e) {

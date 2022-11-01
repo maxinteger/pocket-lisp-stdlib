@@ -1,5 +1,5 @@
 import { assert, typeCheck } from '../../utils/assert'
-import { PLNumber } from './PLNumber'
+import { PLNumber, PLNumberInput } from './PLNumber'
 import Decimal from 'decimal.js'
 
 export interface DecimalResult {
@@ -8,7 +8,7 @@ export interface DecimalResult {
   s: number
 }
 
-export function plNumber(value: number | string | Decimal): PLNumber {
+export function plNumber(value: PLNumberInput): PLNumber {
   return new PLNumber(value)
 }
 
